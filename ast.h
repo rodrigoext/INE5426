@@ -46,5 +46,14 @@ class Block : public Node {
         int computeTree();
 };
 
+class Variable : public Node {
+     public:
+         std::string id;
+         Node *next;
+         Variable(std::string id, Node *next) : id(id), next(next) { }
+         void printTree();
+         int computeTree();
+};
+
 }
 

@@ -1,6 +1,9 @@
 #include "ast.h"
+#include "symbol_table.h"
 
 using namespace AST;
+
+extern STab::SymbolTable symtab;
 
 /* Print methods */
 void Integer::printTree(){
@@ -57,4 +60,17 @@ int Block::computeTree(){
          std::cout << "Computed " << value << std::endl;
     }
     return 0;
+}
+
+void Variable::printTree(){
+    if (next != NULL){
+        next->printTree();
+        std::cout << ", ";
+    }
+    std::cout << id;
+}
+
+int Variable::computeTree(){
+    //the value of a variable is currently stored in the symbol table
+    return symtab.entryList[id].value;
 }
