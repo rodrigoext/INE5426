@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ast.h"
 
-extern AST::Block* programRoot; //set on Bison file
+extern AST::Block* programRoot; //set on Bison files
 extern int yyparse();
 
 int main(int argc, char **argv)
