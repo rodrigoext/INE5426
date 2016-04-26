@@ -20,9 +20,13 @@ extern void yyerror(const char* s, ...);
 /* token defines our terminal symbols (tokens).
  */
 %token <integer> T_INT
-%token T_PLUS T_NL
-%token T_DEF
-%token T_MUL
+%token T_PLUS T_SUB T_NL T_COMMA
+%token T_DEF T_ASSIGN
+%token T_MUL T_DIV
+%token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
+%token T_MAIOR_IGUAL T_MENOR_IGUAL
+%token T_AND T_OR T_NEGA T_ABRE_P T_FECHA_P T_FIM
+%token T_TRUE T_FALSE
 %token <name> T_ID
 
 /* type defines the type of our nonterminal symbols.
@@ -35,8 +39,8 @@ extern void yyerror(const char* s, ...);
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
  */
-%left T_PLUS
-%left T_MUL
+%left T_PLUS T_SUB
+%left T_MUL T_DIV
 %nonassoc error
 
 /* Starting rule 
@@ -49,7 +53,7 @@ program : lines { programRoot = $1; }
         ;
         
 
-lines   : line { $$ = new AST::Block(); $$->lines.push_back($1); }
+lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1); }
         | lines line { if($2 != NULL) $1->lines.push_back($2); }
         | lines error T_NL { yyerrok; }
         ;
@@ -57,16 +61,21 @@ lines   : line { $$ = new AST::Block(); $$->lines.push_back($1); }
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_NL /*$$ = $1 when nothing is said*/
         | T_DEF varlist T_NL { $$ = $2; }
+        | T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
+                                $$ = new AST::BinOp(node,AST::assign,$3); }
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
+        | T_ID { $$ = symtab.useVariable($1); }
         | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
+        | expr T_SUB expr { $$ = new AST::BinOp($1,AST::sub,$3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1,AST::mul,$3); }
+        | expr T_DIV expr { $$ = new AST::BinOp($1,AST::divi,$3); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
 varlist : T_ID { $$ = symtab.newVariable($1, NULL); }
-        | varlist T_ID { $$ = symtab.newVariable($2, $1); }
+        | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, $1); }
         ;
 
 %%
