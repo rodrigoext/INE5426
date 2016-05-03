@@ -10,6 +10,11 @@ void Integer::printTree(){
     std::cout << value;
     return;
 }
+/*
+void Real::printTree(){
+    std::cout << value;
+    return;
+}*/
 
 void BinOp::printTree(){
     left->printTree();
@@ -40,6 +45,11 @@ void Block::printTree(){
 int Integer::computeTree(){
     return value;
 }
+
+/*
+float Real::computeTree(){
+    return value;
+}*/
 
 int BinOp::computeTree(){
     int value, lvalue, rvalue;
