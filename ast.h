@@ -27,6 +27,12 @@ class Integer : public Node {
         int computeTree();
 };
 
+class Real : public Node {
+     public:
+        float value;
+        Real(float value) : value(value) {  }
+};
+
 class BinOp : public Node {
     public:
         Operation op;
