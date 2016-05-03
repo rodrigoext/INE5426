@@ -14,9 +14,15 @@ void Integer::printTree(){
 void BinOp::printTree(){
     left->printTree();
     switch(op){
+        case plus: std::cout << " + ";
+        break;
+        case sub: std::cout << " - ";
+        break;
         case mul: std::cout << " * ";
         break;
-        case plus: std::cout << " + ";
+        case divi: std::cout << " / ";
+        break;
+        case assign: std::cout << " := ";
         break;
     }
     right->printTree();
@@ -40,14 +46,26 @@ int BinOp::computeTree(){
     lvalue = left->computeTree();
     rvalue = right->computeTree();
     switch(op){
+        case plus: value = lvalue + rvalue;
+        std::cout << "Encontrou uma soma entre: " 
+        << lvalue << " e " << rvalue << "." << std::endl;
+        break;
+        case sub: value = lvalue - rvalue;
+        std::cout << "Encontrou uma subtração entre: " 
+        << lvalue << " e " << rvalue << "." << std::endl;
+        break;
         case mul: value = lvalue * rvalue;
         std::cout << "Encontrou uma multiplicação entre: " 
         << lvalue << " e " << rvalue << "." << std::endl;
         break; 
-        case plus: value = lvalue + rvalue;
-        std::cout << "Encontrou uma soma entre: " 
+        case divi: value = lvalue / rvalue;
+        std::cout << "Encontrou uma divisao entre: " 
         << lvalue << " e " << rvalue << "." << std::endl;
-        break; 
+        break;
+        case assign:
+            Variable* leftvar = dynamic_cast<Variable*>(left);
+            symtab.entryList[leftvar->id].value = rvalue;
+            value = rvalue;   
         break;  
     }
     return value;
