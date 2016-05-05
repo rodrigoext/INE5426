@@ -13,6 +13,7 @@ void yyerror(const char* s, ...);
 int [0-9]+
 nome [a-z]+
 real  [0-9]+.[0-9]*|[0-9]*.[0-9]+
+bool "TRUE"|"FALSE"
 tipo masculino: {inteiro | real | booleano | tipo definido no
 código}
 
@@ -20,12 +21,14 @@ código}
 
 [ \t]               ; //ignores spaces
 {int}              	{yylval.integer = std::atoi(yytext); return T_INT;}
-{real}				{yylval.real = std::atof(yytext); return T_REAL;}		
+{real}				{yylval.real = std::atof(yytext); return T_REAL;}
+{bool}				{yylval.booleano = strdup(yytext); return T_BOOL;}		
 "+"                 {return T_PLUS;}
 "-"                 {return T_SUB;}
 "/"                 {return T_DIV;}
 "*"					{return T_MUL;}
 ","                 {return T_COMMA;}
+"."					{return T_DOT;}
 ":="                {return T_ASSIGN;}
 "="                 {return T_IGUAL;}
 "~="                {return T_DIFERENTE;}
@@ -37,10 +40,10 @@ código}
 "OR"                {return T_OR;}
 "~"                 {return T_NEGA;}
 "("                 {return T_ABRE_P;}
-")"                 {return T_FECHA_P;}	
+")"                 {return T_FECHA_P;}
+"{"					{return T_ABRE_ESCOPO;}
+"}"					{return T_FECHA_ESCOPO;}
 ";"                 {return T_FIM;}
-"TRUE"				{return T_TRUE;}
-"FALSE"				{return T_FALSE;}
 "int"				{return D_INT;}
 "real"				{return D_REAL;}
 "bool"				{return D_BOOL;}

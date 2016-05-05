@@ -13,6 +13,7 @@ extern void yyerror(const char* s, ...);
 %union {
     int integer;
     float real;
+    char *booleano;
     AST::Node *node;
     AST::Block *block;
     char *name;
@@ -22,12 +23,14 @@ extern void yyerror(const char* s, ...);
  */
 %token <integer> T_INT
 %token <real> T_REAL
-%token T_PLUS T_SUB T_NL T_COMMA
+%token <booleano> T_BOOL;
+%token T_PLUS T_SUB T_NL T_COMMA T_DOT
 %token T_ASSIGN
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
 %token T_AND T_OR T_NEGA T_ABRE_P T_FECHA_P T_FIM
+%token T_ABRE_ESCOPO T_FECHA_ESCOPO
 %token T_TRUE T_FALSE
 %token D_INT D_REAL D_BOOL
 %token <name> T_ID

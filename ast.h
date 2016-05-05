@@ -30,7 +30,9 @@ class Integer : public Node {
 class Real : public Node {
      public:
         float value;
-        Real(float value) : value(value) {  }
+        Real(float value) : value(value) {
+            std::cout << "real identificado" << std::endl;
+        }
 };
 
 class BinOp : public Node {
