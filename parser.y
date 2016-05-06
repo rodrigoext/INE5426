@@ -63,7 +63,7 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FIM T_NL /*$$ = $1 when nothing is said*/
-        | D_INT varlist T_FIM T_NL { $$ = $2; }
+        | D_INT varlist T_FIM T_NL { symtab.setTempType(STab::Type::integer); $$ = $2; }
         | D_REAL varlist T_FIM T_NL { $$ = $2; }
         | D_BOOL varlist T_FIM T_NL { $$ = $2; }
         | T_ID T_ASSIGN expr T_FIM {  AST::Node* node = symtab.assignVariable($1);

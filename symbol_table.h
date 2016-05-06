@@ -37,9 +37,12 @@ class SymbolTable {
         SymbolTable() {}
         bool checkId(std::string id) {return entryList.find(id) != entryList.end();}
         void addSymbol(std::string id, Symbol newsymbol) {entryList[id] = newsymbol;}
+        void setTempType(Type temp);
         AST::Node* newVariable(std::string id, AST::Node* next);
         AST::Node* assignVariable(std::string id);
         AST::Node* useVariable(std::string id);
+    private:
+    	Type temp_;
 };
 
 }
