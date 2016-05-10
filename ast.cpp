@@ -17,7 +17,7 @@ void Real::printTree(){
 }*/
 
 void BinOp::printTree(){
-    left->printTree();
+    //left->printTree();
     switch(op){
         case plus: std::cout << " + ";
         break;
@@ -27,10 +27,13 @@ void BinOp::printTree(){
         break;
         case divi: std::cout << " / ";
         break;
-        case assign: std::cout << " := ";
+        case assign:
+        std::cout << "Varivel "; left->printTree(); 
+        std::cout << " inicializada com "; right->printTree(); 
+        std::cout << std::endl;
         break;
     }
-    right->printTree();
+    //right->printTree();
     return;
 }
 
