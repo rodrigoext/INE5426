@@ -1,6 +1,7 @@
 %{
 #include "ast.h"
 #include "symbol_table.h"
+#include "types.h"
 STab::SymbolTable symtab;
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
@@ -58,25 +59,25 @@ program : lines { programRoot = $1; }
 
 lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1); }
         | lines line { if($2 != NULL) $1->lines.push_back($2); }
-        | lines error T_NL { yyerrok; }
+        | lines error T_NL { yyerrok; $$ = NULL;}
         ;
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FIM T_NL /*$$ = $1 when nothing is said*/
-        | D_INT varlist T_FIM T_NL { symtab.setTempType(STab::Type::integer); $$ = $2; }
-        | D_REAL varlist T_FIM T_NL { $$ = $2; }
-        | D_BOOL varlist T_FIM T_NL { $$ = $2; }
+        | D_INT T_DECLARA varlist T_FIM T_NL { $$ = $3; }
+        | D_REAL T_DECLARA varlist T_FIM T_NL { $$ = $3; }
+        | D_BOOL T_DECLARA varlist T_FIM T_NL { $$ = $3; }
         | T_ID T_ASSIGN expr T_FIM {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::BinOp(node,AST::assign,$3); }
+                                $$ = new AST::BinOp(node,assign,$3); }
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
 		| T_REAL { $$ = new AST::Real($1); }
         | T_ID { $$ = symtab.useVariable($1); }
-        | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
-        | expr T_SUB expr { $$ = new AST::BinOp($1,AST::sub,$3); }
-        | expr T_MUL expr { $$ = new AST::BinOp($1,AST::mul,$3); }
-        | expr T_DIV expr { $$ = new AST::BinOp($1,AST::divi,$3); }
+        | expr T_PLUS expr { $$ = new AST::BinOp($1,plus,$3); }
+        | expr T_SUB expr { $$ = new AST::BinOp($1,sub,$3); }
+        | expr T_MUL expr { $$ = new AST::BinOp($1,mul,$3); }
+        | expr T_DIV expr { $$ = new AST::BinOp($1,divi,$3); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 

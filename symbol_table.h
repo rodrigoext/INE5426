@@ -4,6 +4,7 @@
 #include <map>
 
 #include "ast.h"
+#include "types.h"
 
 extern void yyerror (const char *c, ...);
 
@@ -11,24 +12,29 @@ namespace STab {
 
 class Symbol;
 
-enum Type { integer, real, string};
-enum Kind { variable, function};
-
 typedef std::map<std::string,Symbol> SymbolList;
 
 class Symbol {
 	public:
-		Type type;
-		Kind kind;
-		int64_t value;        
+		Type type;       
 		bool initialized;      
-		Symbol(Type type, Kind kind, int64_t value, bool initialized) :
-		    type(type), kind(kind), value(value), initialized(initialized) {  }
 		Symbol() {
-			type = integer; 
-			kind = variable; 
-			value = 0; 
-			initialized = false;}
+			type = indefinido;
+			initialized = false;
+		}
+		
+		Symbol(Type type, bool initialized) :
+		    type(type), initialized(initialized) {  }
+		
+		void setType(Type t) {
+			type = t;
+		}
+
+		void setInicializado() {
+			initialized = true;
+		}
+
+
 };
 
 class SymbolTable {

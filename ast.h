@@ -3,10 +3,9 @@
 #include <iostream>
 #include <vector>
 
-namespace AST {
+#include "types.h"
 
-//Binary operations
-enum Operation { plus, sub, divi, mul, assign };
+namespace AST {
 
 class Node;
 
@@ -17,6 +16,8 @@ class Node {
         virtual ~Node() {}
         virtual void printTree(){}
         virtual int computeTree(){return 0;}
+        Type type;
+
 };
 
 class Integer : public Node {

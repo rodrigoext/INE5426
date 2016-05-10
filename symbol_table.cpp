@@ -7,21 +7,8 @@ extern SymbolTable symtab;
 AST::Node* SymbolTable::newVariable(std::string id, AST::Node* next){
     if ( checkId(id) ) yyerror("Variable redefinition! %s\n", id.c_str());
     else {
-        Symbol entry;
-        switch (temp_) {
-            case integer:
-            entry = Symbol(integer, variable, 0, false);
-            addSymbol(id,entry);
-            std::cout << "novo inteiro" << std::endl;
-            break;
-            case real:
-            std::cout << "novo real" << std::endl;
-            default:
-            std::cout << "erro new variable" << std::endl;
-            break;
-        }
-       //Symbol entry(integer, variable, 0, false);
-       //addSymbol(id,entry);
+       Symbol entry;
+       addSymbol(id,entry);
     }
     return new AST::Variable(id, next);
 }
