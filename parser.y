@@ -22,8 +22,8 @@ extern void yyerror(const char* s, ...);
  */
 %token <integer> T_INT
 %token <real> T_REAL
-%token T_PLUS T_SUB T_NL T_COMMA
-%token T_ASSIGN
+%token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END
+%token T_ASSIGN T_DECLARA
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
 %token T_MAIOR_IGUAL T_MENOR_IGUAL

@@ -37,7 +37,10 @@ código}
 "OR"                {return T_OR;}
 "~"                 {return T_NEGA;}
 "("                 {return T_ABRE_P;}
-")"                 {return T_FECHA_P;}	
+")"                 {return T_FECHA_P;}
+"["					{return T_ARRAY_INIT;}
+"]"					{return T_ARRAY_END;}
+":"					{return T_DECLARA;}
 ";"                 {return T_FIM;}
 "TRUE"				{return T_TRUE;}
 "FALSE"				{return T_FALSE;}
