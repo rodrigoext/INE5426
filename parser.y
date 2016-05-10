@@ -71,8 +71,20 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
                                                 }
                                                 $$ = $3; 
                                              }
-        | D_REAL T_DECLARA varlist T_FIM T_NL { $$ = $3; }
-        | D_BOOL T_DECLARA varlist T_FIM T_NL { $$ = $3; }
+        | D_REAL T_DECLARA varlist T_FIM T_NL { AST::Variable* var = (AST::Variable*) $3;
+                                                while (var != NULL) {
+                                                    symtab.setSimbolType(var->id, Type::real);
+                                                    var = (AST::Variable*) var->next;
+                                                }
+                                                $$ = $3; 
+                                               }
+        | D_BOOL T_DECLARA varlist T_FIM T_NL {  AST::Variable* var = (AST::Variable*) $3;
+                                                while (var != NULL) {
+                                                    symtab.setSimbolType(var->id, Type::boleano);
+                                                    var = (AST::Variable*) var->next;
+                                                }
+                                                $$ = $3;
+                                             }
         | T_ID T_ASSIGN expr T_FIM {  AST::Node* node = symtab.assignVariable($1);
                                 $$ = new AST::BinOp(node,assign,$3); }
         ;
