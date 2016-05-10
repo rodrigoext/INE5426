@@ -7,6 +7,7 @@ extern SymbolTable symtab;
 AST::Node* SymbolTable::newVariable(std::string id, AST::Node* next){
     if ( checkId(id) ) yyerror("Variable redefinition! %s\n", id.c_str());
     else {
+        //std::cout << "simbolo " << id << " adicionado" << std::endl;
        Symbol entry;
        addSymbol(id,entry);
     }
@@ -25,6 +26,6 @@ AST::Node* SymbolTable::useVariable(std::string id){
     return new AST::Variable(id, NULL); //Creates variable node anyway
 }
 
-void SymbolTable::setTempType(Type temp){
-    temp_ = temp;
+void SymbolTable::setSimbolType(std::string id, Type t) {
+    entryList[id].setType(t);
 }

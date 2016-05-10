@@ -64,7 +64,13 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FIM T_NL /*$$ = $1 when nothing is said*/
-        | D_INT T_DECLARA varlist T_FIM T_NL { $$ = $3; }
+        | D_INT T_DECLARA varlist T_FIM T_NL { AST::Variable* var = (AST::Variable*) $3;
+                                                while (var != NULL) {
+                                                    symtab.setSimbolType(var->id, Type::integer);
+                                                    var = (AST::Variable*) var->next;
+                                                }
+                                                $$ = $3; 
+                                             }
         | D_REAL T_DECLARA varlist T_FIM T_NL { $$ = $3; }
         | D_BOOL T_DECLARA varlist T_FIM T_NL { $$ = $3; }
         | T_ID T_ASSIGN expr T_FIM {  AST::Node* node = symtab.assignVariable($1);
@@ -81,8 +87,14 @@ expr    : T_INT { $$ = new AST::Integer($1); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
-varlist : T_ID { $$ = symtab.newVariable($1, NULL); }
-        | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, $1); }
+varlist : T_ID { STab::Symbol s = STab::Symbol(); 
+                 symtab.addSymbol($1, s); 
+                 $$ = symtab.newVariable($1, NULL); 
+               }
+        | varlist T_COMMA T_ID { STab::Symbol s = STab::Symbol();
+                                 symtab.addSymbol($3, s);
+                                 $$ = symtab.newVariable($3, $1); 
+                                }
         ;
 
 %%

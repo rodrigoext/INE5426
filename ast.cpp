@@ -42,17 +42,18 @@ void Block::printTree(){
 }
 
 /* Compute methods */
-int Integer::computeTree(){
-    return value;
-}
+//int Integer::computeTree(){
+//    return value;
+//}
 
 /*
 float Real::computeTree(){
     return value;
 }*/
 
+/*
 int BinOp::computeTree(){
-    /*int value, lvalue, rvalue;
+    int value, lvalue, rvalue;
     lvalue = left->computeTree();
     rvalue = right->computeTree();
     switch(op){
@@ -78,10 +79,12 @@ int BinOp::computeTree(){
             value = rvalue;   
         break;  
     }
-    return value;*/
+    return value;
     return 1;
-}
+}*/
 
+
+/*
 int Block::computeTree(){
     int value;
     for (Node* line: lines) {
@@ -90,6 +93,7 @@ int Block::computeTree(){
     }
     return 0;
 }
+*/
 
 void Variable::printTree(){
     if (next != NULL){
@@ -99,8 +103,9 @@ void Variable::printTree(){
     std::cout << id;
 }
 
+/*
 int Variable::computeTree(){
     //the value of a variable is currently stored in the symbol table
     //return symtab.entryList[id].value;
     return 1;
-}
+}*/
