@@ -13,10 +13,13 @@ typedef std::vector<Node*> NodeList; //List of ASTs
 
 class Node {
     public:
-        virtual ~Node() {}
-        virtual void printTree(){}
-        //virtual int computeTree(){return 0;}
         Type type;
+        virtual ~Node() { }
+        Node() { }
+        Node(Type t) : type(t) { }
+        virtual void printTree(){ }
+        //virtual int computeTree(){return 0;}
+        
 
 };
 
@@ -45,6 +48,17 @@ class BinOp : public Node {
         //int computeTree();
 };
 
+class UnOp : public Node {
+    public:
+        Operation op;
+        Node *next;
+        UnOp(Node *next, Operation op) :
+            next(next), op(op) {
+                this->type = indefinido;
+            }
+        void printTree();
+};
+
 class AssignOP : public Node {
     public:
         Node *left;
@@ -67,9 +81,20 @@ class Variable : public Node {
      public:
          std::string id;
          Node *next;
-         Variable(std::string id, Node *next) : id(id), next(next) { }
+         Variable(std::string id, Node *next, Type t) : 
+            id(id), next(next) { 
+                this->type = t;
+                //std::cout << "tipo nodo setado" << std::endl;
+            }
          void printTree();
          //int computeTree();
+};
+
+class VarDeclaration : public Node {
+     public:
+        NodeList vars;
+        VarDeclaration(Type t) : Node(t) { }
+        void printTree();
 };
 
 }

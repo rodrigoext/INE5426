@@ -5,6 +5,8 @@ using namespace AST;
 
 extern STab::SymbolTable symtab;
 
+std::vector<std::string> type_names = {"inteira", "real", "booleana"};
+
 /* Print methods */
 void Integer::printTree(){
     std::cout << value;
@@ -19,18 +21,13 @@ void Real::printTree(){
 void BinOp::printTree(){
     //left->printTree();
     switch(op){
-        case plus: std::cout << " + ";
-        break;
-        case sub: std::cout << " - ";
-        break;
-        case mul: std::cout << " * ";
-        break;
-        case divi: std::cout << " / ";
-        break;
         case assign:
-        std::cout << "Varivel "; left->printTree(); 
-        std::cout << " inicializada com "; right->printTree(); 
-        std::cout << std::endl;
+        std::cout << "Atribuicao de valor para ";
+        left->printTree();
+        std::cout << ": ";
+        right->printTree();
+        break;
+        default:
         break;
     }
     //right->printTree();
@@ -40,10 +37,20 @@ void BinOp::printTree(){
 void Block::printTree(){
     for (Node* line: lines) {
         line->printTree();
-        std::cout << std::endl;
+        std::cout  << std::endl;
     }
 }
 
+void VarDeclaration::printTree(){
+    for(int i = 0; i < 3; ++i) {
+        std::cout << "Declaracao de variavel " << type_names[i] << ": ";
+        for (int j = 0; j < vars.size(); ++j) {
+            if (vars[j]->type == i)
+                std::cout << dynamic_cast<Variable *>(vars[i])->id;
+        }
+        std::cout << std::endl;
+    }
+}
 /* Compute methods */
 //int Integer::computeTree(){
 //    return value;
@@ -79,6 +86,7 @@ int BinOp::computeTree(){
         case assign:
             Variable* leftvar = dynamic_cast<Variable*>(left);
             symtab.entryList[leftvar->id].value = rvalue;
+
             value = rvalue;   
         break;  
     }
