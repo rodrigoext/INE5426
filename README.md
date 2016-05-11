@@ -10,11 +10,11 @@ $ make
 $ ./myparse
 
 ###### Declaração de variáveis
-int: a;
-real: b, c;
+int: a; <br />
+real: b, c; <br />
 
 ###### Atribuição as variáveis
-int: a, b;
-a := 1;
-b := 2;
-a := b + 3;
+int: a, b; <br />
+a := 1; <br />
+b := 2; <br /> 
+a := b + 3; <br />
