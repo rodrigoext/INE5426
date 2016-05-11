@@ -1,6 +1,6 @@
 # INE5426 - Construção de Compiladores
 
-Projeto 1 - Allen
+## Projeto 1 - Allen
 
 ### Compilação
 $ make
