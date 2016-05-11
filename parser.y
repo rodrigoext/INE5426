@@ -37,7 +37,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist
+%type <node> expr line declaracao varlist
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -55,7 +55,6 @@ extern void yyerror(const char* s, ...);
 
 program : lines { programRoot = $1; }
         ;
-        
 
 lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1); }
         | lines line { if($2 != NULL) $1->lines.push_back($2); }
@@ -64,29 +63,33 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FIM T_NL /*$$ = $1 when nothing is said*/
-        | D_INT T_DECLARA varlist T_FIM T_NL { AST::Variable* var = (AST::Variable*) $3;
-                                                while (var != NULL) {
-                                                    symtab.setSimbolType(var->id, Type::integer);
-                                                    var = (AST::Variable*) var->next;
-                                                }
-                                                $$ = $3; 
-                                             }
-        | D_REAL T_DECLARA varlist T_FIM T_NL { AST::Variable* var = (AST::Variable*) $3;
-                                                while (var != NULL) {
-                                                    symtab.setSimbolType(var->id, Type::real);
-                                                    var = (AST::Variable*) var->next;
-                                                }
-                                                $$ = $3; 
-                                               }
-        | D_BOOL T_DECLARA varlist T_FIM T_NL {  AST::Variable* var = (AST::Variable*) $3;
-                                                while (var != NULL) {
-                                                    symtab.setSimbolType(var->id, Type::boleano);
-                                                    var = (AST::Variable*) var->next;
-                                                }
-                                                $$ = $3;
-                                             }
+        | declaracao T_FIM T_NL 
         | T_ID T_ASSIGN expr T_FIM {  AST::Node* node = symtab.assignVariable($1);
                                 $$ = new AST::BinOp(node,assign,$3); }
+        ;
+
+declaracao : 
+        D_INT T_DECLARA varlist     { AST::Variable* var = (AST::Variable*) $3;
+                                        while (var != NULL) {
+                                            symtab.setSimbolType(var->id, Type::integer);
+                                            var = (AST::Variable*) var->next;
+                                        }
+                                        $$ = $3;
+                                    }
+        | D_REAL T_DECLARA varlist  { AST::Variable* var = (AST::Variable*) $3;
+                                        while (var != NULL) {
+                                            symtab.setSimbolType(var->id, Type::real);
+                                            var = (AST::Variable*) var->next;
+                                        }
+                                        $$ = $3; 
+                                    }
+        | D_BOOL T_DECLARA varlist  { AST::Variable* var = (AST::Variable*) $3;
+                                        while (var != NULL) {
+                                            symtab.setSimbolType(var->id, Type::boleano);
+                                            var = (AST::Variable*) var->next;
+                                        }
+                                        $$ = $3;
+                                    }
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
