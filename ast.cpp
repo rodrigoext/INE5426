@@ -5,8 +5,6 @@ using namespace AST;
 
 extern STab::SymbolTable symtab;
 
-std::vector<std::string> type_names = {"inteira", "real", "booleana"};
-
 /* Print methods */
 void Integer::printTree(){
     std::cout << value;
@@ -43,7 +41,7 @@ void Block::printTree(){
 
 void VarDeclaration::printTree(){
     for(int i = 0; i < 3; ++i) {
-        std::cout << "Declaracao de variavel " << type_names[i] << ": ";
+        std::cout << "Declaracao de variavel " << type_name_fem[i] << ": ";
         for (int j = 0; j < vars.size(); ++j) {
             if (vars[j]->type == i)
                 std::cout << dynamic_cast<Variable *>(vars[i])->id;

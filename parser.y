@@ -37,7 +37,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao varlist
+%type <node> expr line declaracao atribuicao varlist
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -62,10 +62,8 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
         ;
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
-        | expr T_FIM T_NL /*$$ = $1 when nothing is said*/
-        | declaracao T_FIM T_NL 
-        | T_ID T_ASSIGN expr T_FIM {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::BinOp(node,assign,$3); }
+        | declaracao T_FIM 
+        | atribuicao T_FIM
         ;
 
 declaracao : 
@@ -85,20 +83,25 @@ declaracao :
                                     }
         | D_BOOL T_DECLARA varlist  { AST::Variable* var = (AST::Variable*) $3;
                                         while (var != NULL) {
-                                            symtab.setSimbolType(var->id, Type::boleano);
+                                            symtab.setSimbolType(var->id, Type::booleano);
                                             var = (AST::Variable*) var->next;
                                         }
                                         $$ = $3;
                                     }
         ;
 
+atribuicao:
+        T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
+                                $$ = new AST::BinOp(node,assign,$3); }
+        ;
+
 expr    : T_INT { $$ = new AST::Integer($1); }
 		| T_REAL { $$ = new AST::Real($1); }
         | T_ID { $$ = symtab.useVariable($1); }
-        | expr T_PLUS expr { $$ = new AST::BinOp($1,plus,$3); }
-        | expr T_SUB expr { $$ = new AST::BinOp($1,sub,$3); }
-        | expr T_MUL expr { $$ = new AST::BinOp($1,mul,$3); }
-        | expr T_DIV expr { $$ = new AST::BinOp($1,divi,$3); }
+        | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
+        | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
+        | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
+        | expr T_DIV expr { $$ = new AST::BinOp($1, divide, $3); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 

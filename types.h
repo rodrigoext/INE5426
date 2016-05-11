@@ -1,7 +1,12 @@
 #pragma once
 
-enum Type { integer, real, boleano, indefinido};
+#include <string>
+#include <vector>
+
+enum Type { integer, real, booleano, indefinido};
+const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "indefinido"};
+const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida"};
 enum Kind { variable, function};
 enum Operation { 
-	plus, sub, divi, mul, assign,
-	equal, diferent, less, great };
+	soma, subtrai, divide, multiplica, assign,
+	igual, diferente, menor, maior };
