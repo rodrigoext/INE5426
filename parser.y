@@ -21,8 +21,10 @@ extern void yyerror(const char* s, ...);
 
 /* token defines our terminal symbols (tokens).
  */
+ /*
 %token <integer> T_INT
 %token <real> T_REAL
+*/
 %token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END
 %token T_ASSIGN T_DECLARA
 %token T_MUL T_DIV
@@ -31,7 +33,7 @@ extern void yyerror(const char* s, ...);
 %token T_AND T_OR T_NEGA T_ABRE_P T_FECHA_P T_FIM
 %token T_TRUE T_FALSE
 %token D_INT D_REAL D_BOOL
-%token <name> T_ID
+%token <name> T_ID T_BOOL T_INT T_REAL
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -67,36 +69,22 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         ;
 
 declaracao : 
-        D_INT T_DECLARA varlist     { AST::Variable* var = (AST::Variable*) $3;
-                                        while (var != NULL) {
-                                            symtab.setSimbolType(var->id, Type::integer);
-                                            var = (AST::Variable*) var->next;
-                                        }
-                                        $$ = $3;
-                                    }
-        | D_REAL T_DECLARA varlist  { AST::Variable* var = (AST::Variable*) $3;
-                                        while (var != NULL) {
-                                            symtab.setSimbolType(var->id, Type::real);
-                                            var = (AST::Variable*) var->next;
-                                        }
-                                        $$ = $3; 
-                                    }
-        | D_BOOL T_DECLARA varlist  { AST::Variable* var = (AST::Variable*) $3;
-                                        while (var != NULL) {
-                                            symtab.setSimbolType(var->id, Type::booleano);
-                                            var = (AST::Variable*) var->next;
-                                        }
-                                        $$ = $3;
-                                    }
+        tipo T_DECLARA varlist { $$ = $3; }
         ;
+
+tipo	: D_INT { symtab.tempType = Type::integer; }
+		| D_REAL { symtab.tempType = Type::real; }
+		| D_BOOL { symtab.tempType = Type::booleano; }
+		;
 
 atribuicao:
         T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::BinOp(node,assign,$3); }
+                                $$ = new AST::AssignOp(node,$3); }
         ;
 
-expr    : T_INT { $$ = new AST::Integer($1); }
-		| T_REAL { $$ = new AST::Real($1); }
+expr    : T_INT { $$ = new AST::Number($1, Type::integer); }
+		| T_REAL { $$ = new AST::Number($1, Type::real); }
+		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
         | T_ID { $$ = symtab.useVariable($1); }
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
@@ -105,13 +93,11 @@ expr    : T_INT { $$ = new AST::Integer($1); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
-varlist : T_ID { STab::Symbol s = STab::Symbol(); 
-                 symtab.addSymbol($1, s); 
-                 $$ = symtab.newVariable($1, NULL); 
+varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
+                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($1, symtab.tempType));
                }
-        | varlist T_COMMA T_ID { STab::Symbol s = STab::Symbol();
-                                 symtab.addSymbol($3, s);
-                                 $$ = symtab.newVariable($3, $1); 
+        | varlist T_COMMA T_ID { $$ = $1;
+                                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType));
                                 }
         ;
 

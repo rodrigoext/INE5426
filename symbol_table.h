@@ -16,15 +16,16 @@ typedef std::map<std::string,Symbol> SymbolList;
 
 class Symbol {
 	public:
-		Type type;       
+		Type type;
+		Kind kind;
 		bool initialized;      
 		Symbol() {
 			type = indefinido;
+			kind = variable;
 			initialized = false;
 		}
-		
-		Symbol(Type type, bool initialized) :
-		    type(type), initialized(initialized) {  }
+		Symbol(Type type, Kind kind, bool initialized) :
+			type(type), kind(kind), initialized(initialized) {  }
 		
 		void setType(Type t) {
 			//sstd::cout << "Type associado" << std::endl;
@@ -41,16 +42,18 @@ class Symbol {
 class SymbolTable {
     public:
         SymbolList entryList;
+        Type tempType;
         SymbolTable() {}
         bool checkId(std::string id) {return (entryList.find(id) != entryList.end() &&
         									  entryList.find(id)->second.type != indefinido);}
         void addSymbol(std::string id, Symbol newsymbol) {entryList[id] = newsymbol;}
         void setSimbolType(std::string id, Type t);
         AST::Node* newVariable(std::string id, AST::Node* next);
+        AST::Node* newVariable(std::string id, Type t);
         AST::Node* assignVariable(std::string id);
         AST::Node* useVariable(std::string id);
-    private:
-    	Type temp_;
+        Symbol getVariable(std::string id);
+
 };
 
 }

@@ -16,6 +16,13 @@ void Real::printTree(){
     return;
 }*/
 
+void AssignOp::printTree(){
+	 std::cout << "Atribuicao de valor para ";
+	left->printTree();
+	std::cout << ": ";
+	right->printTree();
+}
+
 void BinOp::printTree(){
     //left->printTree();
     switch(op){
@@ -40,14 +47,15 @@ void Block::printTree(){
 }
 
 void VarDeclaration::printTree(){
-    for(int i = 0; i < 3; ++i) {
-        std::cout << "Declaracao de variavel " << type_name_fem[i] << ": ";
-        for (int j = 0; j < vars.size(); ++j) {
-            if (vars[j]->type == i)
-                std::cout << dynamic_cast<Variable *>(vars[i])->id;
-        }
-        std::cout << std::endl;
-    }
+	std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+	for (auto var = vars.begin(); var != vars.end(); var++) {
+	        std::cout << dynamic_cast<Variable *>(*var)->id;
+	        if(next(var) != vars.end()) std::cout << ", ";
+	    }
+}
+
+void Number::printTree(){
+	std::cout << "valor " << type_name_masc[type] << " " << value;
 }
 /* Compute methods */
 //int Integer::computeTree(){
@@ -105,11 +113,11 @@ int Block::computeTree(){
 */
 
 void Variable::printTree(){
-    if (next != NULL){
+    /*if (next != NULL){
         next->printTree();
         std::cout << ", ";
     }
-    std::cout << id;
+    std::cout << id;*/
 }
 
 /*

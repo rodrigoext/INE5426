@@ -59,11 +59,11 @@ class UnOp : public Node {
         void printTree();
 };
 
-class AssignOP : public Node {
+class AssignOp : public Node {
     public:
         Node *left;
         Node *right;
-        AssignOP(Node *left, Node *right) :
+        AssignOp(Node *left, Node *right):
             left(left), right(right) { }
         void printTree();
         //int computeTree();
@@ -81,8 +81,8 @@ class Variable : public Node {
      public:
          std::string id;
          Node *next;
-         Variable(std::string id, Node *next, Type t) : 
-            id(id), next(next) { 
+         Variable(std::string id, Type t) :
+            id(id) {
                 this->type = t;
                 //std::cout << "tipo nodo setado" << std::endl;
             }
@@ -90,10 +90,25 @@ class Variable : public Node {
          //int computeTree();
 };
 
+class Number : public Node {
+	 public:
+		std::string value;
+		Number(std::string value, Type t) :
+			value(value) {
+			this->type = t;
+		}
+		void printTree();
+};
+
 class VarDeclaration : public Node {
      public:
         NodeList vars;
-        VarDeclaration(Type t) : Node(t) { }
+        VarDeclaration(Type t) {
+        	this->type = t;
+        }
+        void setType(Type t) {
+        	this->type = t;
+        }
         void printTree();
 };
 
