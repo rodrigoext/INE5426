@@ -33,6 +33,13 @@ void BinOp::printTree(){
         right->printTree();
         break;
         default:
+        std::cout << "(";
+        left->printTree();
+        std::cout << " (" << op_name[op] << " ";
+        std::cout << type_name_fem[this->type];
+        std::cout << ") ";
+        right->printTree();
+        std::cout << ")";
         break;
     }
     //right->printTree();
@@ -56,6 +63,10 @@ void VarDeclaration::printTree(){
 
 void Number::printTree(){
 	std::cout << "valor " << type_name_masc[type] << " " << value;
+}
+
+void Variable::printTree(){
+	std::cout << "variável " << type_name_fem[type] << " " << id;
 }
 /* Compute methods */
 //int Integer::computeTree(){
@@ -112,13 +123,7 @@ int Block::computeTree(){
 }
 */
 
-void Variable::printTree(){
-    /*if (next != NULL){
-        next->printTree();
-        std::cout << ", ";
-    }
-    std::cout << id;*/
-}
+
 
 /*
 int Variable::computeTree(){
