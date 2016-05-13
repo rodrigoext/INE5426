@@ -27,13 +27,21 @@ void BinOp::printTree(){
     //left->printTree();
     switch(op){
         case assign:
-        std::cout << "Atribuicao de valor para ";
-        left->printTree();
-        std::cout << ": ";
-        right->printTree();
-        break;
+            std::cout << "Atribuicao de valor para ";
+            left->printTree();
+            std::cout << ": ";
+            right->printTree();
+            break;
         default:
-        break;
+            std::cout << "(";
+            left->printTree();
+            std::cout << " (" << operation_name[op] << " ";
+            if ( operation_masc[op] ) std::cout << type_name_masc[this->type];
+            else std::cout << type_name_fem[this->type];
+            std::cout << ") ";
+            right->printTree();
+            std::cout << ")";
+            break;
     }
     //right->printTree();
     return;
@@ -53,6 +61,7 @@ void VarDeclaration::printTree(){
 	        if(next(var) != vars.end()) std::cout << ", ";
 	    }
 }
+
 
 void Number::printTree(){
 	std::cout << "valor " << type_name_masc[type] << " " << value;
@@ -111,13 +120,12 @@ int Block::computeTree(){
     return 0;
 }
 */
-
+/*void Coercion::printTree(){
+    next->printTree();
+    std::cout << "para real";
+}*/
 void Variable::printTree(){
-    /*if (next != NULL){
-        next->printTree();
-        std::cout << ", ";
-    }
-    std::cout << id;*/
+    std::cout << "variavel " << type_name_fem[type] << " "<< id;
 }
 
 /*

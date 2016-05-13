@@ -69,6 +69,15 @@ class AssignOp : public Node {
         //int computeTree();
 };
 
+/*class Coercion : public Node {
+    public:
+        Node *next;
+        Coercion(Node *next):
+            next(next){
+                this->type = t;
+            }
+};  */
+
 class Block : public Node {
     public:
         NodeList lines;
@@ -80,7 +89,6 @@ class Block : public Node {
 class Variable : public Node {
      public:
          std::string id;
-         Node *next;
          Variable(std::string id, Type t) :
             id(id) {
                 this->type = t;
