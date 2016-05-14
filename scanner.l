@@ -13,8 +13,6 @@ void yyerror(const char* s, ...);
 int [0-9]+
 nome [a-z]+
 real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
-tipo masculino: {inteiro | real | booleano | tipo definido no
-código}
 
 %%
 

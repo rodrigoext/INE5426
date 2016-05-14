@@ -45,6 +45,7 @@ extern void yyerror(const char* s, ...);
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
  */
+%left T_AND T_OR
 %left T_PLUS T_SUB
 %left T_MUL T_DIV
 %nonassoc error
@@ -79,7 +80,7 @@ tipo	: D_INT { symtab.tempType = Type::integer; }
 
 atribuicao:
         T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::AssignOp(node,$3); }
+                                $$ = new AST::BinOp(node, assign, $3); }
         ;
 
 expr    : T_INT { $$ = new AST::Number($1, Type::integer); }
@@ -90,6 +91,17 @@ expr    : T_INT { $$ = new AST::Number($1, Type::integer); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
         | expr T_DIV expr { $$ = new AST::BinOp($1, divide, $3); }
+        | expr T_IGUAL expr { $$ = new AST::BinOp($1, igual, $3); }
+        | expr T_DIFERENTE expr { $$ = new AST::BinOp($1, diferente, $3); }
+        | expr T_MAIOR expr { $$ = new AST::BinOp($1, maior, $3); }
+        | expr T_MENOR expr { $$ = new AST::BinOp($1, menor, $3); }
+        | expr T_MAIOR_IGUAL expr { $$ = new AST::BinOp($1, maiorouigual, $3); }
+        | expr T_MENOR_IGUAL expr { $$ = new AST::BinOp($1, menorouigual, $3); }
+        | expr T_AND expr { $$ = new AST::BinOp($1, andlogic, $3); }
+        | expr T_OR expr { $$ = new AST::BinOp($1, orlogic, $3); }
+        | T_NEGA expr {$$ = new AST::UnOp($2, nologic);}
+        | T_SUB expr {$$ = new AST::UnOp($2, menosunario);}
+        | T_ABRE_P expr T_FECHA_P { $$ = new AST::UnOp($2, par); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 

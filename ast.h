@@ -18,6 +18,7 @@ class Node {
         Node() { }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
+        //Node* coerce(Node* otherNode);
         //virtual int computeTree(){return 0;}
         
 
@@ -31,11 +32,11 @@ class Integer : public Node {
         //int computeTree();
 };
 
-class Real : public Node {
+/*class Real : public Node {
      public:
         float value;
         Real(float value) : value(value) {  }
-};
+};*/
 
 class BinOp : public Node {
     public:
@@ -53,13 +54,11 @@ class UnOp : public Node {
         Operation op;
         Node *next;
         UnOp(Node *next, Operation op) :
-            next(next), op(op) {
-                this->type = indefinido;
-            }
+            next(next), op(op) { }
         void printTree();
 };
 
-class AssignOp : public Node {
+/*class AssignOp : public Node {
     public:
         Node *left;
         Node *right;
@@ -67,16 +66,8 @@ class AssignOp : public Node {
             left(left), right(right) { }
         void printTree();
         //int computeTree();
-};
+};*/
 
-/*class Coercion : public Node {
-    public:
-        Node *next;
-        Coercion(Node *next):
-            next(next){
-                this->type = t;
-            }
-};  */
 
 class Block : public Node {
     public:
@@ -84,6 +75,18 @@ class Block : public Node {
         Block() { }
         void printTree();
         //int computeTree();
+};
+
+class VarDeclaration : public Node {
+     public:
+        NodeList vars;
+        VarDeclaration(Type t) {
+            this->type = t;
+        }
+        void setType(Type t) {
+            this->type = t;
+        }
+        void printTree();
 };
 
 class Variable : public Node {
@@ -103,22 +106,19 @@ class Number : public Node {
 		std::string value;
 		Number(std::string value, Type t) :
 			value(value) {
-			this->type = t;
-		}
+                this->type = t;
+		    }
 		void printTree();
 };
 
-class VarDeclaration : public Node {
-     public:
-        NodeList vars;
-        VarDeclaration(Type t) {
-        	this->type = t;
-        }
-        void setType(Type t) {
-        	this->type = t;
-        }
+/*class Coercion : public Node {
+    public:
+        Node *next;
+        Coercion(Node *next):
+            next(next){
+                this->type = real;
+            }
         void printTree();
-};
+};  */
 
 }
-

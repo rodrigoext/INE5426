@@ -16,12 +16,19 @@ void Real::printTree(){
     return;
 }*/
 
-void AssignOp::printTree(){
+/*void AssignOp::printTree(){
 	 std::cout << "Atribuicao de valor para ";
 	left->printTree();
 	std::cout << ": ";
 	right->printTree();
-}
+}*/
+    
+/*Node* Node::coerce(Node* otherNode){
+    if (coercionNeeded(this->type, otherNode->type))
+        return new AST::Coercion(this);
+    else 
+        return this;
+}*/
 
 void BinOp::printTree(){
     //left->printTree();
@@ -47,6 +54,25 @@ void BinOp::printTree(){
     return;
 }
 
+void UnOp::printTree(){
+    std::cout << "(";
+    switch(op){
+        case par:
+            std::cout << "(abre parenteses) ";
+            next->printTree();
+            std::cout << " (fecha parenteses)";
+            break;
+        default:
+            std::cout << " (" << operation_name[op] << " ";
+            if ( operation_masc[op] ) std::cout << type_name_masc[this->type];
+            else std::cout << type_name_fem[this->type];
+            std::cout << ") ";
+            next->printTree();
+            break;
+    }
+    std::cout << ")";
+}
+
 void Block::printTree(){
     for (Node* line: lines) {
         line->printTree();
@@ -62,10 +88,19 @@ void VarDeclaration::printTree(){
 	    }
 }
 
+void Variable::printTree(){
+    std::cout << "variavel " << type_name_fem[type] << " "<< id;
+}
 
 void Number::printTree(){
 	std::cout << "valor " << type_name_masc[type] << " " << value;
 }
+
+/*void Coercion::printTree(){
+    next->printTree();
+    std::cout << " para real";
+}*/
+
 /* Compute methods */
 //int Integer::computeTree(){
 //    return value;
@@ -120,13 +155,8 @@ int Block::computeTree(){
     return 0;
 }
 */
-/*void Coercion::printTree(){
-    next->printTree();
-    std::cout << "para real";
-}*/
-void Variable::printTree(){
-    std::cout << "variavel " << type_name_fem[type] << " "<< id;
-}
+
+
 
 /*
 int Variable::computeTree(){

@@ -7,6 +7,7 @@ enum Type { integer, real, booleano, indefinido};
 const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "indefinido"};
 const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida"};
 enum Kind { variable, function};
+//bool coercionNeeded(Type myType, Type otherType);
 enum Operation { 
 	soma, 
 	subtrai, 
@@ -15,8 +16,16 @@ enum Operation {
 	assign,
 	igual, 
 	diferente, 
-	menor, 
-	maior };
+	maior, 
+	menor,
+    maiorouigual,
+    menorouigual, 
+    par,
+    menosunario,
+    andlogic,
+    orlogic,
+    nologic
+};
 const std::vector<std::string> operation_name = {
     "soma",
     "subtracao",
@@ -25,9 +34,16 @@ const std::vector<std::string> operation_name = {
     "atribuicao",
     "igual",
     "diferente",
+    "maior",
     "menor",
-    "maior"
-    };
+    "maior ou igual",
+    "menor ou igual",
+    "parenteses",
+    "menos unario",
+    "e",
+    "ou",
+    "nao"
+};
 
 const std::vector<bool> operation_masc = {
     false,  //soma inteira
@@ -37,6 +53,13 @@ const std::vector<bool> operation_masc = {
     false,  //atribuicao intera (nunca usado)
     true,   //igual inteiro
     true,   //diferente inteiro
-    true,   //menor inteiro
     true,   //maior inteiro
+    true,   //menor inteiro
+    true,   //maior ou igual inteiro
+    true,   //menor ou igual inteiro
+    false,  //parenteses intero (nunca usado)
+    true,   //menos unario inteiro
+    true,   // e booleano
+    true,    // ou booleano
+    true    // nao booleano
 };
