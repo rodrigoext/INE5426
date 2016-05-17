@@ -39,7 +39,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist
+%type <node> expr line declaracao atribuicao varlist arrlist
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -70,6 +70,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
+        | tipo T_ARRAY_INIT expr T_ARRAY_END T_DECLARA arrlist { $$ = $6; } 
         ;
 
 tipo	: D_INT { symtab.tempType = Type::integer; }
@@ -82,7 +83,7 @@ atribuicao:
                                 $$ = new AST::AssignOp(node,$3); }
         ;
 
-expr    : T_INT { $$ = new AST::Number($1, Type::integer); }
+expr    : T_INT { $$ = new AST::Number($1, Type::integer); symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value; }
 		| T_REAL { $$ = new AST::Number($1, Type::real); }
 		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
         | T_ID { $$ = symtab.useVariable($1); }
@@ -90,6 +91,14 @@ expr    : T_INT { $$ = new AST::Number($1, Type::integer); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
         | expr T_DIV expr { $$ = new AST::BinOp($1, divide, $3); }
+        | expr T_MAIOR expr { $$ = new AST::BinOp($1, maior, $3); }
+        | expr T_MENOR expr { $$ = new AST::BinOp($1, menor, $3); }
+        | expr T_MAIOR_IGUAL expr { $$ = new AST::BinOp($1, maior_igual, $3); }
+        | expr T_MENOR_IGUAL expr { $$ = new AST::BinOp($1, menor_igual, $3); }
+        | expr T_DIFERENTE expr { $$ = new AST::BinOp($1, diferente, $3); }
+        | expr T_IGUAL expr { $$ = new AST::BinOp($1, igual, $3); }
+        | T_NEGA expr { $$ = new AST::UnOp($2, negacao); }
+        | T_SUB expr { $$ = new AST::UnOp($2, subtrai); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
@@ -100,7 +109,13 @@ varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
                                  dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType));
                                 }
         ;
-
+arrlist :  T_ID { $$ = new AST::ArrayDeclaration(symtab.tempType);
+				 dynamic_cast< AST::ArrayDeclaration*>($$)->tamanho = symtab.tempLegthArray;
+                 dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($1, symtab.tempType));
+               }
+        | arrlist T_COMMA T_ID { $$ = $1;
+                                 dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($3, symtab.tempType));
+                                }
 %%
 
 

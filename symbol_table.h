@@ -43,6 +43,7 @@ class SymbolTable {
     public:
         SymbolList entryList;
         Type tempType;
+        std::string tempLegthArray;
         SymbolTable() {}
         bool checkId(std::string id) {return (entryList.find(id) != entryList.end() &&
         									  entryList.find(id)->second.type != indefinido);}

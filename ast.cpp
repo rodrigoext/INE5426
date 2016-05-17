@@ -23,6 +23,17 @@ void AssignOp::printTree(){
 	right->printTree();
 }
 
+void UnOp::printTree() {
+	switch(op){
+	default:
+		std::cout << "(" << op_name[op] << " ";
+		if ( op ) std::cout << type_name_masc[this->type];
+		else std::cout << type_name_fem[this->type];
+		std::cout << ") ";
+		next->printTree();
+	}
+}
+
 void BinOp::printTree(){
     //left->printTree();
     switch(op){
@@ -60,6 +71,15 @@ void VarDeclaration::printTree(){
 	        if(next(var) != vars.end()) std::cout << ", ";
 	    }
 }
+
+void ArrayDeclaration::printTree(){
+	std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho << ": ";
+	for (auto var = arrays.begin(); var != arrays.end(); var++) {
+	        std::cout << dynamic_cast<Variable *>(*var)->id;
+	        if(next(var) != arrays.end()) std::cout << ", ";
+	    }
+}
+
 
 void Number::printTree(){
 	std::cout << "valor " << type_name_masc[type] << " " << value;

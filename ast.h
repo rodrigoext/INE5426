@@ -112,5 +112,15 @@ class VarDeclaration : public Node {
         void printTree();
 };
 
+class ArrayDeclaration : public Node {
+	public:
+		NodeList arrays;
+		std::string tamanho;
+		ArrayDeclaration(Type t) {
+			this->type = t;
+		}
+		void printTree();
+};
+
 }
 
