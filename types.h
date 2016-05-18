@@ -63,3 +63,6 @@ const std::vector<bool> operation_masc = {
     true,    // ou booleano
     true    // nao booleano
 };
+
+Type unType(Type next, Operation op);
+Type binType(Type left, Type right, Operation op);

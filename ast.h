@@ -44,7 +44,9 @@ class BinOp : public Node {
         Node *left;
         Node *right;
         BinOp(Node *left, Operation op, Node *right) :
-            left(left), right(right), op(op) { }
+            left(left), right(right), op(op) { 
+                this->type = binType(left->type, right->type, op);
+            }
         void printTree();
         //int computeTree();
 };
@@ -54,7 +56,9 @@ class UnOp : public Node {
         Operation op;
         Node *next;
         UnOp(Node *next, Operation op) :
-            next(next), op(op) { }
+            next(next), op(op) { 
+                this->type = unType(next->type, op);
+            }
         void printTree();
 };
 
