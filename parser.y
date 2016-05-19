@@ -83,7 +83,7 @@ atribuicao:
                                 $$ = new AST::AssignOp(node,$3); }
         ;
 
-expr    : T_INT { $$ = new AST::Number($1, Type::integer); symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value; }
+expr    : T_INT { $$ = new AST::Number($1, Type::integer);  symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value;}
 		| T_REAL { $$ = new AST::Number($1, Type::real); }
 		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
         | T_ID { $$ = symtab.useVariable($1); }
@@ -99,6 +99,7 @@ expr    : T_INT { $$ = new AST::Number($1, Type::integer); symtab.tempLegthArray
         | expr T_IGUAL expr { $$ = new AST::BinOp($1, igual, $3); }
         | T_NEGA expr { $$ = new AST::UnOp($2, negacao); }
         | T_SUB expr { $$ = new AST::UnOp($2, subtrai); }
+        | T_ABRE_P expr T_FECHA_P { $$ = new AST::UnOp($2, parenteses); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
@@ -110,8 +111,8 @@ varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
                                 }
         ;
 arrlist :  T_ID { $$ = new AST::ArrayDeclaration(symtab.tempType);
-				 dynamic_cast< AST::ArrayDeclaration*>($$)->tamanho = symtab.tempLegthArray;
                  dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($1, symtab.tempType));
+                 dynamic_cast< AST::ArrayDeclaration*>($$)->tamanho = symtab.tempLegthArray;
                }
         | arrlist T_COMMA T_ID { $$ = $1;
                                  dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($3, symtab.tempType));
