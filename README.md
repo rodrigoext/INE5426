@@ -18,3 +18,4 @@ int: a, b; <br />
 a := 1; <br />
 b := 2; <br /> 
 a := b + 3; <br />
+real[4]: d; <br />
