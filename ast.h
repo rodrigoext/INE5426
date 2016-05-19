@@ -5,6 +5,8 @@
 
 #include "types.h"
 
+extern void yyerror(const char* s, ...);
+
 namespace AST {
 
 class Node;
@@ -43,7 +45,9 @@ class BinOp : public Node {
         Node *left;
         Node *right;
         BinOp(Node *left, Operation op, Node *right) :
-            left(left), right(right), op(op) { }
+            left(left), right(right), op(op) {
+
+        }
         void printTree();
         //int computeTree();
 };
@@ -64,7 +68,12 @@ class AssignOp : public Node {
         Node *left;
         Node *right;
         AssignOp(Node *left, Node *right):
-            left(left), right(right) { }
+            left(left), right(right) {
+        	if (left->type != right->type) {
+        		yyerror(("semantico: operacao atribuicao espera " + type_name_masc[left->type] +
+        				" mas recebeu " + type_name_masc[right->type] + ".").c_str());
+        	}
+        }
         void printTree();
         //int computeTree();
 };
