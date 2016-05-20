@@ -19,7 +19,6 @@ class Node {
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
         //Node* coerce(Node* otherNode);
-        //virtual int computeTree(){return 0;}
         
 
 };
@@ -29,14 +28,7 @@ class Integer : public Node {
         int value;
         Integer(int value) : value(value) {  }
         void printTree();
-        //int computeTree();
 };
-
-/*class Real : public Node {
-     public:
-        float value;
-        Real(float value) : value(value) {  }
-};*/
 
 class BinOp : public Node {
     public:
@@ -48,7 +40,6 @@ class BinOp : public Node {
                 this->type = binType(left->type, right->type, op);
             }
         void printTree();
-        //int computeTree();
 };
 
 class UnOp : public Node {
@@ -62,23 +53,11 @@ class UnOp : public Node {
         void printTree();
 };
 
-/*class AssignOp : public Node {
-    public:
-        Node *left;
-        Node *right;
-        AssignOp(Node *left, Node *right):
-            left(left), right(right) { }
-        void printTree();
-        //int computeTree();
-};*/
-
-
 class Block : public Node {
     public:
         NodeList lines;
         Block() { }
         void printTree();
-        //int computeTree();
 };
 
 class VarDeclaration : public Node {
@@ -93,6 +72,16 @@ class VarDeclaration : public Node {
         void printTree();
 };
 
+class ArrayDeclaration : public Node {
+    public:
+        NodeList arrays;
+        std::string tamanho;
+        ArrayDeclaration(Type t) {
+            this->type = t;
+        }
+        void printTree();
+};
+
 class Variable : public Node {
      public:
          std::string id;
@@ -102,7 +91,6 @@ class Variable : public Node {
                 //std::cout << "tipo nodo setado" << std::endl;
             }
          void printTree();
-         //int computeTree();
 };
 
 class Number : public Node {

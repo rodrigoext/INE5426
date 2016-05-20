@@ -43,11 +43,12 @@ class SymbolTable {
     public:
         SymbolList entryList;
         Type tempType;
+        std::string tempLegthArray;
         SymbolTable() {}
-        bool checkId(std::string id) {return (entryList.find(id) != entryList.end());}
+        bool checkId(std::string id) {return (entryList.find(id) != entryList.end() &&
+        									  entryList.find(id)->second.type != indefinido);}
         void addSymbol(std::string id, Symbol newsymbol) {entryList[id] = newsymbol;}
         void setSimbolType(std::string id, Type t);
-        // AST::Node* newVariable(std::string id, AST::Node* next);
         AST::Node* newVariable(std::string id, Type t);
         AST::Node* assignVariable(std::string id);
         AST::Node* useVariable(std::string id);

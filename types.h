@@ -26,7 +26,7 @@ enum Operation {
     orlogic,
     nologic
 };
-const std::vector<std::string> operation_name = {
+const std::vector<std::string> op_name = {
     "soma",
     "subtracao",
     "divisao",
@@ -45,7 +45,7 @@ const std::vector<std::string> operation_name = {
     "nao"
 };
 
-const std::vector<bool> operation_masc = {
+const std::vector<bool> op_masc = {
     false,  //soma inteira
     false,  //subtracao inteira
     false,  //divisao inteira

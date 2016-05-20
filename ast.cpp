@@ -10,18 +10,6 @@ void Integer::printTree(){
     std::cout << value;
     return;
 }
-/*
-void Real::printTree(){
-    std::cout << value;
-    return;
-}*/
-
-/*void AssignOp::printTree(){
-	 std::cout << "Atribuicao de valor para ";
-	left->printTree();
-	std::cout << ": ";
-	right->printTree();
-}*/
     
 /*Node* Node::coerce(Node* otherNode){
     if (coercionNeeded(this->type, otherNode->type))
@@ -31,7 +19,6 @@ void Real::printTree(){
 }*/
 
 void BinOp::printTree(){
-    //left->printTree();
     switch(op){
         case assign:
             std::cout << "Atribuicao de valor para ";
@@ -42,15 +29,14 @@ void BinOp::printTree(){
         default:
             std::cout << "(";
             left->printTree();
-            std::cout << " (" << operation_name[op] << " ";
-            if ( operation_masc[op] ) std::cout << type_name_masc[this->type];
+            std::cout << " (" << op_name[op] << " ";
+            if ( op_masc[op] ) std::cout << type_name_masc[this->type];
             else std::cout << type_name_fem[this->type];
             std::cout << ") ";
             right->printTree();
             std::cout << ")";
             break;
     }
-    //right->printTree();
     return;
 }
 
@@ -63,8 +49,8 @@ void UnOp::printTree(){
             std::cout << " (fecha parenteses)";
             break;
         default:
-            std::cout << " (" << operation_name[op] << " ";
-            if ( operation_masc[op] ) std::cout << type_name_masc[this->type];
+            std::cout << " (" << op_name[op] << " ";
+            if ( op_masc[op] ) std::cout << type_name_masc[this->type];
             else std::cout << type_name_fem[this->type];
             std::cout << ") ";
             next->printTree();
@@ -88,6 +74,14 @@ void VarDeclaration::printTree(){
 	    }
 }
 
+void ArrayDeclaration::printTree(){
+    std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho << ": ";
+    for (auto var = arrays.begin(); var != arrays.end(); var++) {
+        std::cout << dynamic_cast<Variable *>(*var)->id;
+        if(next(var) != arrays.end()) std::cout << ", ";
+    }
+}
+
 void Variable::printTree(){
     std::cout << "variavel " << type_name_fem[type] << " "<< id;
 }
@@ -99,68 +93,4 @@ void Number::printTree(){
 /*void Coercion::printTree(){
     next->printTree();
     std::cout << " para real";
-}*/
-
-/* Compute methods */
-//int Integer::computeTree(){
-//    return value;
-//}
-
-/*
-float Real::computeTree(){
-    return value;
-}*/
-
-/*
-int BinOp::computeTree(){
-    int value, lvalue, rvalue;
-    lvalue = left->computeTree();
-    rvalue = right->computeTree();
-    switch(op){
-        case plus: value = lvalue + rvalue;
-        std::cout << "Encontrou uma soma entre: " 
-        << lvalue << " e " << rvalue << "." << std::endl;
-        break;
-        case sub: value = lvalue - rvalue;
-        std::cout << "Encontrou uma subtração entre: " 
-        << lvalue << " e " << rvalue << "." << std::endl;
-        break;
-        case mul: value = lvalue * rvalue;
-        std::cout << "Encontrou uma multiplicação entre: " 
-        << lvalue << " e " << rvalue << "." << std::endl;
-        break; 
-        case divi: value = lvalue / rvalue;
-        std::cout << "Encontrou uma divisao entre: " 
-        << lvalue << " e " << rvalue << "." << std::endl;
-        break;
-        case assign:
-            Variable* leftvar = dynamic_cast<Variable*>(left);
-            symtab.entryList[leftvar->id].value = rvalue;
-
-            value = rvalue;   
-        break;  
-    }
-    return value;
-    return 1;
-}*/
-
-
-/*
-int Block::computeTree(){
-    int value;
-    for (Node* line: lines) {
-        value = line->computeTree();
-         std::cout << "Computed " << value << std::endl;
-    }
-    return 0;
-}
-*/
-
-
-
-/*
-int Variable::computeTree(){
-    //the value of a variable is currently stored in the symbol table
-    //return symtab.entryList[id].value;
-    return 1;
 }*/

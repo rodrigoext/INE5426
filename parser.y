@@ -39,13 +39,15 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist
+%type <node> expr line declaracao atribuicao varlist arrlist
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
  */
 %left T_AND T_OR
+%left T_NEGA
+%left T_IGUAL T_DIFERENTE T_MAIOR T_MENOR T_MAIOR_IGUAL T_MENOR_IGUAL
 %left T_PLUS T_SUB
 %left T_MUL T_DIV
 %nonassoc error
@@ -71,6 +73,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist {$$ = $6;}
         ;
 
 tipo	: D_INT { symtab.tempType = Type::integer; }
@@ -113,6 +116,12 @@ varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
                                 }
         ;
 
+arrlist: T_ID { $$ = new AST:: ArrayDeclaration(symtab.tempType);
+                dynamic_cast< AST::ArrayDeclaration*>($$)->tamanho = symtab.tempLegthArray;
+                dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($1, symtab.tempType));
+            }
+        | arrlist T_COMMA T_ID { $$ = $1;
+                                 dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($3, symtab.tempType));
+                                }
+
 %%
-
-
