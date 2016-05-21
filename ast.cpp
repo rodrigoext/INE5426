@@ -37,18 +37,13 @@ void UnOp::printTree() {
 void BinOp::printTree(){
     switch(op){
 
-    case soma:
-    case subtrai:
-    case multiplica:
-    case divide:
-    	break;
-    case assign:
+    case associa:
         std::cout << "Atribuicao de valor para ";
         left->printTree();
         std::cout << ": ";
         right->printTree();
         break;
-        default:
+    default:
         std::cout << "(";
         left->printTree();
         std::cout << " (" << op_name[op] << " ";

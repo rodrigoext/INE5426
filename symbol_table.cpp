@@ -26,7 +26,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t){
 AST::Node* SymbolTable::assignVariable(std::string id){
     if ( ! checkId(id) ) yyerror("semantico: variavel %s sem declaracao.\n", id.c_str());
     entryList[id].initialized = true;
-    return new AST::Variable(id, symtab.tempType); //Creates variable node anyway
+    return new AST::Variable(id, entryList[id].type); //Creates variable node anyway
 }
 
 AST::Node* SymbolTable::useVariable(std::string id){
