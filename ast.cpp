@@ -10,17 +10,10 @@ void Integer::printTree(){
     std::cout << value;
     return;
 }
-    
-/*Node* Node::coerce(Node* otherNode){
-    if (coercionNeeded(this->type, otherNode->type))
-        return new AST::Coercion(this);
-    else 
-        return this;
-}*/
 
 void BinOp::printTree(){
     switch(op){
-        case assign:
+        case associa:
             std::cout << "Atribuicao de valor para ";
             left->printTree();
             std::cout << ": ";
@@ -43,7 +36,7 @@ void BinOp::printTree(){
 void UnOp::printTree(){
     std::cout << "(";
     switch(op){
-        case par:
+        case parenteses:
             std::cout << "(abre parenteses) ";
             next->printTree();
             std::cout << " (fecha parenteses)";
@@ -71,11 +64,11 @@ void VarDeclaration::printTree(){
 	for (auto var = vars.begin(); var != vars.end(); var++) {
 	        std::cout << dynamic_cast<Variable *>(*var)->id;
 	        if(next(var) != vars.end()) std::cout << ", ";
-	    }
+	}
 }
 
 void ArrayDeclaration::printTree(){
-    std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho << ": ";
+    std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << this->tamanho << ": ";
     for (auto var = arrays.begin(); var != arrays.end(); var++) {
         std::cout << dynamic_cast<Variable *>(*var)->id;
         if(next(var) != arrays.end()) std::cout << ", ";
@@ -89,6 +82,14 @@ void Variable::printTree(){
 void Number::printTree(){
 	std::cout << "valor " << type_name_masc[type] << " " << value;
 }
+
+    
+/*Node* Node::coerce(Node* otherNode){
+    if (coercionNeeded(this->type, otherNode->type))
+        return new AST::Coercion(this);
+    else 
+        return this;
+}*/
 
 /*void Coercion::printTree(){
     next->printTree();

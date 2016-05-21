@@ -1,30 +1,30 @@
 #pragma once
 
+
 #include <string>
 #include <vector>
 
-enum Type { integer, real, booleano, indefinido};
+enum Type { inteiro, real, booleano, indefinido};
 const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "indefinido"};
 const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida"};
 enum Kind { variable, function};
-//bool coercionNeeded(Type myType, Type otherType);
 enum Operation { 
 	soma, 
 	subtrai, 
 	divide, 
 	multiplica, 
-	assign,
+	associa,
 	igual, 
 	diferente, 
 	maior, 
 	menor,
-    maiorouigual,
-    menorouigual, 
-    par,
+    maior_igual,
+    menor_igual, 
+    parenteses,
     menosunario,
-    andlogic,
-    orlogic,
-    nologic
+    e_logico,
+    ou_logico,
+    negacao
 };
 const std::vector<std::string> op_name = {
     "soma",
@@ -64,5 +64,4 @@ const std::vector<bool> op_masc = {
     true    // nao booleano
 };
 
-Type unType(Type next, Operation op);
-Type binType(Type left, Type right, Operation op);
+//bool coercionNeeded(Type myType, Type otherType);

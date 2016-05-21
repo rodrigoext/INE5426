@@ -5,6 +5,8 @@
 
 #include "types.h"
 
+extern void yyerror(const char* s, ...);
+
 namespace AST {
 
 class Node;
@@ -37,7 +39,37 @@ class BinOp : public Node {
         Node *right;
         BinOp(Node *left, Operation op, Node *right) :
             left(left), right(right), op(op) { 
-                this->type = binType(left->type, right->type, op);
+                switch (op) {
+                    case associa:
+                        this->type = left->type;
+                        // TODO: checar se é uma variável.
+                        //if (left->type != right->type) {
+                        //  yyerror(("semantico: operacao atribuicao espera " + type_name_masc[left->type] +
+                        //          " mas recebeu " + type_name_masc[right->type] + ".").c_str());
+                        //}
+                        break;
+                    case soma:
+                    case divide:
+                    case subtrai:
+                    case multiplica:
+                        this->type = inteiro;
+                        if (left->type == real && right->type == real)
+                            this->type = real;
+                        break;
+                    case igual:
+                    case diferente:
+                    case maior:
+                    case maior_igual:
+                    case menor:
+                    case menor_igual:
+                    case e_logico:
+                    case ou_logico:
+                        this->type = booleano;
+                        break;
+                    default:
+                        this->type = indefinido;
+                        break;
+                }
             }
         void printTree();
 };
@@ -48,7 +80,21 @@ class UnOp : public Node {
         Node *next;
         UnOp(Node *next, Operation op) :
             next(next), op(op) { 
-                this->type = unType(next->type, op);
+                switch (op) {
+                    case menosunario:
+                        this->type = inteiro;
+                        if (next->type == inteiro || next->type == real)
+                            this->type = next->type;
+                        break;
+                    case negacao:
+                        this->type = booleano;
+                        break;
+                    case parenteses:
+                        this->type = next->type;
+                        break;
+                    default:
+                        this->type = indefinido;
+                }
             }
         void printTree();
 };
