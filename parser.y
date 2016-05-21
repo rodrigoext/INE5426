@@ -73,17 +73,17 @@ declaracao :
         | tipo T_ARRAY_INIT expr T_ARRAY_END T_DECLARA arrlist { $$ = $6; } 
         ;
 
-tipo	: D_INT { symtab.tempType = Type::integer; }
+tipo	: D_INT { symtab.tempType = Type::inteiro; }
 		| D_REAL { symtab.tempType = Type::real; }
 		| D_BOOL { symtab.tempType = Type::booleano; }
 		;
 
 atribuicao:
         T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::AssignOp(node,$3); }
+                                $$ = new AST::BinOp(node, associa, $3); }
         ;
 
-expr    : T_INT { $$ = new AST::Number($1, Type::integer);  symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value;}
+expr    : T_INT { $$ = new AST::Number($1, Type::inteiro);  symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value;}
 		| T_REAL { $$ = new AST::Number($1, Type::real); }
 		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
         | T_ID { $$ = symtab.useVariable($1); }
@@ -97,6 +97,8 @@ expr    : T_INT { $$ = new AST::Number($1, Type::integer);  symtab.tempLegthArra
         | expr T_MENOR_IGUAL expr { $$ = new AST::BinOp($1, menor_igual, $3); }
         | expr T_DIFERENTE expr { $$ = new AST::BinOp($1, diferente, $3); }
         | expr T_IGUAL expr { $$ = new AST::BinOp($1, igual, $3); }
+        | expr T_AND expr { $$ = new AST::BinOp($1, e_logico, $3); }
+        | expr T_OR expr { $$ = new AST::BinOp($1, ou_logico, $3); }
         | T_NEGA expr { $$ = new AST::UnOp($2, negacao); }
         | T_SUB expr { $$ = new AST::UnOp($2, subtrai); }
         | T_ABRE_P expr T_FECHA_P { $$ = new AST::UnOp($2, parenteses); }
