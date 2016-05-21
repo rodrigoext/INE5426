@@ -47,13 +47,14 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "bool"				{return D_BOOL;}
 {nome}				{yylval.name = strdup(yytext); return T_ID;}
 \n                  {return T_NL;}
-.                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
+.                   {yyerror("lexico: simbolo desconhecido: %c.\n", *yytext);} /*complains about every unknown character*/
 
 %%
 
 void yyerror(const char *s, ...){
     va_list ap;
     va_start(ap, s);
-    std::fprintf(stderr, "Line %d: error: ", yylineno);
+    std::fprintf(stderr, "[Linha %d] Erro ", yylineno);
     std::vfprintf(stderr, s, ap);
+    std::fprintf(stderr, "\n");
 }

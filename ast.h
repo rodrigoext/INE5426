@@ -43,10 +43,10 @@ class BinOp : public Node {
                     case associa:
                         this->type = left->type;
                         // TODO: checar se é uma variável.
-                        //if (left->type != right->type) {
-                        //  yyerror(("semantico: operacao atribuicao espera " + type_name_masc[left->type] +
-                        //          " mas recebeu " + type_name_masc[right->type] + ".").c_str());
-                        //}
+                        if (left->type != right->type) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
+                                 " mas recebeu " + type_name_masc[right->type] + ".").c_str());
+                        }
                         break;
                     case soma:
                     case divide:
@@ -55,6 +55,14 @@ class BinOp : public Node {
                         this->type = inteiro;
                         if (left->type == real && right->type == real)
                             this->type = real;
+                        if (left->type != inteiro && left->type != real) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera inteiro ou real mas recebeu " + 
+                                 type_name_masc[left->type] + ".").c_str());
+                        }
+                        if (right->type != inteiro && right->type != real) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera inteiro ou real mas recebeu " + 
+                                 type_name_masc[right->type] + ".").c_str());
+                        }
                         break;
                     case igual:
                     case diferente:
@@ -62,9 +70,26 @@ class BinOp : public Node {
                     case maior_igual:
                     case menor:
                     case menor_igual:
+                        this->type = booleano;
+                        if (left->type != inteiro && left->type != real) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera inteiro ou real mas recebeu " + 
+                                 type_name_masc[left->type] + ".").c_str());
+                        }
+                        if (right->type != inteiro && right->type != real) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera inteiro ou real mas recebeu " + 
+                                 type_name_masc[right->type] + ".").c_str());
+                        }
                     case e_logico:
                     case ou_logico:
                         this->type = booleano;
+                        if (right->type != booleano) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera booleano mas recebeu " + 
+                                 type_name_masc[right->type] + ".").c_str());
+                        }
+                        if (left->type != booleano) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera booleano mas recebeu " + 
+                                 type_name_masc[left->type] + ".").c_str());
+                        }
                         break;
                     default:
                         this->type = indefinido;
@@ -85,9 +110,16 @@ class UnOp : public Node {
                         this->type = inteiro;
                         if (next->type == inteiro || next->type == real)
                             this->type = next->type;
+                        else
+                            yyerror(("semantico: operacao " + op_name[op] + " espera inteiro ou real mas recebeu " + 
+                                 type_name_masc[next->type] + ".").c_str());
                         break;
                     case negacao:
                         this->type = booleano;
+                        if (next->type != booleano) {
+                         yyerror(("semantico: operacao " + op_name[op] + " espera booleano mas recebeu " + 
+                                 type_name_masc[next->type] + ".").c_str());
+                        }
                         break;
                     case parenteses:
                         this->type = next->type;

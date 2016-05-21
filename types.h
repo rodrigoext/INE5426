@@ -5,8 +5,8 @@
 #include <vector>
 
 enum Type { inteiro, real, booleano, indefinido};
-const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "indefinido"};
-const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida"};
+const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "desconhecido"};
+const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "desconhecida"};
 enum Kind { variable, function};
 enum Operation { 
 	soma, 

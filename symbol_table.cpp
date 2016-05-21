@@ -31,7 +31,7 @@ AST::Node* SymbolTable::assignVariable(std::string id){
 
 AST::Node* SymbolTable::useVariable(std::string id){
     if ( ! checkId(id) ) yyerror("semantico: variavel %s sem declaracao.\n", id.c_str());
-    if ( ! entryList[id].initialized ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
+        else if ( ! entryList[id].initialized ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
     return new AST::Variable(id, entryList[id].type); //Creates variable node anyway
 }
 

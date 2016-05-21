@@ -63,28 +63,26 @@ program : lines { programRoot = $1; }
 
 lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1); }
         | lines line { if($2 != NULL) $1->lines.push_back($2); }
-        | lines error T_NL { yyerrok; $$ = NULL;}
         ;
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | declaracao T_FIM 
         | atribuicao T_FIM
+        | error T_FIM {yyerrok; $$=NULL;}
         ;
 
-declaracao : 
-        tipo T_DECLARA varlist { $$ = $3; }
-        | tipo T_ARRAY_INIT expr T_ARRAY_END T_DECLARA arrlist {$$ = $6;}
-        ;
+declaracao  : tipo T_DECLARA varlist { $$ = $3; }
+            | tipo T_ARRAY_INIT expr T_ARRAY_END T_DECLARA arrlist {$$ = $6;}
+            ;
 
 tipo	: D_INT { symtab.tempType = Type::inteiro; }
 		| D_REAL { symtab.tempType = Type::real; }
 		| D_BOOL { symtab.tempType = Type::booleano; }
 		;
 
-atribuicao:
-        T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
+atribuicao  : T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
                                 $$ = new AST::BinOp(node, associa, $3); }
-        ;
+            ;
 
 expr    : T_INT { $$ = new AST::Number($1, Type::inteiro); symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value;}
 		| T_REAL { $$ = new AST::Number($1, Type::real); }
