@@ -16,8 +16,12 @@ typedef std::vector<Node*> NodeList; //List of ASTs
 class Node {
     public:
         Type type;
+        Kind kind;
         virtual ~Node() { }
-        Node() { }
+        Node() {
+        	this->type = indefinido;
+        	this->kind = variable;
+        }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
         //virtual int computeTree(){return 0;}
@@ -44,8 +48,9 @@ class BinOp : public Node {
         Operation op;
         Node *left;
         Node *right;
-        BinOp(Node *left, Operation op, Node *right) :
-            left(left), right(right), op(op) {
+        Node *array_exp;
+        BinOp(Node *left, Operation op, Node *right, Node *array_exp = NULL) :
+            left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
         		this->type = left->type;
@@ -130,12 +135,17 @@ class Block : public Node {
 class Variable : public Node {
      public:
          std::string id;
-         Node *next;
-         Variable(std::string id, Type t) :
-            id(id) {
-                this->type = t;
+         Kind kind;
+         Node * next;
+         Variable(std::string id, Type t, Kind k = variable) :
+            id(id), kind(k) {
+        	 	 this->next = NULL;
+        	 	 this->type = t;
                 //std::cout << "tipo nodo setado" << std::endl;
             }
+         void setNext(Node * next) {
+        	 this->next = next;
+         }
          void printTree();
          //int computeTree();
 };
@@ -143,9 +153,14 @@ class Variable : public Node {
 class Number : public Node {
 	 public:
 		std::string value;
+		Node * next;
 		Number(std::string value, Type t) :
 			value(value) {
+			this->next = NULL;
 			this->type = t;
+		}
+		void setNext(Node * node) {
+			this->next = node;
 		}
 		void printTree();
 };
@@ -153,23 +168,19 @@ class Number : public Node {
 class VarDeclaration : public Node {
      public:
         NodeList vars;
-        VarDeclaration(Type t) {
+        Number *tamanho;
+        VarDeclaration(Type t, Kind k = variable) {
         	this->type = t;
+        	this->kind = k;
+        	this->tamanho = NULL;
         }
         void setType(Type t) {
         	this->type = t;
         }
+        void setTamanho(Number * tamanho) {
+        	this->tamanho = tamanho;
+        }
         void printTree();
-};
-
-class ArrayDeclaration : public Node {
-	public:
-		NodeList arrays;
-		std::string tamanho;
-		ArrayDeclaration(Type t) {
-			this->type = t;
-		}
-		void printTree();
 };
 
 }

@@ -40,6 +40,10 @@ void BinOp::printTree(){
     case associa:
         std::cout << "Atribuicao de valor para ";
         left->printTree();
+        if (array_exp != NULL) {
+        	array_exp->printTree();
+        	std::cout << "}";
+        }
         std::cout << ": ";
         right->printTree();
         break;
@@ -64,26 +68,29 @@ void Block::printTree(){
 }
 
 void VarDeclaration::printTree(){
-	std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+	if (kind == array)
+		std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+	else
+		std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
 	for (auto var = vars.begin(); var != vars.end(); var++) {
-	        std::cout << dynamic_cast<Variable *>(*var)->id;
-	        if(next(var) != vars.end()) std::cout << ", ";
-	    }
-}
-
-void ArrayDeclaration::printTree(){
-	std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << this->tamanho << ": ";
-	for (auto var = arrays.begin(); var != arrays.end(); var++) {
-	        std::cout << dynamic_cast<Variable *>(*var)->id;
-	        if(next(var) != arrays.end()) std::cout << ", ";
-	    }
+		std::cout << dynamic_cast<Variable *>(*var)->id;
+		if(next(var) != vars.end()) std::cout << ", ";
+	}
 }
 
 
 void Number::printTree(){
-	std::cout << "valor " << type_name_masc[type] << " " << value;
+	std::cout << " valor " << type_name_masc[type] << " " << value;
 }
 
 void Variable::printTree(){
-	std::cout << "variável " << type_name_fem[type] << " " << id;
+	if (kind == array) {
+		std::cout << "arranjo " << type_name_masc[type] << " " << id << " {+indice:";
+		if(next != NULL)
+			next->printTree();
+		std::cout << "} ";
+	}
+	else
+		std::cout << "variável " << type_name_fem[type] << " " << id;
+
 }

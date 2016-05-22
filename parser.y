@@ -39,7 +39,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist arrlist
+%type <node> expr line declaracao atribuicao varlist arrlist term target
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -70,7 +70,12 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
-        | tipo T_ARRAY_INIT expr T_ARRAY_END T_DECLARA arrlist { $$ = $6; } 
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist {   AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($6);
+        															AST::Number *n = new AST::Number($3, Type::inteiro);
+        															vardecl->setTamanho(n);
+        															for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
+        																symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
+        															$$ = $6; } 
         ;
 
 tipo	: D_INT { symtab.tempType = Type::inteiro; }
@@ -79,14 +84,15 @@ tipo	: D_INT { symtab.tempType = Type::inteiro; }
 		;
 
 atribuicao:
-        T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::BinOp(node, associa, $3); }
+        target T_ASSIGN expr { $$ = new AST::BinOp($1, associa, $3); }
+        | target T_ARRAY_INIT expr T_ARRAY_END T_ASSIGN expr { $$ = new AST::BinOp($1, associa, $6, $3); }
         ;
-
-expr    : T_INT { $$ = new AST::Number($1, Type::inteiro);  symtab.tempLegthArray = dynamic_cast<AST::Number*>($$)->value;}
-		| T_REAL { $$ = new AST::Number($1, Type::real); }
-		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
-        | T_ID { $$ = symtab.useVariable($1); }
+target  : T_ID { $$ = symtab.useVariable($1); }
+		;
+		
+expr    : term { $$ = $1; }
+        | target T_ARRAY_INIT expr T_ARRAY_END { dynamic_cast< AST::Variable*>($1)->setNext($3);
+        										$$ = $1; }
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
@@ -104,6 +110,12 @@ expr    : T_INT { $$ = new AST::Number($1, Type::inteiro);  symtab.tempLegthArra
         | T_ABRE_P expr T_FECHA_P { $$ = new AST::UnOp($2, parenteses); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
+        
+term   :  T_INT { $$ = new AST::Number($1, Type::inteiro);}
+		| T_REAL { $$ = new AST::Number($1, Type::real); }
+		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
+        | T_ID { $$ = symtab.useVariable($1); }
+        ;
 
 varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
                  dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($1, symtab.tempType));
@@ -112,12 +124,11 @@ varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
                                  dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType));
                                 }
         ;
-arrlist :  T_ID { $$ = new AST::ArrayDeclaration(symtab.tempType);
-                 dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($1, symtab.tempType));
-                 dynamic_cast< AST::ArrayDeclaration*>($$)->tamanho = symtab.tempLegthArray;
+arrlist :  T_ID { $$ = new AST::VarDeclaration(symtab.tempType, array);
+                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($1, symtab.tempType, array));
                }
         | arrlist T_COMMA T_ID { $$ = $1;
-                                 dynamic_cast< AST::ArrayDeclaration*>($$)->arrays.push_back(symtab.newVariable($3, symtab.tempType));
+                                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType, array));
                                 }
 %%
 

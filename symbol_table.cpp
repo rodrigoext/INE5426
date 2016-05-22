@@ -5,34 +5,41 @@ using namespace STab;
 extern SymbolTable symtab;
 
 
-AST::Node* SymbolTable::newVariable(std::string id, AST::Node* next){
+AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, AST::Node* next){
 	if ( checkId(id) ) yyerror("Variable redefinition! %s\n", id.c_str());
 	    else {
-	       Symbol entry(indefinido, variable, false);
+	       Symbol entry(t, k, false);
 	       addSymbol(id,entry);
 	    }
-	return new AST::Variable(id, indefinido);
+	AST::Variable *v = new AST::Variable(id, indefinido);
+	v->setNext(next);
+	return v;
 }
 
-AST::Node* SymbolTable::newVariable(std::string id, Type t){
+AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k){
     if ( checkId(id) ) yyerror("semantico: variavel %s sofrendo redefinicao.\n", id.c_str());
     else {
-       Symbol entry(t, variable, false);
-       addSymbol(id,entry);
+    	if (k == array) {
+    		Symbol entry(t, k, true);
+    		addSymbol(id,entry);
+    	} else {
+    		Symbol entry(t, k, false);
+    		addSymbol(id,entry);
+    	}
     }
-    return new AST::Variable(id, t);
+    return new AST::Variable(id, t, k);
 }
 
 AST::Node* SymbolTable::assignVariable(std::string id){
     if ( ! checkId(id) ) yyerror("semantico: variavel %s sem declaracao.\n", id.c_str());
     entryList[id].initialized = true;
-    return new AST::Variable(id, entryList[id].type); //Creates variable node anyway
+    return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
 }
 
 AST::Node* SymbolTable::useVariable(std::string id){
     if ( ! checkId(id) ) yyerror("semantico: variavel %s sem declaracao.\n", id.c_str());
     if ( ! entryList[id].initialized ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
-    return new AST::Variable(id, entryList[id].type); //Creates variable node anyway
+    return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
 }
 
 Symbol SymbolTable::getVariable(std::string id){
@@ -41,4 +48,12 @@ Symbol SymbolTable::getVariable(std::string id){
 
 void SymbolTable::setSimbolType(std::string id, Type t) {
     entryList[id].setType(t);
+}
+
+void SymbolTable::setSimbolKind(std::string id, Kind k) {
+	entryList[id].setKind(k);
+}
+
+void SymbolTable::setSimbolSize(std::string id, int size) {
+	entryList[id].setSize(size);
 }
