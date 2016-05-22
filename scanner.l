@@ -45,6 +45,9 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "int"				{return D_INT;}
 "real"				{return D_REAL;}
 "bool"				{return D_BOOL;}
+"if"				{return D_IF;}
+"then"				{return D_THEN;}
+"end"				{return D_END;}
 {nome}				{yylval.name = strdup(yytext); return T_ID;}
 \n                  {return T_NL;}
 .                   {yyerror("lexico: simbolo desconhecido: %c.\n", *yytext);} /*complains about every unknown character*/

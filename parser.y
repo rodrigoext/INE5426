@@ -27,6 +27,7 @@ extern void yyerror(const char* s, ...);
 */
 %token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END
 %token T_ASSIGN T_DECLARA
+%token D_IF D_THEN D_END
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
@@ -39,7 +40,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist arrlist term target
+%type <node> expr line declaracao atribuicao varlist arrlist term target condicao
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -66,7 +67,11 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | declaracao T_FIM 
         | atribuicao T_FIM
+        | condicao T_FIM
         ;
+        
+condicao : D_IF expr D_THEN expr D_END D_IF { $$ = $2; }
+		
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
@@ -87,7 +92,7 @@ atribuicao:
         target T_ASSIGN expr { $$ = new AST::BinOp($1, associa, $3); }
         | target T_ARRAY_INIT expr T_ARRAY_END T_ASSIGN expr { $$ = new AST::BinOp($1, associa, $6, $3); }
         ;
-target  : T_ID { $$ = symtab.useVariable($1); }
+target  : T_ID { $$ = symtab.assignVariable($1); }
 		;
 		
 expr    : term { $$ = $1; }
