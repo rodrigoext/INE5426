@@ -183,5 +183,16 @@ class VarDeclaration : public Node {
         void printTree();
 };
 
+class ConditionalExp : public Node {
+	public:
+		Node * condition;
+		Node * next;
+		ConditionalExp(Node * condition, Node *next) :
+			condition(condition), next(next) {
+			this->type = indefinido;
+		}
+		void printTree();
+};
+
 }
 

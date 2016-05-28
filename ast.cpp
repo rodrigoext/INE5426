@@ -88,9 +88,19 @@ void Variable::printTree(){
 		std::cout << "arranjo " << type_name_masc[type] << " " << id << " {+indice:";
 		if(next != NULL)
 			next->printTree();
-		std::cout << "} ";
+		//std::cout << "} ";
 	}
 	else
 		std::cout << "variável " << type_name_fem[type] << " " << id;
 
+}
+
+void ConditionalExp::printTree() {
+	std::cout << "Expressao condicional" << std::endl;
+	std::cout << "+se: ";
+	condition->printTree();
+	std::cout << std::endl;
+	std::cout << "+entao: " << std::endl;
+	next->printTree();
+	std::cout << std::endl;
 }

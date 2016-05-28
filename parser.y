@@ -67,10 +67,11 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | declaracao T_FIM 
         | atribuicao T_FIM
-        | condicao T_FIM
+        | condicao D_END D_IF
         ;
         
-condicao : D_IF expr D_THEN expr D_END D_IF { $$ = $2; }
+condicao : D_IF expr D_THEN lines { AST::ConditionalExp * condExp;
+									$$ = new AST::ConditionalExp($2, $4); }
 		
 
 declaracao : 
@@ -96,8 +97,9 @@ target  : T_ID { $$ = symtab.assignVariable($1); }
 		;
 		
 expr    : term { $$ = $1; }
-        | target T_ARRAY_INIT expr T_ARRAY_END { dynamic_cast< AST::Variable*>($1)->setNext($3);
-        										$$ = $1; }
+        | T_ID T_ARRAY_INIT expr T_ARRAY_END { AST::Variable* v = dynamic_cast< AST::Variable*>(symtab.useVariable($1));
+        										v->setNext($3);
+        										$$ = v; }
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
