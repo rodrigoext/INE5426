@@ -48,6 +48,12 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "if"				{return D_IF;}
 "then"				{return D_THEN;}
 "end"				{return D_END;}
+"else"				{return D_ELSE;}
+"decl"				{return D_DECL;}
+"fun"				{return D_FUN;}
+"def"				{return D_DEF;}
+"while"				{return D_WHILE;}
+"do"				{return D_DO;}
 {nome}				{yylval.name = strdup(yytext); return T_ID;}
 \n                  {return T_NL;}
 .                   {yyerror("lexico: simbolo desconhecido: %c.\n", *yytext);} /*complains about every unknown character*/

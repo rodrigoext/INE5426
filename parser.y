@@ -27,7 +27,9 @@ extern void yyerror(const char* s, ...);
 */
 %token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END
 %token T_ASSIGN T_DECLARA
-%token D_IF D_THEN D_END
+%token D_IF D_THEN D_END D_ELSE
+%token D_WHILE D_DO
+%token D_DEF D_FUN D_DECL
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
@@ -40,7 +42,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist arrlist term target condicao
+%type <node> expr line declaracao atribuicao varlist arrlist term target condicao laco
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -68,20 +70,26 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | declaracao T_FIM 
         | atribuicao T_FIM
         | condicao D_END D_IF
+        | laco D_END D_WHILE
         ;
         
-condicao : D_IF expr D_THEN lines { AST::ConditionalExp * condExp;
-									$$ = new AST::ConditionalExp($2, $4); }
-		
+condicao : D_IF expr T_NL D_THEN lines { $$ = new AST::ConditionalExp($2, $5); }
+		|  D_IF expr D_THEN lines { $$ = new AST::ConditionalExp($2, $4); }
+		|  D_IF expr T_NL D_THEN lines D_ELSE lines { AST::ConditionalExp * condExp;
+													condExp = new AST::ConditionalExp($2, $5);
+													condExp->SetSenao($7);
+													$$ = condExp; }
+laco : D_WHILE expr D_DO T_NL lines { $$ = new AST::LoopExp($2, $5);}
+		| D_WHILE expr D_DO lines { $$ = new AST::LoopExp($2, $4);}
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
-        | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist {   AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($6);
-        															AST::Number *n = new AST::Number($3, Type::inteiro);
-        															vardecl->setTamanho(n);
-        															for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
-        																symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
-        															$$ = $6; } 
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist { AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($6);
+        														  AST::Number *n = new AST::Number($3, Type::inteiro);
+        														  vardecl->setTamanho(n);
+        														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
+        															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
+        													      $$ = $6; }
         ;
 
 tipo	: D_INT { symtab.tempType = Type::inteiro; }

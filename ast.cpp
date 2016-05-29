@@ -102,5 +102,20 @@ void ConditionalExp::printTree() {
 	std::cout << std::endl;
 	std::cout << "+entao: " << std::endl;
 	next->printTree();
+	if (senao != NULL) {
+		std::cout << "+senao" << std::endl;
+		senao->printTree();
+	}
+	std::cout << "Fim expressao condicional";
 	std::cout << std::endl;
+}
+
+void LoopExp::printTree() {
+	std::cout << "Laco" << std::endl;
+	std::cout << "+enquanto: ";
+	condition->printTree();
+	std::cout << std::endl;
+	std::cout << "+faca: " << std::endl;
+	next->printTree();
+	std::cout << "Fim laco";
 }
