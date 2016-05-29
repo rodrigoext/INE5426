@@ -183,5 +183,31 @@ class VarDeclaration : public Node {
         void printTree();
 };
 
+class ConditionalExp : public Node {
+	public:
+		Node * condition;
+		Node * next;
+		Node * senao;
+		ConditionalExp(Node * condition, Node *next) :
+			condition(condition), next(next) {
+			this->type = indefinido;
+			this->senao = NULL;
+		}
+		void SetSenao(Node * senao) {
+			this->senao = senao;
+		}
+		void printTree();
+};
+
+class LoopExp : public Node {
+	public:
+		Node * condition;
+		Node * next;
+		LoopExp(Node *condition, Node *next) :
+			condition(condition), next(next) {
+		}
+		void printTree();
+};
+
 }
 

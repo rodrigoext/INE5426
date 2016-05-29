@@ -27,7 +27,9 @@ extern void yyerror(const char* s, ...);
 */
 %token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END
 %token T_ASSIGN T_DECLARA
-%token D_IF D_THEN D_END
+%token D_IF D_THEN D_END D_ELSE
+%token D_WHILE D_DO
+%token D_DEF D_FUN D_DECL
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
@@ -40,7 +42,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist arrlist term target condicao
+%type <node> expr line declaracao atribuicao varlist arrlist term target condicao laco
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -67,20 +69,27 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | declaracao T_FIM 
         | atribuicao T_FIM
-        | condicao T_FIM
+        | condicao D_END D_IF
+        | laco D_END D_WHILE
         ;
         
-condicao : D_IF expr D_THEN expr D_END D_IF { $$ = $2; }
-		
+condicao : D_IF expr T_NL D_THEN lines { $$ = new AST::ConditionalExp($2, $5); }
+		|  D_IF expr D_THEN lines { $$ = new AST::ConditionalExp($2, $4); }
+		|  D_IF expr T_NL D_THEN lines D_ELSE lines { AST::ConditionalExp * condExp;
+													condExp = new AST::ConditionalExp($2, $5);
+													condExp->SetSenao($7);
+													$$ = condExp; }
+laco : D_WHILE expr D_DO T_NL lines { $$ = new AST::LoopExp($2, $5);}
+		| D_WHILE expr D_DO lines { $$ = new AST::LoopExp($2, $4);}
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
-        | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist {   AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($6);
-        															AST::Number *n = new AST::Number($3, Type::inteiro);
-        															vardecl->setTamanho(n);
-        															for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
-        																symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
-        															$$ = $6; } 
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist { AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($6);
+        														  AST::Number *n = new AST::Number($3, Type::inteiro);
+        														  vardecl->setTamanho(n);
+        														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
+        															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
+        													      $$ = $6; }
         ;
 
 tipo	: D_INT { symtab.tempType = Type::inteiro; }
@@ -96,8 +105,9 @@ target  : T_ID { $$ = symtab.assignVariable($1); }
 		;
 		
 expr    : term { $$ = $1; }
-        | target T_ARRAY_INIT expr T_ARRAY_END { dynamic_cast< AST::Variable*>($1)->setNext($3);
-        										$$ = $1; }
+        | T_ID T_ARRAY_INIT expr T_ARRAY_END { AST::Variable* v = dynamic_cast< AST::Variable*>(symtab.useVariable($1));
+        										v->setNext($3);
+        										$$ = v; }
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
