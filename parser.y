@@ -79,8 +79,14 @@ condicao : D_IF expr T_NL D_THEN lines { $$ = new AST::ConditionalExp($2, $5); }
 													condExp = new AST::ConditionalExp($2, $5);
 													condExp->SetSenao($7);
 													$$ = condExp; }
+		|  D_IF expr D_THEN lines D_ELSE lines { AST::ConditionalExp * condExp;
+													condExp = new AST::ConditionalExp($2, $4);
+													condExp->SetSenao($6);
+													$$ = condExp; }
+													;
 laco : D_WHILE expr D_DO T_NL lines { $$ = new AST::LoopExp($2, $5);}
 		| D_WHILE expr D_DO lines { $$ = new AST::LoopExp($2, $4);}
+		;
 
 declaracao : 
         tipo T_DECLARA varlist { $$ = $3; }
