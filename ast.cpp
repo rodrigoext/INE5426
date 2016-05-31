@@ -119,3 +119,16 @@ void LoopExp::printTree() {
 	next->printTree();
 	std::cout << "Fim laco";
 }
+
+void FunctionDeclaration::printTree() {
+	if (next != NULL)
+		std::cout << "Declaracao de funcao " << type_name_fem[type] << ": " << id << std::endl;
+	else
+		std::cout << "Definicao de funcao " << type_name_fem[type] << ": " << id << std::endl;
+	std::cout << "+parametros:" << std::endl;
+	if (parametros != NULL)
+		parametros->printTree();
+	if (next != NULL)
+		next->printTree();
+	std::cout << std::endl << "Fim declaracao" ;
+}

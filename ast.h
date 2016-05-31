@@ -209,5 +209,17 @@ class LoopExp : public Node {
 		void printTree();
 };
 
+class FunctionDeclaration : public Node {
+	public:
+		std::string id;
+		Node * parametros;
+		Node * next;
+		Type type;
+		FunctionDeclaration(std::string id, Node *parametros, Node *next, Type t) :
+			id(id), parametros(parametros), next(next), type(t) {
+		}
+		void printTree();
+};
+
 }
 

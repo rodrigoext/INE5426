@@ -96,7 +96,7 @@ declaracao :
         														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
         															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
         													      $$ = $6; }
-        | D_DECL D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P { $$ = NULL; }
+        | D_DECL D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P { $$ = new AST::FunctionDeclaration($5, $7, NULL, symtab.tempTypeFunc); }
         ;
         
 parametro : { $$ = NULL;}
