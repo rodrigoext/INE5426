@@ -42,7 +42,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist arrlist term target condicao laco
+%type <node> expr line declaracao atribuicao varlist arrlist term target condicao laco parametro
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -96,7 +96,22 @@ declaracao :
         														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
         															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
         													      $$ = $6; }
+        | D_DECL D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P { $$ = NULL; }
         ;
+        
+parametro : { $$ = NULL;}
+		| tipo T_DECLARA T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
+                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType));
+               }
+        | parametro T_COMMA tipo T_DECLARA T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
+								                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($5, symtab.tempType));
+								               	}
+		;
+
+tipofunc: D_INT { symtab.tempTypeFunc = Type::inteiro; }
+		| D_REAL { symtab.tempTypeFunc = Type::real; }
+		| D_BOOL { symtab.tempTypeFunc = Type::booleano; }
+		;
 
 tipo	: D_INT { symtab.tempType = Type::inteiro; }
 		| D_REAL { symtab.tempType = Type::real; }
