@@ -16,7 +16,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, AST::Node* n
 	return v;
 }
 
-AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k){
+AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, bool parameter){
     if ( checkId(id) ) yyerror("semantico: variavel %s sofrendo redefinicao.\n", id.c_str());
     else {
     	if (k == array) {
@@ -27,7 +27,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k){
     		addSymbol(id,entry);
     	}
     }
-    return new AST::Variable(id, t, k);
+    return new AST::Variable(id, t, k, parameter);
 }
 
 AST::Node* SymbolTable::assignVariable(std::string id){

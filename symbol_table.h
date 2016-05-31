@@ -62,7 +62,7 @@ class SymbolTable {
         void setSimbolKind(std::string id, Kind k);
         void setSimbolSize(std::string id, int size);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);
-        AST::Node* newVariable(std::string id, Type t, Kind k = variable);
+        AST::Node* newVariable(std::string id, Type t, Kind k = variable, bool parameter = false);
         AST::Node* assignVariable(std::string id);
         AST::Node* useVariable(std::string id);
         Symbol getVariable(std::string id);

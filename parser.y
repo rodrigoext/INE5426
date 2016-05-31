@@ -100,11 +100,15 @@ declaracao :
         ;
         
 parametro : { $$ = NULL;}
-		| tipo T_DECLARA T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
-                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType));
+		| tipo T_DECLARA T_ID { $$ = new AST::ParameterDeclaration();
+				 AST::VarDeclaration * vd = new AST::VarDeclaration(symtab.tempType, variable, true);
+                 dynamic_cast< AST::VarDeclaration*>(vd)->vars.push_back(symtab.newVariable($3, symtab.tempType, variable, true));
+                 dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vd);
                }
-        | parametro T_COMMA tipo T_DECLARA T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
-								                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($5, symtab.tempType));
+        | parametro T_COMMA tipo T_DECLARA T_ID { $$ = $1; 
+        										  AST::VarDeclaration * vd = new AST::VarDeclaration(symtab.tempType, variable, true);
+                 								  dynamic_cast< AST::VarDeclaration*>(vd)->vars.push_back(symtab.newVariable($5, symtab.tempType, variable, true));
+                								  dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vd);
 								               	}
 		;
 

@@ -137,10 +137,12 @@ class Variable : public Node {
          std::string id;
          Kind kind;
          Node * next;
-         Variable(std::string id, Type t, Kind k = variable) :
+         bool parameter;
+         Variable(std::string id, Type t, Kind k = variable, bool parameter = false) :
             id(id), kind(k) {
         	 	 this->next = NULL;
         	 	 this->type = t;
+        	 	 this->parameter = parameter;
                 //std::cout << "tipo nodo setado" << std::endl;
             }
          void setNext(Node * next) {
@@ -169,10 +171,12 @@ class VarDeclaration : public Node {
      public:
         NodeList vars;
         Number *tamanho;
-        VarDeclaration(Type t, Kind k = variable) {
+        bool parameter;
+        VarDeclaration(Type t, Kind k = variable, bool parameter = false) {
         	this->type = t;
         	this->kind = k;
         	this->tamanho = NULL;
+        	this->parameter = parameter;
         }
         void setType(Type t) {
         	this->type = t;
@@ -205,6 +209,14 @@ class LoopExp : public Node {
 		Node * next;
 		LoopExp(Node *condition, Node *next) :
 			condition(condition), next(next) {
+		}
+		void printTree();
+};
+
+class ParameterDeclaration : public Node {
+	public:
+		NodeList params;
+		ParameterDeclaration() {
 		}
 		void printTree();
 };
