@@ -29,7 +29,7 @@ extern void yyerror(const char* s, ...);
 %token T_ASSIGN T_DECLARA
 %token D_IF D_THEN D_END D_ELSE
 %token D_WHILE D_DO
-%token D_DEF D_FUN D_DECL
+%token D_DEF D_FUN D_DECL D_RETURN
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
@@ -42,7 +42,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist arrlist term target condicao laco parametro
+%type <node> expr line declaracao atribuicao varlist arrlist term target condicao laco parametro definicao
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -71,6 +71,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | atribuicao T_FIM
         | condicao D_END D_IF
         | laco D_END D_WHILE
+        | definicao D_END D_DEF
         ;
         
 condicao : D_IF expr T_NL D_THEN lines { $$ = new AST::ConditionalExp($2, $5); }
@@ -96,8 +97,11 @@ declaracao :
         														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
         															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
         													      $$ = $6; }
-        | D_DECL D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P { $$ = new AST::FunctionDeclaration($5, $7, NULL, symtab.tempTypeFunc); }
+        | D_DECL D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P { $$ = new AST::FunctionDeclaration($5, $7, NULL, NULL, symtab.tempTypeFunc); }
         ;
+        
+definicao: D_DEF D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P 
+			lines D_RETURN expr T_FIM line { $$ = new AST::FunctionDeclaration($5, $7, $9, $11, symtab.tempTypeFunc); } 
         
 parametro : { $$ = NULL;}
 		| tipo T_DECLARA T_ID { $$ = new AST::ParameterDeclaration();
@@ -105,11 +109,29 @@ parametro : { $$ = NULL;}
                  dynamic_cast< AST::VarDeclaration*>(vd)->vars.push_back(symtab.newVariable($3, symtab.tempType, variable, true));
                  dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vd);
                }
+       | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA T_ID { $$ = new AST::ParameterDeclaration();
+															 AST::VarDeclaration * vd = new AST::VarDeclaration(symtab.tempType, array, true);
+															 AST::Number *n = new AST::Number($3, Type::inteiro);
+													  		 vd->setTamanho(n);
+														     vd->vars.push_back(symtab.newVariable($6, symtab.tempType, array, true));
+														     symtab.setSimbolSize($6, std::stoi(n->value));
+														     dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vd);
+       						 								}
         | parametro T_COMMA tipo T_DECLARA T_ID { $$ = $1; 
         										  AST::VarDeclaration * vd = new AST::VarDeclaration(symtab.tempType, variable, true);
-                 								  dynamic_cast< AST::VarDeclaration*>(vd)->vars.push_back(symtab.newVariable($5, symtab.tempType, variable, true));
+                 								  vd->vars.push_back(symtab.newVariable($5, symtab.tempType, variable, true));
                 								  dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vd);
 								               	}
+		| parametro T_COMMA tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA T_ID
+												{
+													  AST::VarDeclaration* vardecl = new AST::VarDeclaration(symtab.tempType, array, true);
+													  AST::Number *n = new AST::Number($5, Type::inteiro);
+													  vardecl->setTamanho(n);
+													  vardecl->vars.push_back(symtab.newVariable($8, symtab.tempType, array, true));
+													  symtab.setSimbolSize($8, std::stoi(n->value));
+												      $$ = $1;
+												      dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vardecl);
+												}
 		;
 
 tipofunc: D_INT { symtab.tempTypeFunc = Type::inteiro; }

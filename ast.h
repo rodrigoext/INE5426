@@ -226,9 +226,10 @@ class FunctionDeclaration : public Node {
 		std::string id;
 		Node * parametros;
 		Node * next;
+		Node * retorno;
 		Type type;
-		FunctionDeclaration(std::string id, Node *parametros, Node *next, Type t) :
-			id(id), parametros(parametros), next(next), type(t) {
+		FunctionDeclaration(std::string id, Node *parametros, Node *next, Node *retorno, Type t) :
+			id(id), parametros(parametros), next(next), retorno(retorno), type(t) {
 		}
 		void printTree();
 };
