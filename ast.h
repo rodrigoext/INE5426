@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "types.h"
 
@@ -43,6 +44,29 @@ class Real : public Node {
         Real(float value) : value(value) {  }
 };
 
+class Variable : public Node {
+     public:
+         std::string id;
+         Kind kind;
+         Node * next;
+         bool parameter;
+         Node * parameters;
+         Variable(std::string id, Type t, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
+            id(id), kind(k) {
+        	 	 this->next = NULL;
+        	 	 this->type = t;
+        	 	 this->parameter = parameter;
+        	 	 this->parameters = parameters;
+            }
+         void setNext(Node * next) {
+        	 this->next = next;
+         }
+         void SetParametros(Node * parameters) {
+        	 this->parameters = parameters;
+         }
+         void printTree();
+};
+
 class BinOp : public Node {
     public:
         Operation op;
@@ -53,18 +77,22 @@ class BinOp : public Node {
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-        		this->type = left->type;
-        		// TODO: checar se é uma variável.
-        		//if (left->type != right->type) {
-				//	yyerror(("semantico: operacao atribuicao espera " + type_name_masc[left->type] +
-				//			" mas recebeu " + type_name_masc[right->type] + ".").c_str());
-				//}
+        		if ( dynamic_cast<Variable*>(left)->kind == array && (array_exp->type == real || array_exp->type == booleano)) {
+        			yyerror(("semantico: indice do tipo " + type_name_masc[array_exp->type]).c_str());
+        		}
+        		if (left->type != right->type) {
+        			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
+        					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
+        		}
         		break;
         	case soma:
         	case divide:
         	case subtrai:
         	case multiplica:
-        		this->type = inteiro;
+        		if (right->type == indefinido) {
+        			yyerror(("semantico: operacao " + op_name[op] + " espera inteiro ou real mas recebeu " + type_name_masc[right->type] + ".").c_str());
+        		}
+        		this->type = left->type;
         		if (left->type == real && right->type == real)
         			this->type = real;
         		break;
@@ -76,6 +104,10 @@ class BinOp : public Node {
         	case menor_igual:
         	case e_logico:
         	case ou_logico:
+        		if (right->type != booleano) {
+        			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
+        			        					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
+        		}
         		this->type = booleano;
         		break;
         	default:
@@ -84,7 +116,6 @@ class BinOp : public Node {
         	}
         }
         void printTree();
-        //int computeTree();
 };
 
 class UnOp : public Node {
@@ -121,7 +152,6 @@ class AssignOp : public Node {
 
         }
         void printTree();
-        //int computeTree();
 };
 
 class Block : public Node {
@@ -129,25 +159,6 @@ class Block : public Node {
         NodeList lines;
         Block() { }
         void printTree();
-        //int computeTree();
-};
-
-class Variable : public Node {
-     public:
-         std::string id;
-         Kind kind;
-         Node * next;
-         Variable(std::string id, Type t, Kind k = variable) :
-            id(id), kind(k) {
-        	 	 this->next = NULL;
-        	 	 this->type = t;
-                //std::cout << "tipo nodo setado" << std::endl;
-            }
-         void setNext(Node * next) {
-        	 this->next = next;
-         }
-         void printTree();
-         //int computeTree();
 };
 
 class Number : public Node {
@@ -169,10 +180,12 @@ class VarDeclaration : public Node {
      public:
         NodeList vars;
         Number *tamanho;
-        VarDeclaration(Type t, Kind k = variable) {
+        bool parameter;
+        VarDeclaration(Type t, Kind k = variable, bool parameter = false) {
         	this->type = t;
         	this->kind = k;
         	this->tamanho = NULL;
+        	this->parameter = parameter;
         }
         void setType(Type t) {
         	this->type = t;
@@ -205,6 +218,35 @@ class LoopExp : public Node {
 		Node * next;
 		LoopExp(Node *condition, Node *next) :
 			condition(condition), next(next) {
+		}
+		void printTree();
+};
+
+class ParameterDeclaration : public Node {
+	public:
+		NodeList params;
+		ParameterDeclaration() {
+		}
+		void printTree();
+};
+
+class FunctionDeclaration : public Node {
+	public:
+		std::string id;
+		Node * parametros;
+		Node * next;
+		Node * retorno;
+		Type type;
+		FunctionDeclaration(std::string id, Node *parametros, Node *next, Node *retorno, Type t) :
+			id(id), parametros(parametros), next(next), retorno(retorno), type(t) {
+			if (retorno != NULL) {
+				if (retorno->type != this->type) {
+					yyerror(("semantico: funcao " + id + " espera retorno do tipo " + type_name_masc[t]).c_str());
+				}
+			}
+		}
+		void SetParametros(Node *parametros) {
+			this->parametros = parametros;
 		}
 		void printTree();
 };

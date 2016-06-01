@@ -47,6 +47,22 @@ void BinOp::printTree(){
         std::cout << ": ";
         right->printTree();
         break;
+    case igual:
+	case diferente:
+	case maior:
+	case maior_igual:
+	case menor:
+	case menor_igual:
+	case e_logico:
+	case ou_logico:
+		std::cout << "(";
+		left->printTree();
+		std::cout << " (" << op_name[op] << " ";
+		std::cout << type_name_masc[this->type];
+		std::cout << ") ";
+		right->printTree();
+		std::cout << ")";
+		break;
     default:
         std::cout << "(";
         left->printTree();
@@ -68,13 +84,25 @@ void Block::printTree(){
 }
 
 void VarDeclaration::printTree(){
-	if (kind == array)
-		std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-	else
-		std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
-	for (auto var = vars.begin(); var != vars.end(); var++) {
-		std::cout << dynamic_cast<Variable *>(*var)->id;
-		if(next(var) != vars.end()) std::cout << ", ";
+	if (parameter) {
+		if (kind == array)
+			std::cout << "parametro arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+		else
+			std::cout << "parametro " << type_name_masc[type] << ": ";
+		for (auto var = vars.begin(); var != vars.end(); var++) {
+			std::cout << dynamic_cast<Variable *>(*var)->id;
+			if(next(var) != vars.end()) std::cout << ", ";
+		}
+		std::cout << std::endl;
+	} else {
+		if (kind == array)
+			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+		else
+			std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+		for (auto var = vars.begin(); var != vars.end(); var++) {
+			std::cout << dynamic_cast<Variable *>(*var)->id;
+			if(next(var) != vars.end()) std::cout << ", ";
+		}
 	}
 }
 
@@ -89,9 +117,16 @@ void Variable::printTree(){
 		if(next != NULL)
 			next->printTree();
 		//std::cout << "} ";
-	}
-	else
+	} else if (kind == function) {
+		std::cout << "chamada de funcao " << type_name_fem[type] << " " << id;
+		std::cout << " {+parametros: ";
+		if (parameters != NULL) {
+			parameters->printTree();
+		}
+		std::cout << "}";
+	} else {
 		std::cout << "variável " << type_name_fem[type] << " " << id;
+	}
 
 }
 
@@ -118,4 +153,32 @@ void LoopExp::printTree() {
 	std::cout << "+faca: " << std::endl;
 	next->printTree();
 	std::cout << "Fim laco";
+}
+
+void ParameterDeclaration::printTree() {
+	for (auto param = params.begin(); param != params.end(); param++) {
+		dynamic_cast<VarDeclaration *>(*param)->printTree();
+	}
+}
+
+void FunctionDeclaration::printTree() {
+	if (next != NULL)
+		std::cout << "Declaracao de funcao " << type_name_fem[type] << ": " << id << std::endl;
+	else
+		std::cout << "Definicao de funcao " << type_name_fem[type] << ": " << id << std::endl;
+	if (parametros != NULL) {
+		std::cout << "+parametros:" << std::endl;
+		parametros->printTree();
+	}
+	if (next != NULL) {
+		std::cout << "+corpo:" << std::endl;
+		next->printTree();
+	}
+	if (retorno != NULL) {
+		std::cout << "Retorno de funcao: ";
+		retorno->printTree();
+		std::cout << std::endl << "Fim declaracao" ;
+	} else {
+		std::cout << "Fim definicao" ;
+	}
 }
