@@ -239,6 +239,11 @@ class FunctionDeclaration : public Node {
 		Type type;
 		FunctionDeclaration(std::string id, Node *parametros, Node *next, Node *retorno, Type t) :
 			id(id), parametros(parametros), next(next), retorno(retorno), type(t) {
+			if (retorno != NULL) {
+				if (retorno->type != this->type) {
+					yyerror(("semantico: funcao " + id + " espera retorno do tipo " + type_name_masc[t]).c_str());
+				}
+			}
 		}
 		void SetParametros(Node *parametros) {
 			this->parametros = parametros;

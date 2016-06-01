@@ -31,7 +31,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, bool paramet
 }
 
 AST::Node* SymbolTable::newFunction(std::string id, Type t, Kind k, AST::Node* parametros, bool declarada) {
-	 if ( checkId(id) ) {
+	if ( checkId(id) ) {
 		 if (entryList[id].funcDeclarada) {
 			 yyerror("semantico: funcao %s sofrendo redeclaracao.\n", id.c_str());
 		 }

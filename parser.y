@@ -102,7 +102,7 @@ declaracao :
         														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
         															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
         													      $$ = $6; }
-        | D_DECL D_FUN tipofunc T_DECLARA T_ID parametros { symtab.setFunctionDeclared($5);
+        | D_DECL D_FUN tipofunc T_DECLARA T_ID parametros { symtab.newFunction($5, symtab.tempTypeFunc, function, NULL, false); 
         													$$ = new AST::FunctionDeclaration($5, $6, NULL, NULL, symtab.tempTypeFunc); }
         ;
 
@@ -125,8 +125,8 @@ arrlist :  T_ID { $$ = new AST::VarDeclaration(symtab.tempType, array);
 /*Análago a declaração temos a definição de uma função, porém aqui, 
 /*também é definida o escopo dessa função.*/        
 definicao: D_DEF D_FUN tipofunc T_DECLARA T_ID T_ABRE_P parametro T_FECHA_P
-			lines D_RETURN expr T_FIM line {symtab.newFunction($5, symtab.tempTypeFunc, function, NULL, false); 
-											$$ = new AST::FunctionDeclaration($5, $7, $9, $11, symtab.tempTypeFunc); } 
+					lines D_RETURN expr T_FIM line {symtab.newFunction($5, symtab.tempTypeFunc, function, NULL, true); 
+													$$ = new AST::FunctionDeclaration($5, $7, $9, $11, symtab.tempTypeFunc); } 
 
 /*Parametros são definidos por uma ou mais parametro entre parenteses*/
 parametros:  { $$ = NULL; }
