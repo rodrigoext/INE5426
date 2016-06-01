@@ -47,6 +47,22 @@ void BinOp::printTree(){
         std::cout << ": ";
         right->printTree();
         break;
+    case igual:
+	case diferente:
+	case maior:
+	case maior_igual:
+	case menor:
+	case menor_igual:
+	case e_logico:
+	case ou_logico:
+		std::cout << "(";
+		left->printTree();
+		std::cout << " (" << op_name[op] << " ";
+		std::cout << type_name_masc[this->type];
+		std::cout << ") ";
+		right->printTree();
+		std::cout << ")";
+		break;
     default:
         std::cout << "(";
         left->printTree();
@@ -101,9 +117,16 @@ void Variable::printTree(){
 		if(next != NULL)
 			next->printTree();
 		//std::cout << "} ";
-	}
-	else
+	} else if (kind == function) {
+		std::cout << "chamada de funcao " << type_name_fem[type] << " " << id;
+		std::cout << " {+parametros: ";
+		if (parameters != NULL) {
+			parameters->printTree();
+		}
+		std::cout << "}";
+	} else {
 		std::cout << "variável " << type_name_fem[type] << " " << id;
+	}
 
 }
 
@@ -154,8 +177,8 @@ void FunctionDeclaration::printTree() {
 	if (retorno != NULL) {
 		std::cout << "Retorno de funcao: ";
 		retorno->printTree();
-		std::cout << std::endl << "Fim definicao" ;
-	} else {
 		std::cout << std::endl << "Fim declaracao" ;
+	} else {
+		std::cout << "Fim definicao" ;
 	}
 }
