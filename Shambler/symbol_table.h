@@ -21,12 +21,14 @@ class Symbol {
 		bool initialized;
 		int size_array;
 		bool funcDeclarada;
+		bool strong;
 		Symbol() {
 			type = indefinido;
 			kind = variable;
 			initialized = false;
 			size_array = 0;
 			funcDeclarada = false;
+			strong = false;
 		}
 		Symbol(Type type, Kind kind, bool initialized, int size = 0, bool funcDeclarada = false) :
 			type(type), kind(kind), initialized(initialized), size_array(size), funcDeclarada(funcDeclarada) {  }
@@ -45,6 +47,9 @@ class Symbol {
 		void SetFuncaoDecladara() {
 			funcDeclarada = true;
 		}
+		void setStrong() {
+			strong = true;
+		}
 };
 
 class SymbolTable {
@@ -60,6 +65,7 @@ class SymbolTable {
         void setSymbolInitialized(std::string id, bool init = true);
         void setSymbolKind(std::string id, Kind k);
         void setSymbolSize(std::string id, int size);
+        void setSymbolTypeString(std::string id, Type t);
         void setFunctionDeclared(std::string id);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);
         AST::Node* newVariable(std::string id, Type t, Kind k = variable, bool parameter = false);

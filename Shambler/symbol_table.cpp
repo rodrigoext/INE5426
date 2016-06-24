@@ -19,6 +19,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, AST::Node* n
 
 AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, bool parameter){
     if ( checkId(id) ) {
+    	return assignVariable(id);
     	yyerror("semantico: variavel %s sofrendo redefinicao.\n", id.c_str());
     }
 	if (k == array) {
@@ -81,6 +82,10 @@ void SymbolTable::setSymbolSize(std::string id, int size) {
 	if (size < 1)
 		yyerror(("semantico: arranjo " + id + " com tamanho menor do que um.").c_str());
 	entryList[id].setSize(size);
+}
+
+void SymbolTable::setSymbolTypeString(std::string id, Type t) {
+	entryList[id].setStrong();
 }
 
 void SymbolTable::setFunctionDeclared(std::string id) {

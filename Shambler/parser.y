@@ -69,7 +69,8 @@ lines   : line { $$ = new AST::Block(); if ($1 != NULL) $$->lines.push_back($1);
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | condicao D_END D_IF
         | laco D_END D_WHILE
-        | declaracao T_FIM 
+        | declaracao T_FIM
+        | declaracao 
         | atribuicao T_FIM
         | atribuicao
         | definicao D_END D_DEF
@@ -96,7 +97,7 @@ laco : D_WHILE expr D_DO T_NL lines { $$ = new AST::LoopExp($2, $5);}
 /*Uma declaração é composta de um tipo primitivo seguito por identificadores*/
 /*Obs: No caso de funções, podemos ou não ter parametros*/
 declaracao : 
-        tipo T_DECLARA varlist { $$ = $3; }
+        tipo varlist { $$ = $2; }
         | tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA arrlist { AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($6);
         														  AST::Number *n = new AST::Number($3, Type::inteiro);
         														  vardecl->setTamanho(n);
@@ -189,15 +190,27 @@ atribuicao:
         | target T_ARRAY_INIT expr T_ARRAY_END T_ASSIGN expr parametros {if ($7 != NULL)
         																	dynamic_cast< AST::FunctionDeclaration*>($3)->SetParametros($7); 
         																$$ = new AST::BinOp($1, associa, $6, $3); }
-       	| varlist T_IGUAL expr { AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($1);
+       	| target T_IGUAL expr   { AST::Variable* v = dynamic_cast< AST::Variable*>($1);
+       							  $$ = new AST::BinOp($1, associa, $3); 
+        						}
+        | tipo varlist T_IGUAL expr {AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($2);
        									vardecl->setType(symtab.tempType);
        									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
         									symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
         									symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
         									dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
        									}
-       									$$ = new AST::BinOp($1, associa, $3); 
-       									}
+       									$$ = new AST::BinOp($2, associa, $4); 
+       								}
+       	| varlist T_IGUAL expr { 	AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($1);
+									vardecl->setType(symtab.tempType);
+									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+										symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
+										symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
+										dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
+									}
+									$$ = new AST::BinOp($1, associa, $3); 
+       							}
         ;
 
 /*Variável que será usada na atribuição*/
