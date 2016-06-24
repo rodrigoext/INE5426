@@ -4,6 +4,7 @@ using namespace STab;
 
 extern SymbolTable symtab;
 
+#include <iostream>
 
 AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, AST::Node* next){
 	if ( checkId(id) ) yyerror("Variable redefinition! %s\n", id.c_str());
@@ -63,15 +64,20 @@ Symbol SymbolTable::getVariable(std::string id){
 	return entryList[id];
 }
 
-void SymbolTable::setSimbolType(std::string id, Type t) {
+void SymbolTable::setSymbolType(std::string id, Type t) {
     entryList[id].setType(t);
+    //std::cout << id << " | " << type_name_masc[t] << std::endl;
 }
 
-void SymbolTable::setSimbolKind(std::string id, Kind k) {
+void SymbolTable::setSymbolInitialized(std::string id, bool init) {
+	entryList[id].initialized = init;
+}
+
+void SymbolTable::setSymbolKind(std::string id, Kind k) {
 	entryList[id].setKind(k);
 }
 
-void SymbolTable::setSimbolSize(std::string id, int size) {
+void SymbolTable::setSymbolSize(std::string id, int size) {
 	if (size < 1)
 		yyerror(("semantico: arranjo " + id + " com tamanho menor do que um.").c_str());
 	entryList[id].setSize(size);

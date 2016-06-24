@@ -17,8 +17,8 @@ extern void yyerror(const char* s, ...);
     AST::Node *node;
     AST::Block *block;
     char *name;
-}
 
+}
 /* token defines our terminal symbols (tokens).
  */
  /*
@@ -71,6 +71,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | laco D_END D_WHILE
         | declaracao T_FIM 
         | atribuicao T_FIM
+        | atribuicao
         | definicao D_END D_DEF
         | error T_FIM {yyerrok; $$ = NULL;}
         ;
@@ -100,7 +101,7 @@ declaracao :
         														  AST::Number *n = new AST::Number($3, Type::inteiro);
         														  vardecl->setTamanho(n);
         														  for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++)
-        															 symtab.setSimbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
+        															 symtab.setSymbolSize(dynamic_cast<AST::Variable *>(*var)->id, std::stoi(n->value));
         													      $$ = $6; }
         | D_DECL D_FUN tipofunc T_DECLARA T_ID parametros { symtab.newFunction($5, symtab.tempTypeFunc, function, NULL, false); 
         													$$ = new AST::FunctionDeclaration($5, $6, NULL, NULL, symtab.tempTypeFunc); }
@@ -151,7 +152,7 @@ parametro : { $$ = NULL;}
 															 AST::Number *n = new AST::Number($3, Type::inteiro);
 													  		 vd->setTamanho(n);
 														     vd->vars.push_back(symtab.newVariable($6, symtab.tempType, array, true));
-														     symtab.setSimbolSize($6, std::stoi(n->value));
+														     symtab.setSymbolSize($6, std::stoi(n->value));
 														     dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vd);
 															}       
 		| parametro T_COMMA tipo T_ARRAY_INIT T_INT T_ARRAY_END T_DECLARA T_ID
@@ -160,7 +161,7 @@ parametro : { $$ = NULL;}
 												  AST::Number *n = new AST::Number($5, Type::inteiro);
 												  vardecl->setTamanho(n);
 												  vardecl->vars.push_back(symtab.newVariable($8, symtab.tempType, array, true));
-												  symtab.setSimbolSize($8, std::stoi(n->value));
+												  symtab.setSymbolSize($8, std::stoi(n->value));
 											      $$ = $1;
 											      dynamic_cast< AST::ParameterDeclaration*>($$)->params.push_back(vardecl);
 												}
@@ -175,6 +176,7 @@ tipofunc: D_INT { symtab.tempTypeFunc = Type::inteiro; }
 tipo	: D_INT { symtab.tempType = Type::inteiro; }
 		| D_REAL { symtab.tempType = Type::real; }
 		| D_BOOL { symtab.tempType = Type::booleano; }
+		| { symtab.tempType = Type::indefinido; }
 		;
 
 /*Uma atribuição é composta por uma expressão ou função já declarada, para uma determinada variável*/
@@ -187,6 +189,15 @@ atribuicao:
         | target T_ARRAY_INIT expr T_ARRAY_END T_ASSIGN expr parametros {if ($7 != NULL)
         																	dynamic_cast< AST::FunctionDeclaration*>($3)->SetParametros($7); 
         																$$ = new AST::BinOp($1, associa, $6, $3); }
+       	| varlist T_IGUAL expr { AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($1);
+       									vardecl->setType(symtab.tempType);
+       									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+        									symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
+        									symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
+        									dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
+       									}
+       									$$ = new AST::BinOp($1, associa, $3); 
+       									}
         ;
 
 /*Variável que será usada na atribuição*/
@@ -217,9 +228,9 @@ expr    : term { $$ = $1; }
         ;
 
 /*Uma expressão pode ser um termo que inclui: usar uma variável já declarada ou um valor (real, inteiro e booleano)*/        
-term   :  T_INT { $$ = new AST::Number($1, Type::inteiro); }
-		| T_REAL { $$ = new AST::Number($1, Type::real); }
-		| T_BOOL { $$ = new AST::Number($1, Type::booleano); }
+term   :  T_INT { $$ = new AST::Number($1, Type::inteiro); symtab.tempType = Type::inteiro; }
+		| T_REAL { $$ = new AST::Number($1, Type::real); symtab.tempType = Type::real; }
+		| T_BOOL { $$ = new AST::Number($1, Type::booleano); symtab.tempType = Type::booleano; }
         | T_ID { $$ = symtab.useVariable($1); }
         ;
 

@@ -56,9 +56,10 @@ class SymbolTable {
         SymbolTable() {}
         bool checkId(std::string id) {return (entryList.find(id) != entryList.end());}
         void addSymbol(std::string id, Symbol newsymbol) {entryList[id] = newsymbol;}
-        void setSimbolType(std::string id, Type t);
-        void setSimbolKind(std::string id, Kind k);
-        void setSimbolSize(std::string id, int size);
+        void setSymbolType(std::string id, Type t);
+        void setSymbolInitialized(std::string id, bool init = true);
+        void setSymbolKind(std::string id, Kind k);
+        void setSymbolSize(std::string id, int size);
         void setFunctionDeclared(std::string id);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);
         AST::Node* newVariable(std::string id, Type t, Kind k = variable, bool parameter = false);

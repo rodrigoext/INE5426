@@ -61,6 +61,9 @@ class Variable : public Node {
          void setNext(Node * next) {
         	 this->next = next;
          }
+         void setType(Type t) {
+         	this->type = t;
+         }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }
@@ -77,9 +80,9 @@ class BinOp : public Node {
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-        		if ( dynamic_cast<Variable*>(left)->kind == array && (array_exp->type == real || array_exp->type == booleano)) {
-        			yyerror(("semantico: indice do tipo " + type_name_masc[array_exp->type]).c_str());
-        		}
+        		//if ( dynamic_cast<Variable*>(left)->kind == array && (array_exp->type == real || array_exp->type == booleano)) {
+        		//	yyerror(("semantico: indice do tipo " + type_name_masc[array_exp->type]).c_str());
+        		//}
         		if (left->type != right->type) {
         			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
         					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
@@ -189,6 +192,9 @@ class VarDeclaration : public Node {
         }
         void setType(Type t) {
         	this->type = t;
+        	setTypeVars(t);
+        }
+        void setTypeVars(Type t) {
         }
         void setTamanho(Number * tamanho) {
         	this->tamanho = tamanho;
