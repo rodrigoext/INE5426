@@ -1,0 +1,12 @@
+int x, maximo
+x = 0;
+maximo = 7
+
+while x <= maximo {
+	real valor
+	bool fim = FALSE
+	valor = 0.2*x + 5.
+	x = x + 1
+}
+
+fim = TRUE

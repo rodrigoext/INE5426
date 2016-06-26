@@ -1,0 +1,20 @@
+v0: operadores matematicos, logicos e relacionais
+v1: condicionais
+		if
+		if else if else
+
+v2: laços
+		while
+		for in
+		for to
+		for i=1 to
+		for to --
+		for i=1 --
+
+v3: funções
+		func return
+		void func
+		
+v4: matrizes e arranjos
+		tipo[n] arranjo
+		tipo(x,y) matriz
