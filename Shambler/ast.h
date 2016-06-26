@@ -26,7 +26,7 @@ class Node {
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
         //virtual int computeTree(){return 0;}
-        
+
 
 };
 
@@ -49,12 +49,13 @@ class Variable : public Node {
          std::string id;
          Kind kind;
          Node * next;
-         bool parameter;
+         bool parameter, strong;
          Node * parameters;
-         Variable(std::string id, Type t, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
+         Variable(std::string id, Type t, Kind k = variable, bool strong = false,  bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
         	 	 this->next = NULL;
         	 	 this->type = t;
+             this->strong = strong;
         	 	 this->parameter = parameter;
         	 	 this->parameters = parameters;
             }
@@ -80,9 +81,6 @@ class BinOp : public Node {
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-        		//if ( dynamic_cast<Variable*>(left)->kind == array && (array_exp->type == real || array_exp->type == booleano)) {
-        		//	yyerror(("semantico: indice do tipo " + type_name_masc[array_exp->type]).c_str());
-        		//}
         		if (left->type != right->type) {
         			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
         					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
@@ -258,4 +256,3 @@ class FunctionDeclaration : public Node {
 };
 
 }
-
