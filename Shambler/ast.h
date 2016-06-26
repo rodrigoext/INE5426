@@ -49,13 +49,12 @@ class Variable : public Node {
          std::string id;
          Kind kind;
          Node * next;
-         bool parameter, strong;
+         bool parameter;
          Node * parameters;
-         Variable(std::string id, Type t, Kind k = variable, bool strong = false,  bool parameter = false, Node * parameters = NULL) :
+         Variable(std::string id, Type t, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
         	 	 this->next = NULL;
         	 	 this->type = t;
-             this->strong = strong;
         	 	 this->parameter = parameter;
         	 	 this->parameters = parameters;
             }

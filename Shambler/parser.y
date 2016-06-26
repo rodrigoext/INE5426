@@ -92,10 +92,10 @@ tipo	: D_INT { symtab.tempType = Type::inteiro; }
 
 atribuicao:
         tipo varlist T_IGUAL expr {
-                                      AST::VarDeclaration* vardecl = dynamic_cast< AST::VarDeclaration*>($2);
+                                      AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($2));
                      									vardecl->setType(symtab.tempType);
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-                      									symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
+                      									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
                       									dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
                      									}
