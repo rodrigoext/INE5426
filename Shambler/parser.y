@@ -83,7 +83,10 @@ varlist : T_ID { if (symtab.checkId($1)) {
                     symtab.declared = true;
                   } else {
                     $$ = new AST::VarDeclaration(symtab.tempType, symtab.strong);
-                   ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, symtab.tempType, symtab.strong));
+                    if (symtab.strong)
+                      ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, symtab.tempType, symtab.strong));
+                    else
+                      ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, indefinido, symtab.strong));
                    symtab.declared = false;
                   }
                }
@@ -154,8 +157,13 @@ term   :  T_INT { $$ = new AST::Number($1, Type::inteiro); symtab.tempType = Typ
         | T_ID { $$ = symtab.useVariable($1); }
         ;
 
-funcao: T_ID T_FUNC_INI lines T_FUNC_END {symtab.newFunction($1, Type::indefinido, function);
-                            $$ = new AST::FunctionDeclaration($1, NULL, $3, NULL, indefinido);
+funcao: T_ID T_FUNC_INI lines T_FUNC_END {
+                              symtab.newFunction($1, Type::indefinido, function);
+                              $$ = new AST::FunctionDeclaration($1, NULL, $3, NULL, indefinido);
+                            }
+        | T_ID T_FUNC_INI lines D_RETURN expr lines T_FUNC_END {
+                              symtab.newFunction($1, ((AST::Variable*)$5)->type, function);
+                              $$ = new AST::FunctionDeclaration($1, NULL, $3, $5, ((AST::Variable*)$5)->type);
                             }
         ;
 

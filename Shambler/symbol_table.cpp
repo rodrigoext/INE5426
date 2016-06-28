@@ -18,18 +18,28 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, AST::Node* n
 }
 
 AST::Node* SymbolTable::newVariable(std::string id, Type t, bool strong, Kind k, bool parameter){
-    if ( checkId(id) ) {
-    	return assignVariable(id);
-    	yyerror("semantico: variavel %s sofrendo redefinicao.\n", id.c_str());
-    }
-	if (k == array) {
-		Symbol entry(t, k, true);
-		addSymbol(id,entry);
+  if ( checkId(id) ) {
+  	return assignVariable(id);
+  	yyerror("semantico: variavel %s sofrendo redefinicao.\n", id.c_str());
+  }
+	if (strong) {
+		if (k == array) {
+			Symbol entry(t, k, true);
+			addSymbol(id,entry);
+		} else {
+			Symbol entry(t, k, false);
+			addSymbol(id,entry);
+		}
 	} else {
-		Symbol entry(t, k, false);
-		addSymbol(id,entry);
+		if (k == array) {
+			Symbol entry(Type::indefinido, k, true);
+			addSymbol(id,entry);
+		} else {
+			Symbol entry(Type::indefinido, k, false);
+			addSymbol(id,entry);
+		}
 	}
-    return new AST::Variable(id, t, strong, k, parameter);
+	return new AST::Variable(id, t, strong, k, parameter);
 }
 
 AST::Node* SymbolTable::newFunction(std::string id, Type t, Kind k, AST::Node* parametros, bool declarada) {
@@ -58,6 +68,7 @@ AST::Node* SymbolTable::useVariable(std::string id){
     	return new AST::Variable(id, indefinido);
     }
     if ( ! entryList[id].initialized && entryList[id].kind != function ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
+		//std::cout << type_name_masc[entryList[id].type] << std::endl;
    	return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
 }
 
