@@ -97,8 +97,14 @@ void VarDeclaration::printTree(){
 	} else {
 		if (kind == array)
 			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-		else
-			std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+		else {
+      if(strong) {
+			  std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+      } else {
+        std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
+      }
+
+    }
 		for (auto var = vars.begin(); var != vars.end(); var++) {
 			std::cout << dynamic_cast<Variable *>(*var)->id;
 			if(next(var) != vars.end()) std::cout << ", ";

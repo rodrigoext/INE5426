@@ -77,17 +77,23 @@ declaracao :
         tipo varlist { $$ = $2; }
         ;
 
-varlist : T_ID { $$ = new AST::VarDeclaration(symtab.tempType);
-                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($1, symtab.tempType));
+varlist : T_ID { if (symtab.checkId($1)) {
+                    $$ = symtab.assignVariable($1);
+                    symtab.declared = true;
+                  } else {
+                    $$ = new AST::VarDeclaration(symtab.tempType, symtab.strong);
+                   ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, symtab.tempType, symtab.strong));
+                   symtab.declared = false;
+                  }
                }
         | varlist T_COMMA T_ID { $$ = $1;
-                                 dynamic_cast< AST::VarDeclaration*>($$)->vars.push_back(symtab.newVariable($3, symtab.tempType));
+                                 ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($3, symtab.tempType, symtab.strong));
                                 }
         ;
 
-tipo	: D_INT { symtab.tempType = Type::inteiro; }
-		| D_REAL { symtab.tempType = Type::real; }
-		| D_BOOL { symtab.tempType = Type::booleano; }
+tipo	: D_INT { symtab.tempType = Type::inteiro; symtab.strong = true; }
+		| D_REAL { symtab.tempType = Type::real; symtab.strong = true; }
+		| D_BOOL { symtab.tempType = Type::booleano; symtab.strong = true; }
 		;
 
 atribuicao:
@@ -96,20 +102,26 @@ atribuicao:
                      									vardecl->setType(symtab.tempType);
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
-                      									symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
-                      									dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
+                      									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+                      									((AST::Variable *)(*var))->setType(symtab.tempType);
                      									}
                      									$$ = new AST::BinOp($2, associa, $4);
+                                      symtab.strong = false;
        								              }
        	| varlist T_IGUAL expr {
-                                  AST::VarDeclaration* vardecl = dynamic_cast<AST::VarDeclaration*>($1);
-                									vardecl->setType(symtab.tempType);
-                									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-                										symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
-                										symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
-                										dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
-                									}
-                									$$ = new AST::BinOp($1, associa, $3);
+                                  if (symtab.declared) {
+                                    AST::Variable* v = dynamic_cast< AST::Variable*>($1);
+                                    $$ = new AST::BinOp($1, associa, $3);
+                                  } else {
+                                    AST::VarDeclaration* vardecl = dynamic_cast<AST::VarDeclaration*>($1);
+                  									vardecl->setType(symtab.tempType);
+                  									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+                  										symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
+                  										symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
+                  										dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
+                  									}
+                  									$$ = new AST::BinOp($1, associa, $3);
+                                  }
        							            }
         ;
 

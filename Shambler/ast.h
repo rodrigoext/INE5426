@@ -49,12 +49,13 @@ class Variable : public Node {
          std::string id;
          Kind kind;
          Node * next;
-         bool parameter;
+         bool parameter, strong;
          Node * parameters;
-         Variable(std::string id, Type t, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
+         Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
         	 	 this->next = NULL;
         	 	 this->type = t;
+             this->strong = strong;
         	 	 this->parameter = parameter;
         	 	 this->parameters = parameters;
             }
@@ -180,11 +181,12 @@ class VarDeclaration : public Node {
      public:
         NodeList vars;
         Number *tamanho;
-        bool parameter;
-        VarDeclaration(Type t, Kind k = variable, bool parameter = false) {
+        bool parameter, strong;
+        VarDeclaration(Type t, bool strong = false, Kind k = variable, bool parameter = false) {
         	this->type = t;
         	this->kind = k;
         	this->tamanho = NULL;
+          this->strong = strong;
         	this->parameter = parameter;
         }
         void setType(Type t) {

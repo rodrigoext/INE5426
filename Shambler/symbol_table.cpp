@@ -17,7 +17,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, AST::Node* n
 	return v;
 }
 
-AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, bool parameter){
+AST::Node* SymbolTable::newVariable(std::string id, Type t, bool strong, Kind k, bool parameter){
     if ( checkId(id) ) {
     	return assignVariable(id);
     	yyerror("semantico: variavel %s sofrendo redefinicao.\n", id.c_str());
@@ -29,7 +29,7 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, Kind k, bool paramet
 		Symbol entry(t, k, false);
 		addSymbol(id,entry);
 	}
-    return new AST::Variable(id, t, k, parameter);
+    return new AST::Variable(id, t, strong, k, parameter);
 }
 
 AST::Node* SymbolTable::newFunction(std::string id, Type t, Kind k, AST::Node* parametros, bool declarada) {
@@ -65,9 +65,14 @@ Symbol SymbolTable::getVariable(std::string id){
 	return entryList[id];
 }
 
-void SymbolTable::setSymbolType(std::string id, Type t) {
-    entryList[id].setType(t);
-    //std::cout << id << " | " << type_name_masc[t] << std::endl;
+bool SymbolTable::setSymbolType(std::string id, Type t) {
+		//std::cout << id << " | " << type_name_masc[entryList[id].type] << std::endl;
+		if (entryList[id].type == indefinido) {
+			entryList[id].setType(t);
+			return true;
+		}
+    //std::cout << id << " | " << type_name_masc[entryList[id].type] << std::endl;
+		return false;
 }
 
 void SymbolTable::setSymbolInitialized(std::string id, bool init) {
