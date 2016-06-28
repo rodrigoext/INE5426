@@ -18,7 +18,7 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 
 [ \t]               ; //ignores spaces
 {int}              	{yylval.name = strdup(yytext); return T_INT;}
-{real}				{yylval.name = strdup(yytext); return T_REAL;}		
+{real}				{yylval.name = strdup(yytext); return T_REAL;}
 "+"                 {return T_PLUS;}
 "-"                 {return T_SUB;}
 "/"                 {return T_DIV;}
@@ -36,9 +36,11 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "~"                 {return T_NEGA;}
 "("                 {return T_ABRE_P;}
 ")"                 {return T_FECHA_P;}
-"["					{return T_ARRAY_INIT;}
-"]"					{return T_ARRAY_END;}
-":"					{return T_DECLARA;}
+"["					        {return T_ARRAY_INIT;}
+"]"					        {return T_ARRAY_END;}
+"{"                 {return T_FUNC_INI;}
+"}"                 {return T_FUNC_END;}
+":"					        {return T_DECLARA;}
 ";"                 {return T_FIM;}
 "TRUE"				{yylval.name = strdup(yytext); return T_BOOL;}
 "FALSE"				{yylval.name = strdup(yytext); return T_BOOL;}

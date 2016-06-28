@@ -24,7 +24,7 @@ extern void yyerror(const char* s, ...);
 %token <integer> T_INT
 %token <real> T_REAL
 */
-%token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END
+%token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END T_FUNC_INI T_FUNC_END
 %token T_ASSIGN T_DECLARA
 %token D_IF D_THEN D_END D_ELSE
 %token D_WHILE D_DO
@@ -41,7 +41,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist term
+%type <node> expr line declaracao atribuicao varlist term funcao
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -70,6 +70,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | declaracao
         | atribuicao T_FIM
         | atribuicao
+        | funcao
         | error T_FIM {yyerrok; $$ = NULL;}
         ;
 
@@ -151,6 +152,11 @@ term   :  T_INT { $$ = new AST::Number($1, Type::inteiro); symtab.tempType = Typ
 		    | T_REAL { $$ = new AST::Number($1, Type::real); symtab.tempType = Type::real; }
 		    | T_BOOL { $$ = new AST::Number($1, Type::booleano); symtab.tempType = Type::booleano; }
         | T_ID { $$ = symtab.useVariable($1); }
+        ;
+
+funcao: T_ID T_FUNC_INI lines T_FUNC_END {symtab.newFunction($1, Type::indefinido, function);
+                            $$ = new AST::FunctionDeclaration($1, NULL, $3, NULL, indefinido);
+                            }
         ;
 
 

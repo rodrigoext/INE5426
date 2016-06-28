@@ -168,10 +168,15 @@ void ParameterDeclaration::printTree() {
 }
 
 void FunctionDeclaration::printTree() {
-	if (next != NULL)
-		std::cout << "Declaracao de funcao " << type_name_fem[type] << ": " << id << std::endl;
-	else
+	if (next != NULL) {
+		std::cout << "Declaracao de funcao ";
+    if (type == indefinido)
+      std::cout << "sem retorno: " << id << std::endl;
+    else
+      std::cout << type_name_fem[type] << ": " << id << std::endl;
+	} else {
 		std::cout << "Definicao de funcao " << type_name_fem[type] << ": " << id << std::endl;
+  }
 	if (parametros != NULL) {
 		std::cout << "+parametros:" << std::endl;
 		parametros->printTree();
