@@ -41,7 +41,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist term funcao
+%type <node> expr line declaracao atribuicao varlist term funcao parametro parametros
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -130,9 +130,14 @@ atribuicao:
         ;
 
 expr    : term { $$ = $1; }
-        | T_ID T_ARRAY_INIT expr T_ARRAY_END { AST::Variable* v = dynamic_cast< AST::Variable*>(symtab.useVariable($1));
-        										v->setNext($3);
-        										$$ = v; }
+
+        | T_ID T_ARRAY_INIT expr T_ARRAY_END
+        {
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+        	v->setNext($3);
+          $$ = v;
+        }
+
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
@@ -157,14 +162,34 @@ term   :  T_INT { $$ = new AST::Number($1, Type::inteiro); symtab.tempType = Typ
         | T_ID { $$ = symtab.useVariable($1); }
         ;
 
-funcao: T_ID T_FUNC_INI lines T_FUNC_END {
-                              symtab.newFunction($1, Type::indefinido, function);
-                              $$ = new AST::FunctionDeclaration($1, NULL, $3, NULL, indefinido);
-                            }
-        | T_ID T_FUNC_INI lines D_RETURN expr lines T_FUNC_END {
-                              symtab.newFunction($1, ((AST::Variable*)$5)->type, function);
-                              $$ = new AST::FunctionDeclaration($1, NULL, $3, $5, ((AST::Variable*)$5)->type);
-                            }
+funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
+        {
+          symtab.newFunction($1, Type::indefinido, function);
+          $$ = new AST::FunctionDeclaration($1, $2, $4, NULL, indefinido);
+        }
+
+        | T_ID parametros T_FUNC_INI lines D_RETURN expr lines T_FUNC_END
+        {
+          symtab.newFunction($1, ((AST::Variable*)$6)->type, function);
+          $$ = new AST::FunctionDeclaration($1, $2, $4, $6, ((AST::Variable*)$6)->type);
+        }
+        ;
+
+parametros: T_ABRE_P parametro T_FECHA_P
+        {
+          $$ = NULL;
+        }
+        ;
+
+parametro: T_ID
+        {
+          $$ = NULL;
+        }
+
+        | parametro T_COMMA T_ID
+        {
+          $$ = NULL;
+        }
         ;
 
 
