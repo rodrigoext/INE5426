@@ -47,6 +47,8 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "int"				{return D_INT;}
 "real"				{return D_REAL;}
 "bool"				{return D_BOOL;}
+"vector"            {return D_VETOR;}
+"list"              {return D_LISTA;} 
 "if"				{return D_IF;}
 "then"				{return D_THEN;}
 "end"				{return D_END;}

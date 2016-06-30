@@ -34,7 +34,7 @@ extern void yyerror(const char* s, ...);
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
 %token T_AND T_OR T_NEGA T_ABRE_P T_FECHA_P T_FIM
 %token T_TRUE T_FALSE
-%token D_INT D_REAL D_BOOL
+%token D_INT D_REAL D_BOOL D_VETOR D_LISTA
 %token <name> T_ID T_BOOL T_INT T_REAL
 
 /* type defines the type of our nonterminal symbols.
@@ -76,6 +76,8 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
 declaracao :
         tipo varlist { $$ = $2; }
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist { $$ = $5; }
+        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist { $$ = $7; }
         ;
 
 varlist : T_ID { if (symtab.checkId($1)) {
@@ -111,7 +113,30 @@ atribuicao:
                      									}
                      									$$ = new AST::BinOp($2, associa, $4);
                                       symtab.strong = false;
+       				  			              }
+
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist T_IGUAL expr {
+                                      AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($5));
+                     									vardecl->setType(symtab.tempType);
+                     									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+                      									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+                      									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+                      									((AST::Variable *)(*var))->setType(symtab.tempType);
+                     									}
+                     									$$ = new AST::BinOp($5, associa, $7);
+                                      symtab.strong = false;
        								              }
+        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist T_IGUAL expr {
+                                      AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
+                     									vardecl->setType(symtab.tempType);
+                     									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+                      									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+                      									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+                      									((AST::Variable *)(*var))->setType(symtab.tempType);
+                     									}
+                     									$$ = new AST::BinOp($7, associa, $9);
+                                      symtab.strong = false;
+       								              }      
        	| varlist T_IGUAL expr {
                                   if (symtab.declared) {
                                     AST::Variable* v = dynamic_cast< AST::Variable*>($1);
