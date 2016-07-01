@@ -108,10 +108,10 @@ class BinOp : public Node {
         	case menor_igual:
         	case e_logico:
         	case ou_logico:
-        		if (right->type != booleano) {
+        		/*if (right->type != booleano) {
         			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
         			        					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
-        		}
+        		}*/
         		this->type = booleano;
         		break;
         	default:

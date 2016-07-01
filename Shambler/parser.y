@@ -41,7 +41,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca
+%type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -72,6 +72,8 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | atribuicao
         | funcao
         | funcao T_FIM
+        | condicao
+        | condicao T_FIM
         | busca
         | busca T_FIM
         | error T_FIM {yyerrok; $$ = NULL;}
@@ -243,6 +245,19 @@ parametro: T_ID
         | parametro T_COMMA T_ID
         {
           $$ = NULL;
+        }
+        ;
+
+condicao: D_IF expr T_FUNC_INI lines T_FUNC_END
+        {
+          $$ = new AST::ConditionalExp($2, $4);
+        }
+
+        | D_IF expr T_FUNC_INI lines T_FUNC_END D_ELSE T_FUNC_INI lines T_FUNC_END
+        {
+          AST::ConditionalExp * c = new AST::ConditionalExp($2, $4);
+          c->SetSenao($8);
+          $$ = c;
         }
         ;
 
