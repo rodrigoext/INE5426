@@ -193,3 +193,9 @@ void FunctionDeclaration::printTree() {
 		std::cout << "Fim definicao" ;
 	}
 }
+
+void FindExpr::printTree() {
+  std::cout << "Busca por predicado tal que " << id << " possui ou e igual a ";
+  next->printTree();
+  std::cout << std::endl;
+}

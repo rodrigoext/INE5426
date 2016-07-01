@@ -42,13 +42,16 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "}"                 {return T_FUNC_END;}
 ":"					        {return T_DECLARA;}
 ";"                 {return T_FIM;}
+"."                 {return T_DOT;}
+"->"                {return T_FIND;}
+"find"              {return D_FIND;}
 "TRUE"				{yylval.name = strdup(yytext); return T_BOOL;}
 "FALSE"				{yylval.name = strdup(yytext); return T_BOOL;}
 "int"				{return D_INT;}
 "real"				{return D_REAL;}
 "bool"				{return D_BOOL;}
 "vector"            {return D_VETOR;}
-"list"              {return D_LISTA;} 
+"list"              {return D_LISTA;}
 "if"				{return D_IF;}
 "then"				{return D_THEN;}
 "end"				{return D_END;}

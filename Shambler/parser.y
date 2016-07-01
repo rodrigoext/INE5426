@@ -24,13 +24,13 @@ extern void yyerror(const char* s, ...);
 %token <integer> T_INT
 %token <real> T_REAL
 */
-%token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END T_FUNC_INI T_FUNC_END
+%token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END T_FUNC_INI T_FUNC_END T_DOT
 %token T_ASSIGN T_DECLARA
 %token D_IF D_THEN D_END D_ELSE
 %token D_WHILE D_DO
-%token D_DEF D_FUN D_DECL D_RETURN
+%token D_DEF D_FUN D_DECL D_RETURN D_FIND
 %token T_MUL T_DIV
-%token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR
+%token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR T_FIND
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
 %token T_AND T_OR T_NEGA T_ABRE_P T_FECHA_P T_FIM
 %token T_TRUE T_FALSE
@@ -41,7 +41,7 @@ extern void yyerror(const char* s, ...);
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line declaracao atribuicao varlist term funcao parametro parametros
+%type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -71,6 +71,9 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | atribuicao T_FIM
         | atribuicao
         | funcao
+        | funcao T_FIM
+        | busca
+        | busca T_FIM
         | error T_FIM {yyerrok; $$ = NULL;}
         ;
 
@@ -118,10 +121,13 @@ atribuicao:
         | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist T_IGUAL expr {
                                       AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($5));
                      									vardecl->setType(symtab.tempType);
+                                      vardecl->setKind(Kind::array);
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+                                        symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
                       									((AST::Variable *)(*var))->setType(symtab.tempType);
+                                        ((AST::Variable *)(*var))->setKind(Kind::array);
                      									}
                      									$$ = new AST::BinOp($5, associa, $7);
                                       symtab.strong = false;
@@ -129,14 +135,17 @@ atribuicao:
         | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist T_IGUAL expr {
                                       AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
                      									vardecl->setType(symtab.tempType);
+                                      vardecl->setKind(Kind::matrix);
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+                                        symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
                       									((AST::Variable *)(*var))->setType(symtab.tempType);
+                                        ((AST::Variable *)(*var))->setKind(Kind::matrix);
                      									}
                      									$$ = new AST::BinOp($7, associa, $9);
                                       symtab.strong = false;
-       								              }      
+       								              }
        	| varlist T_IGUAL expr {
                                   if (symtab.declared) {
                                     AST::Variable* v = dynamic_cast< AST::Variable*>($1);
@@ -216,6 +225,11 @@ parametro: T_ID
           $$ = NULL;
         }
         ;
+
+busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
+        {
+          $$= new AST::FindExpr($7, $9, Type::indefinido);
+        }
 
 
 

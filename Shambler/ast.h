@@ -65,6 +65,9 @@ class Variable : public Node {
          void setType(Type t) {
          	this->type = t;
          }
+         void setKind(Kind k) {
+           this->kind = k;
+         }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }
@@ -193,6 +196,9 @@ class VarDeclaration : public Node {
         	this->type = t;
         	setTypeVars(t);
         }
+        void setKind(Kind k) {
+          this->kind = k;
+        }
         void setTypeVars(Type t) {
         }
         void setTamanho(Number * tamanho) {
@@ -256,4 +262,15 @@ class FunctionDeclaration : public Node {
 		void printTree();
 };
 
+class FindExpr : public Node {
+  public:
+    std::string id;
+    Node * next;
+    Type type;
+    FindExpr(std::string id, Node * next, Type t) :
+      id(id), next(next), type(t) {
+
+      }
+    void printTree();
+};
 }
