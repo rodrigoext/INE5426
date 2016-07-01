@@ -97,8 +97,14 @@ void VarDeclaration::printTree(){
 	} else {
 		if (kind == array)
 			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-		else
-			std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+		else {
+      if(strong) {
+			  std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+      } else {
+        std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
+      }
+
+    }
 		for (auto var = vars.begin(); var != vars.end(); var++) {
 			std::cout << dynamic_cast<Variable *>(*var)->id;
 			if(next(var) != vars.end()) std::cout << ", ";
@@ -147,9 +153,21 @@ void ConditionalExp::printTree() {
 
 void LoopExp::printTree() {
 	std::cout << "Laco" << std::endl;
-	std::cout << "+enquanto: ";
-	condition->printTree();
-	std::cout << std::endl;
+	if (forExp) {
+		std::cout << "+para: ";
+		condition->printTree();
+		std::cout << std::endl;
+		if(decrement)
+			std::cout << "+decrementa ate: ";
+		else
+			std::cout << "+ate: ";
+		conditionFor->printTree();
+		std::cout << std::endl;
+	} else {
+		std::cout << "+enquanto: ";
+		condition->printTree();
+		std::cout << std::endl;
+	}
 	std::cout << "+faca: " << std::endl;
 	next->printTree();
 	std::cout << "Fim laco";
@@ -162,10 +180,15 @@ void ParameterDeclaration::printTree() {
 }
 
 void FunctionDeclaration::printTree() {
-	if (next != NULL)
-		std::cout << "Declaracao de funcao " << type_name_fem[type] << ": " << id << std::endl;
-	else
+	if (next != NULL) {
+		std::cout << "Declaracao de funcao ";
+    if (type == indefinido)
+      std::cout << "sem retorno: " << id << std::endl;
+    else
+      std::cout << type_name_fem[type] << ": " << id << std::endl;
+	} else {
 		std::cout << "Definicao de funcao " << type_name_fem[type] << ": " << id << std::endl;
+  }
 	if (parametros != NULL) {
 		std::cout << "+parametros:" << std::endl;
 		parametros->printTree();
@@ -181,4 +204,10 @@ void FunctionDeclaration::printTree() {
 	} else {
 		std::cout << "Fim definicao" ;
 	}
+}
+
+void FindExpr::printTree() {
+  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " e igual a ";
+  next->printTree();
+  std::cout << std::endl;
 }

@@ -18,7 +18,7 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 
 [ \t]               ; //ignores spaces
 {int}              	{yylval.name = strdup(yytext); return T_INT;}
-{real}				{yylval.name = strdup(yytext); return T_REAL;}		
+{real}				{yylval.name = strdup(yytext); return T_REAL;}
 "+"                 {return T_PLUS;}
 "-"                 {return T_SUB;}
 "/"                 {return T_DIV;}
@@ -38,13 +38,20 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 ")"                 {return T_FECHA_P;}
 "["					{return T_ARRAY_INIT;}
 "]"					{return T_ARRAY_END;}
+"{"                 {return T_FUNC_INI;}
+"}"                 {return T_FUNC_END;}
 ":"					{return T_DECLARA;}
 ";"                 {return T_FIM;}
+"."                 {return T_DOT;}
+"->"                {return T_FIND;}
+"find"              {return D_FIND;}
 "TRUE"				{yylval.name = strdup(yytext); return T_BOOL;}
 "FALSE"				{yylval.name = strdup(yytext); return T_BOOL;}
 "int"				{return D_INT;}
 "real"				{return D_REAL;}
 "bool"				{return D_BOOL;}
+"vector"            {return D_VETOR;}
+"list"              {return D_LISTA;}
 "if"				{return D_IF;}
 "then"				{return D_THEN;}
 "end"				{return D_END;}
@@ -53,6 +60,8 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "fun"				{return D_FUN;}
 "def"				{return D_DEF;}
 "while"				{return D_WHILE;}
+"for"               {return D_FOR;}
+"to"                {return D_TO;}
 "do"				{return D_DO;}
 "return"			{return D_RETURN;}
 {nome}				{yylval.name = strdup(yytext); return T_ID;}

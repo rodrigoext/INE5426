@@ -26,7 +26,7 @@ class Node {
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
         //virtual int computeTree(){return 0;}
-        
+
 
 };
 
@@ -49,12 +49,13 @@ class Variable : public Node {
          std::string id;
          Kind kind;
          Node * next;
-         bool parameter;
+         bool parameter, strong;
          Node * parameters;
-         Variable(std::string id, Type t, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
+         Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
         	 	 this->next = NULL;
         	 	 this->type = t;
+             this->strong = strong;
         	 	 this->parameter = parameter;
         	 	 this->parameters = parameters;
             }
@@ -63,6 +64,9 @@ class Variable : public Node {
          }
          void setType(Type t) {
          	this->type = t;
+         }
+         void setKind(Kind k) {
+           this->kind = k;
          }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
@@ -80,9 +84,6 @@ class BinOp : public Node {
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-        		//if ( dynamic_cast<Variable*>(left)->kind == array && (array_exp->type == real || array_exp->type == booleano)) {
-        		//	yyerror(("semantico: indice do tipo " + type_name_masc[array_exp->type]).c_str());
-        		//}
         		if (left->type != right->type) {
         			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
         					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
@@ -107,10 +108,10 @@ class BinOp : public Node {
         	case menor_igual:
         	case e_logico:
         	case ou_logico:
-        		if (right->type != booleano) {
+        		/*if (right->type != booleano) {
         			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
         			        					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
-        		}
+        		}*/
         		this->type = booleano;
         		break;
         	default:
@@ -183,16 +184,20 @@ class VarDeclaration : public Node {
      public:
         NodeList vars;
         Number *tamanho;
-        bool parameter;
-        VarDeclaration(Type t, Kind k = variable, bool parameter = false) {
+        bool parameter, strong;
+        VarDeclaration(Type t, bool strong = false, Kind k = variable, bool parameter = false) {
         	this->type = t;
         	this->kind = k;
         	this->tamanho = NULL;
+          this->strong = strong;
         	this->parameter = parameter;
         }
         void setType(Type t) {
         	this->type = t;
         	setTypeVars(t);
+        }
+        void setKind(Kind k) {
+          this->kind = k;
         }
         void setTypeVars(Type t) {
         }
@@ -222,8 +227,14 @@ class LoopExp : public Node {
 	public:
 		Node * condition;
 		Node * next;
-		LoopExp(Node *condition, Node *next) :
-			condition(condition), next(next) {
+		Node * conditionFor;
+		bool forExp;
+		bool decrement;
+		LoopExp(Node *condition, Node *next, bool forExp = false, bool decrement = false) :
+			condition(condition), next(next), forExp(forExp), decrement(decrement) {
+		}
+		void SetConditionFor(Node *next) {
+			this->conditionFor = next;
 		}
 		void printTree();
 };
@@ -257,5 +268,15 @@ class FunctionDeclaration : public Node {
 		void printTree();
 };
 
-}
+class FindExpr : public Node {
+  public:
+    std::string id;
+    Node * next;
+    Type type;
+    FindExpr(std::string id, Node * next, Type t) :
+      id(id), next(next), type(t) {
 
+      }
+    void printTree();
+};
+}
