@@ -27,7 +27,7 @@ extern void yyerror(const char* s, ...);
 %token T_PLUS T_SUB T_NL T_COMMA T_ARRAY_INIT T_ARRAY_END T_FUNC_INI T_FUNC_END T_DOT
 %token T_ASSIGN T_DECLARA
 %token D_IF D_THEN D_END D_ELSE
-%token D_WHILE D_DO
+%token D_WHILE D_DO D_FOR D_TO
 %token D_DEF D_FUN D_DECL D_RETURN D_FIND
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR T_FIND
@@ -42,6 +42,7 @@ extern void yyerror(const char* s, ...);
  * Example: %type<node> expr
  */
 %type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
+%type <node> laco
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -74,6 +75,8 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | funcao T_FIM
         | condicao
         | condicao T_FIM
+        | laco
+        | laco T_FIM
         | busca
         | busca T_FIM
         | error T_FIM {yyerrok; $$ = NULL;}
@@ -258,6 +261,32 @@ condicao: D_IF expr T_FUNC_INI lines T_FUNC_END
           AST::ConditionalExp * c = new AST::ConditionalExp($2, $4);
           c->SetSenao($8);
           $$ = c;
+        }
+        ;
+
+laco: 
+        D_WHILE expr T_FUNC_INI lines T_FUNC_END
+        {
+          $$ = new AST::LoopExp($2, $4);
+        }
+
+        | D_FOR expr T_FUNC_INI lines T_FUNC_END
+        {
+          $$ = new AST::LoopExp($2, $4, true);
+        }
+
+        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END 
+        {
+          AST::LoopExp * loop = new AST::LoopExp($2, $6, true);
+          loop->SetConditionFor($4);
+          $$ = loop;
+        }
+
+        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END 
+        {
+          AST::LoopExp * loop = new AST::LoopExp($2, $8, true, true);
+          loop->SetConditionFor($4);
+          $$ = loop;
         }
         ;
 

@@ -153,9 +153,21 @@ void ConditionalExp::printTree() {
 
 void LoopExp::printTree() {
 	std::cout << "Laco" << std::endl;
-	std::cout << "+enquanto: ";
-	condition->printTree();
-	std::cout << std::endl;
+	if (forExp) {
+		std::cout << "+para: ";
+		condition->printTree();
+		std::cout << std::endl;
+		if(decrement)
+			std::cout << "+decrementa ate: ";
+		else
+			std::cout << "+ate: ";
+		conditionFor->printTree();
+		std::cout << std::endl;
+	} else {
+		std::cout << "+enquanto: ";
+		condition->printTree();
+		std::cout << std::endl;
+	}
 	std::cout << "+faca: " << std::endl;
 	next->printTree();
 	std::cout << "Fim laco";
@@ -195,7 +207,7 @@ void FunctionDeclaration::printTree() {
 }
 
 void FindExpr::printTree() {
-  std::cout << "Busca por predicado tal que " << id << " possui ou e igual a ";
+  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " e igual a ";
   next->printTree();
   std::cout << std::endl;
 }

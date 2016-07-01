@@ -227,8 +227,14 @@ class LoopExp : public Node {
 	public:
 		Node * condition;
 		Node * next;
-		LoopExp(Node *condition, Node *next) :
-			condition(condition), next(next) {
+		Node * conditionFor;
+		bool forExp;
+		bool decrement;
+		LoopExp(Node *condition, Node *next, bool forExp = false, bool decrement = false) :
+			condition(condition), next(next), forExp(forExp), decrement(decrement) {
+		}
+		void SetConditionFor(Node *next) {
+			this->conditionFor = next;
 		}
 		void printTree();
 };

@@ -36,11 +36,11 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "~"                 {return T_NEGA;}
 "("                 {return T_ABRE_P;}
 ")"                 {return T_FECHA_P;}
-"["					        {return T_ARRAY_INIT;}
-"]"					        {return T_ARRAY_END;}
+"["					{return T_ARRAY_INIT;}
+"]"					{return T_ARRAY_END;}
 "{"                 {return T_FUNC_INI;}
 "}"                 {return T_FUNC_END;}
-":"					        {return T_DECLARA;}
+":"					{return T_DECLARA;}
 ";"                 {return T_FIM;}
 "."                 {return T_DOT;}
 "->"                {return T_FIND;}
@@ -60,6 +60,8 @@ real  [0-9]+\.[0-9]*|[0-9]*\.[0-9]+
 "fun"				{return D_FUN;}
 "def"				{return D_DEF;}
 "while"				{return D_WHILE;}
+"for"               {return D_FOR;}
+"to"                {return D_TO;}
 "do"				{return D_DO;}
 "return"			{return D_RETURN;}
 {nome}				{yylval.name = strdup(yytext); return T_ID;}
