@@ -78,8 +78,27 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         ;
 
 declaracao :
-        tipo varlist { $$ = $2; }
-        | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist { $$ = $5; }
+        tipo varlist
+        {
+          $$ = $2;
+        }
+
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist
+        {
+          AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($5));
+          vardecl->setType(symtab.tempType);
+          vardecl->setKind(Kind::array);
+          vardecl->setTamanho(new AST::Number($3, Type::inteiro));
+          for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+            symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
+            ((AST::Variable *)(*var))->setType(symtab.tempType);
+            ((AST::Variable *)(*var))->setKind(Kind::array);
+          }
+          symtab.strong = false;
+          $$ = $5;
+        }
+
         | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist { $$ = $7; }
         ;
 
@@ -122,6 +141,7 @@ atribuicao:
                                       AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($5));
                      									vardecl->setType(symtab.tempType);
                                       vardecl->setKind(Kind::array);
+                                      vardecl->setTamanho(new AST::Number($3, Type::inteiro));
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
