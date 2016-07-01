@@ -76,11 +76,24 @@ void BinOp::printTree(){
     return;
 }
 
+int BinOp::computeTree() {
+  return left->computeTree() + right->computeTree();
+}
+
 void Block::printTree(){
     for (Node* line: lines) {
         line->printTree();
         std::cout  << std::endl;
     }
+}
+
+int Block::computeTree(){
+  int value;
+  for (Node* line: lines) {
+      value = line->computeTree();
+      std::cout << "Computed " << value << std::endl;
+  }
+  return 0;
 }
 
 void VarDeclaration::printTree(){
@@ -112,9 +125,16 @@ void VarDeclaration::printTree(){
 	}
 }
 
+int VarDeclaration::computeTree() {
+  return 0;
+}
 
 void Number::printTree(){
 	std::cout << " valor " << type_name_masc[type] << " " << value;
+}
+
+int Number::computeTree(){
+  return std::stoi(value);
 }
 
 void Variable::printTree(){
@@ -133,7 +153,10 @@ void Variable::printTree(){
 	} else {
 		std::cout << "variável " << type_name_fem[type] << " " << id;
 	}
+}
 
+int Variable::computeTree(){
+  return 0;
 }
 
 void ConditionalExp::printTree() {

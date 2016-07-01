@@ -7,7 +7,9 @@ extern int yyparse();
 int main(int argc, char **argv)
 {
  yyparse();                  //parses whole data
+ std::cout << "#Print lines" << std::endl;
  programRoot->printTree();   //prints the ASTs
- //programRoot->computeTree(); //computes the ASTs
+ std::cout << "#Compute lines" << std::endl;
+ programRoot->computeTree(); //computes the ASTs
  return 0;
 }

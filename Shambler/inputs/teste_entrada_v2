@@ -10,8 +10,6 @@ if frequencia >= .75 {
 	media = (a*2 + b*2 + c*4) / 8
 	if media >= 5.75 OR media = 5.5 AND frequencia = 10. {
 		aprovado = TRUE
-	} else if media >= 3. {
-		rec = TRUE
 	} else {
 		aprovado = FALSE
 		rec = FALSE

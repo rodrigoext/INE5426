@@ -25,7 +25,7 @@ class Node {
         }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
-        //virtual int computeTree(){return 0;}
+        virtual int computeTree(){return 0;}
 
 
 };
@@ -72,6 +72,7 @@ class Variable : public Node {
         	 this->parameters = parameters;
          }
          void printTree();
+         int computeTree();
 };
 
 class BinOp : public Node {
@@ -120,6 +121,7 @@ class BinOp : public Node {
         	}
         }
         void printTree();
+        int computeTree();
 };
 
 class UnOp : public Node {
@@ -163,6 +165,7 @@ class Block : public Node {
         NodeList lines;
         Block() { }
         void printTree();
+        int computeTree();
 };
 
 class Number : public Node {
@@ -178,6 +181,7 @@ class Number : public Node {
 			this->next = node;
 		}
 		void printTree();
+    int computeTree();
 };
 
 class VarDeclaration : public Node {
@@ -205,6 +209,7 @@ class VarDeclaration : public Node {
         	this->tamanho = tamanho;
         }
         void printTree();
+        int computeTree();
 };
 
 class ConditionalExp : public Node {

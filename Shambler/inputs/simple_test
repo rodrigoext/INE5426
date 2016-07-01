@@ -8,20 +8,20 @@ while caminhar {
 
 int i = 0
 for i to 100 {
-  incremento = 10
+  i = i + 1
 }
 
 i = 200
 for i to 50 -- {
-  decrementa = 10
+  i = i - 1
 }
 
 soma {
   r = 2 + 3
 }
 
-subtrair {
-  result = 4 - 5
+subtrair(a, b) {
+  result = a - b
   return result
 }
 
