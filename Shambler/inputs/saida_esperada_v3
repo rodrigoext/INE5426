@@ -1,0 +1,13 @@
+Declaracao de arranjo inteiro de tamanho 5: a
+Declaracao de arranjo booleano de tamanho 3: b
+Declaracao de arranjo real de tamanho 8: c
+Atribuicao de valor para variavel i: valor inteiro 4
+Atribuicao de valor para variavel j: valor inteiro 1
+
+Atribuicao de valor para arranjo inteiro a {+indice: valor inteiro 3}: variavel inteira j
+Atribuicao de valor para arranjo inteiro a {+indice: variavel inteira i}: valor inteiro 7
+Atribuicao de valor para arranjo inteiro a {+indice: (variavel inteira j (soma inteira) variavel inteira i)}: valor inteiro 10 (multiplicacao inteira) arranjo inteiro a {+indice: valor inteiro 3}
+Atribuicao de valor para variavel k: arranjo inteiro a {+indice: variavel inteira i}
+Atribuicao de valor para arranjo inteiro a {+indice: (valor inteiro 6 (subtracao inteira) valor inteiro 4)}: arranjo real c {+indice: valor inteiro 5} (divisao inteira) valor inteiro 4
+Atribuicao de valor para arranjo booleano b {+indice: arranjo inteiro a {+indice: valor inteiro 3}}: arranjo real c {+indice: valor inteiro 3 (soma inteira) valor inteiro 2} (menor booleano) arranjo inteiro a {+indice: valor inteiro 2 (multiplicacao inteira) valor inteiro 2}
+Atribuicao de valor para arranjo booleano b {+indice: valor inteiro 2}: arranjo booleano b {+indice: valor inteiro 3} (e booleano) arranjo booleano b {+indice: valor inteiro 1}

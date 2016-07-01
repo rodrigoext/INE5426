@@ -1,25 +1,26 @@
-Declaracao de variavel real: media, frequencia
-Atribuicao de valor para variavel real frequencia: valor real .8
-Declaracao de variavel booleana: aprovado
-Atribuicao de valor para variavel booleana aprovado: valor booleano FALSE
-Declaracao de variavel booleana: rec
-Atribuicao de valor para variavel a: valor real 3.9
-Atribuicao de valor para variavel b: valor real 5.
-Atribuicao de valor para variavel c: valor inteiro 10
+Declaracao de variavel inteira: a, b
+Declaracao de variavel inteira: c
+Atribuicao de valor para variavel inteira c: valor inteiro 5
+Atribuicao de valor para variavel d: valor inteiro 3
+Declaracao de variavel real: h, i
+Atribuicao de valor para variavel real h: valor real 2.4
+Atribuicao de valor para variavel real i: valor real 2.4
+Declaracao de variavel real: l, m
+Declaracao de variavel real: j
+Atribuicao de valor para variavel real i: valor real .7
+Atribuicao de valor para variavel k: valor real 0.8
+Declaracao de variavel booleana: x, z
+Declaracao de variavel booleana: w
+Atribuicao de valor para variavel booleana w: valor booleano TRUE
+Atribuicao de valor para variavel y: valor booleano FALSE
 
-Expressao condicional
-+se: (variavel real frequencia (maior ou igual booleano) valor real .75)
-+entao:
-Atribuicao de valor para variavel real media: ((abre parenteses) (variavel real a (multiplicacao real) valor inteiro 2 para real) (soma real) (variavel real b (multiplicacao real) valor inteiro  para real) (soma real) (variavel inteira c (multiplicacao inteira) valor inteiro 4) para real (fecha parenteses)) (divisao real) valor inteiro 8 para real
-Expressao condicional
-+se: ((variavel real media (maior ou igual booleano) valor real 5.75) (ou booleano) ((variavel real media (igual booleano) valor real 5.5) (e booleano) (variavel real frequencia (igual booleano) valor real 10.)))
-+entao: 
-Atribuicao de valor para variavel booleana aprovado: valor booleano TRUE
-+senao se: (variavel real media (maior ou igual booleano) valor real 3.)
-+entao: 
-Atribuicao de valor para variavel booleana rec: valor booleano TRUE
-+senao:
-Atribuicao de valor para variavel booleana aprovado: valor booleano FALSE
-Atribuicao de valor para variavel booleana rec: valor booleano FALSE
-Fim expressao condicional
-Fim expressao condicional
+Atribuicao de valor para variavel inteira a: valor inteiro 2 (soma inteira) valor inteiro 6 (subtracao inteira) (valor inteiro 14 (divisao inteira) valor inteiro 2)
+Atribuicao de valor para variavel inteira a: ((abre parenteses) (variavel inteira c (multiplicacao inteira) valor inteiro 2) (soma inteira) (variavel inteira d (multiplicacao inteira) variavel inteira c) (fecha parenteses)) (divisao inteira) valor inteiro 4
+Atribuicao de valor para variavel inteira b: (menos unario inteiro) variavel real a 
+
+Atribuicao de valor para variavel real i: valor real 14.5 (subtracao real) (variavel real h (multiplicacao real) valor real 3.)
+Atribuicao de valor para variavel real m: variavel real j (multiplicacao real) valor inteiro 5 (divisao real) variavel real k
+Atribuicao de valor para variavel real l: ((menos unario inteiro) variavel inteira d) para real
+
+Atribuicao de valor para variavel booleana x: variavel booleana y (ou booleano) (variavel real a (maior booleano) variavel real i)
+Atribuicao de valor para variavel booleana z: ((nao booleano) variavel booleana w) (e booleano) (variavel inteira d (menor ou igual booleano) variavel real l) 

@@ -207,7 +207,7 @@ void FunctionDeclaration::printTree() {
 }
 
 void FindExpr::printTree() {
-  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " e igual a ";
+  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " =";
   next->printTree();
   std::cout << std::endl;
 }

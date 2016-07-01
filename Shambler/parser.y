@@ -238,6 +238,7 @@ parametros: T_ABRE_P parametro T_FECHA_P
         {
           $$ = NULL;
         }
+        | { $$ = NULL;}
         ;
 
 parametro: T_ID
@@ -264,7 +265,7 @@ condicao: D_IF expr T_FUNC_INI lines T_FUNC_END
         }
         ;
 
-laco: 
+laco:
         D_WHILE expr T_FUNC_INI lines T_FUNC_END
         {
           $$ = new AST::LoopExp($2, $4);
@@ -275,14 +276,14 @@ laco:
           $$ = new AST::LoopExp($2, $4, true);
         }
 
-        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END 
+        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $6, true);
           loop->SetConditionFor($4);
           $$ = loop;
         }
 
-        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END 
+        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $8, true, true);
           loop->SetConditionFor($4);
@@ -292,7 +293,7 @@ laco:
 
 busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
         {
-          $$= new AST::FindExpr($7, $9, Type::indefinido);
+          $$ = new AST::FindExpr($7, $9, Type::indefinido);
         }
 
 

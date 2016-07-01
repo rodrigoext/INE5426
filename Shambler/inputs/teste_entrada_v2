@@ -1,12 +1,19 @@
-int x, maximo
-x = 0;
-maximo = 7
+real media, frequencia
+frequencia = .8
+bool aprovado = FALSE
+bool rec
+a = 3.9
+b = 5.
+c = 10
 
-while x <= maximo {
-	real valor
-	bool fim = FALSE
-	valor = 0.2*x + 5.
-	x = x + 1
+if frequencia >= .75 {
+	media = (a*2 + b*2 + c*4) / 8
+	if media >= 5.75 OR media = 5.5 AND frequencia = 10. {
+		aprovado = TRUE
+	} else if media >= 3. {
+		rec = TRUE
+	} else {
+		aprovado = FALSE
+		rec = FALSE
+	}
 }
-
-fim = TRUE
