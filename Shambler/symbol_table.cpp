@@ -69,7 +69,10 @@ AST::Node* SymbolTable::useVariable(std::string id){
     }
     if ( ! entryList[id].initialized && entryList[id].kind != function ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
 		//std::cout << type_name_masc[entryList[id].type] << std::endl;
-   	return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
+	AST::Variable * var = new AST::Variable(id, entryList[id].type, entryList[id].kind);
+	if(entryList[id].strong)
+		var->setStrong(true);
+   	return var; //Creates variable node anyway
 }
 
 Symbol SymbolTable::getVariable(std::string id){
@@ -92,6 +95,10 @@ void SymbolTable::setSymbolInitialized(std::string id, bool init) {
 
 void SymbolTable::setSymbolKind(std::string id, Kind k) {
 	entryList[id].setKind(k);
+}
+
+void SymbolTable::setSymbolStrong(std::string id) {
+	entryList[id].setStrong();
 }
 
 void SymbolTable::setSymbolSize(std::string id, int size) {

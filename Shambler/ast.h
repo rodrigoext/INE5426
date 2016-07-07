@@ -79,6 +79,9 @@ class Variable : public Node {
 			 this->x = x;
 			 this->y = y;
 		 }
+		 void setStrong(bool s) {
+			 this->strong = s;
+		 }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }

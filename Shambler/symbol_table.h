@@ -57,7 +57,7 @@ class SymbolTable {
         SymbolList entryList;
         Type tempType;
         Type tempTypeFunc;
-				bool strong, declared;
+		bool strong, declared;
         std::string tempLegthArray;
         SymbolTable() {}
         bool checkId(std::string id) {return (entryList.find(id) != entryList.end());}
@@ -66,6 +66,7 @@ class SymbolTable {
         void setSymbolInitialized(std::string id, bool init = true);
         void setSymbolKind(std::string id, Kind k);
         void setSymbolSize(std::string id, int size);
+		void setSymbolStrong(std::string id);
         void setSymbolTypeString(std::string id, Type t);
         void setFunctionDeclared(std::string id);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);

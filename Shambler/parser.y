@@ -97,6 +97,7 @@ declaracao :
           for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
             symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
             symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
+            symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
             ((AST::Variable *)(*var))->setType(symtab.tempType);
             ((AST::Variable *)(*var))->setKind(Kind::array);
           }
@@ -114,6 +115,7 @@ declaracao :
             symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
             symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
             symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
+            symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
             ((AST::Variable *)(*var))->setType(symtab.tempType);
             ((AST::Variable *)(*var))->setKind(Kind::matrix);
           }
@@ -151,6 +153,7 @@ atribuicao:
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+                                        symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
                       									((AST::Variable *)(*var))->setType(symtab.tempType);
                      									}
                      									$$ = new AST::BinOp($2, associa, $4);
@@ -166,6 +169,7 @@ atribuicao:
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
                                         symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
+                                        symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
                       									((AST::Variable *)(*var))->setType(symtab.tempType);
                                         ((AST::Variable *)(*var))->setKind(Kind::array);
                      									}
@@ -181,6 +185,7 @@ atribuicao:
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
                                         symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
+                                        symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
                       									((AST::Variable *)(*var))->setType(symtab.tempType);
                                         ((AST::Variable *)(*var))->setKind(Kind::matrix);
                      									}
@@ -205,16 +210,18 @@ atribuicao:
         ;
 
 expr    : term { $$ = $1; }
-
+        /*Usar valores do arranjo*/
         | T_ID T_ARRAY_INIT expr T_ARRAY_END
         {
+          //Precisa mudar para um valor (Number), não variável
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
         	v->setNext($3);
           $$ = v;
         }
-        
+        /*Usar valores da matriz*/
         | T_ID T_ABRE_P expr T_COMMA expr T_FECHA_P
         {
+          //Precisa mudar para um valor (Number), não variável
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
           v->setKind(Kind::matrix);
           v->setUseXY($3, $5);
