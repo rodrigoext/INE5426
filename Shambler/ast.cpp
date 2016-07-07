@@ -117,6 +117,15 @@ void Variable::printTree(){
 			parameters->printTree();
 		}
 		std::cout << "}";
+	} else if (kind == matrix) { 
+		std::cout << "matriz " << type_name_masc[type] << " " << id;
+		if (x && y) {
+			std::cout << " {+linha:";
+			x->printTree();
+			std::cout << "}, {+coluna:";
+			y->printTree();
+			std::cout << "}";
+		}
 	} else {
 		std::cout << "variável " << type_name_fem[type] << " " << id;
 	}

@@ -212,6 +212,14 @@ expr    : term { $$ = $1; }
         	v->setNext($3);
           $$ = v;
         }
+        
+        | T_ID T_ABRE_P expr T_COMMA expr T_FECHA_P
+        {
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+          v->setKind(Kind::matrix);
+          v->setUseXY($3, $5);
+          $$ = v;
+        }
 
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }

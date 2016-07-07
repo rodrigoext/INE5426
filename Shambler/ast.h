@@ -54,13 +54,17 @@ class Variable : public Node {
          Node * next;
          bool parameter, strong;
          Node * parameters;
+		 Node *x;
+		 Node *y;
          Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
-        	 	 this->next = NULL;
-        	 	 this->type = t;
-             this->strong = strong;
-        	 	 this->parameter = parameter;
-        	 	 this->parameters = parameters;
+				this->next = NULL;
+				this->x = NULL;
+				this->y = NULL;
+				this->type = t;
+				this->strong = strong;
+				this->parameter = parameter;
+				this->parameters = parameters;
             }
          void setNext(Node * next) {
         	 this->next = next;
@@ -71,6 +75,10 @@ class Variable : public Node {
          void setKind(Kind k) {
            this->kind = k;
          }
+		 void setUseXY(Node *x, Node *y) {
+			 this->x = x;
+			 this->y = y;
+		 }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }
