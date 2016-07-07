@@ -32,10 +32,10 @@ AST::Node* SymbolTable::newVariable(std::string id, Type t, bool strong, Kind k,
 		}
 	} else {
 		if (k == array) {
-			Symbol entry(Type::indefinido, k, true);
+			Symbol entry(Type::dinamico, k, true);
 			addSymbol(id,entry);
 		} else {
-			Symbol entry(Type::indefinido, k, false);
+			Symbol entry(Type::dinamico, k, false);
 			addSymbol(id,entry);
 		}
 	}

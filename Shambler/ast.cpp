@@ -96,39 +96,6 @@ int Block::computeTree(){
   return 0;
 }
 
-void VarDeclaration::printTree(){
-	if (parameter) {
-		if (kind == array)
-			std::cout << "parametro arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-		else
-			std::cout << "parametro " << type_name_masc[type] << ": ";
-		for (auto var = vars.begin(); var != vars.end(); var++) {
-			std::cout << dynamic_cast<Variable *>(*var)->id;
-			if(next(var) != vars.end()) std::cout << ", ";
-		}
-		std::cout << std::endl;
-	} else {
-		if (kind == array)
-			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-		else {
-      if(strong) {
-			  std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
-      } else {
-        std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
-      }
-
-    }
-		for (auto var = vars.begin(); var != vars.end(); var++) {
-			std::cout << dynamic_cast<Variable *>(*var)->id;
-			if(next(var) != vars.end()) std::cout << ", ";
-		}
-	}
-}
-
-int VarDeclaration::computeTree() {
-  return 0;
-}
-
 void Number::printTree(){
 	std::cout << " valor " << type_name_masc[type] << " " << value;
 }
@@ -156,6 +123,42 @@ void Variable::printTree(){
 }
 
 int Variable::computeTree(){
+  return 0;
+}
+
+void VarDeclaration::printTree(){
+	if (parameter) {
+		if (kind == array)
+			std::cout << "parametro arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+		else
+			std::cout << "parametro " << type_name_masc[type] << ": ";
+		for (auto var = vars.begin(); var != vars.end(); var++) {
+			std::cout << dynamic_cast<Variable *>(*var)->id;
+			if(next(var) != vars.end()) std::cout << ", ";
+		}
+		std::cout << std::endl;
+	} else {
+		if (kind == array) {
+			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+		} else if (kind == matrix) {
+			std::cout << "Declaracao de Matriz " << type_name_masc[type] << " de "; 
+			std::cout << x->value << " linhas por " << y->value << " colunas: ";
+		} else {
+			if(strong) {
+					std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+			} else {
+				std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
+			}
+
+    }
+		for (auto var = vars.begin(); var != vars.end(); var++) {
+			std::cout << dynamic_cast<Variable *>(*var)->id;
+			if(next(var) != vars.end()) std::cout << ", ";
+		}
+	}
+}
+
+int VarDeclaration::computeTree() {
   return 0;
 }
 
@@ -194,6 +197,14 @@ void LoopExp::printTree() {
 	std::cout << "+faca: " << std::endl;
 	next->printTree();
 	std::cout << "Fim laco";
+}
+
+double LoopExp::computeTreeD() {
+	if (forExp) {
+		return 1.0;
+	} else {
+		return 0.0;
+	}
 }
 
 void ParameterDeclaration::printTree() {

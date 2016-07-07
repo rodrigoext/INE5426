@@ -18,14 +18,17 @@ class Node {
     public:
         Type type;
         Kind kind;
+		bool strong;
         virtual ~Node() { }
         Node() {
         	this->type = indefinido;
         	this->kind = variable;
+			this->strong = false;
         }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
         virtual int computeTree(){return 0;}
+		virtual double computeTreeD(){return 0.0;}
 
 
 };
@@ -75,6 +78,56 @@ class Variable : public Node {
          int computeTree();
 };
 
+class Number : public Node {
+	 public:
+		std::string value;
+		Node * next;
+		Number(std::string value, Type t) :
+			value(value) {
+			this->next = NULL;
+			this->type = t;
+		}
+		void setNext(Node * node) {
+			this->next = node;
+		}
+		void printTree();
+    int computeTree();
+};
+
+class VarDeclaration : public Node {
+     public:
+        NodeList vars;
+        Number *tamanho;
+		Number *x;
+		Number *y;
+        bool parameter, strong;
+        VarDeclaration(Type t, bool strong = false, Kind k = variable, bool parameter = false) {
+        	this->type = t;
+        	this->kind = k;
+        	this->tamanho = NULL;
+          this->strong = strong;
+        	this->parameter = parameter;
+        }
+        void setType(Type t) {
+        	this->type = t;
+        	setTypeVars(t);
+        }
+        void setKind(Kind k) {
+          this->kind = k;
+        }
+        void setTypeVars(Type t) {
+        }
+        void setTamanho(Number * tamanho) {
+        	this->tamanho = tamanho;
+        }
+		void setTamanhoXY(Number * x, Number * y) {
+			this->x = x;
+			this->y = y;
+		}
+        void printTree();
+        int computeTree();
+};
+
 class BinOp : public Node {
     public:
         Operation op;
@@ -85,10 +138,14 @@ class BinOp : public Node {
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-        		if (left->type != right->type) {
-        			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
-        					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
-        		}
+				if (left->strong) {
+					if (left->type != right->type) {
+						yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
+								" mas recebeu " + type_name_masc[right->type] + ".").c_str());
+					}
+				} else {
+					left->type = right->type;
+				}
         		break;
         	case soma:
         	case divide:
@@ -168,50 +225,6 @@ class Block : public Node {
         int computeTree();
 };
 
-class Number : public Node {
-	 public:
-		std::string value;
-		Node * next;
-		Number(std::string value, Type t) :
-			value(value) {
-			this->next = NULL;
-			this->type = t;
-		}
-		void setNext(Node * node) {
-			this->next = node;
-		}
-		void printTree();
-    int computeTree();
-};
-
-class VarDeclaration : public Node {
-     public:
-        NodeList vars;
-        Number *tamanho;
-        bool parameter, strong;
-        VarDeclaration(Type t, bool strong = false, Kind k = variable, bool parameter = false) {
-        	this->type = t;
-        	this->kind = k;
-        	this->tamanho = NULL;
-          this->strong = strong;
-        	this->parameter = parameter;
-        }
-        void setType(Type t) {
-        	this->type = t;
-        	setTypeVars(t);
-        }
-        void setKind(Kind k) {
-          this->kind = k;
-        }
-        void setTypeVars(Type t) {
-        }
-        void setTamanho(Number * tamanho) {
-        	this->tamanho = tamanho;
-        }
-        void printTree();
-        int computeTree();
-};
-
 class ConditionalExp : public Node {
 	public:
 		Node * condition;
@@ -242,6 +255,7 @@ class LoopExp : public Node {
 			this->conditionFor = next;
 		}
 		void printTree();
+		double computeTreeD();
 };
 
 class ParameterDeclaration : public Node {

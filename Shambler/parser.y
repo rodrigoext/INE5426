@@ -104,7 +104,22 @@ declaracao :
           $$ = $5;
         }
 
-        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist { $$ = $7; }
+        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist 
+        {
+          AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
+          vardecl->setType(symtab.tempType);
+          vardecl->setKind(Kind::matrix);
+          vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
+          for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+            symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+            symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
+            ((AST::Variable *)(*var))->setType(symtab.tempType);
+            ((AST::Variable *)(*var))->setKind(Kind::matrix);
+          }
+          symtab.strong = false;
+          $$ = $7;
+       	}
         ;
 
 varlist : T_ID { if (symtab.checkId($1)) {
@@ -161,6 +176,7 @@ atribuicao:
                                       AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
                      									vardecl->setType(symtab.tempType);
                                       vardecl->setKind(Kind::matrix);
+                                      vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
@@ -236,19 +252,23 @@ funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
 
 parametros: T_ABRE_P parametro T_FECHA_P
         {
-          $$ = NULL;
+          $$ = $2;
         }
         | { $$ = NULL;}
         ;
 
 parametro: T_ID
         {
-          $$ = NULL;
+          $$ = new AST::VarDeclaration(Type::dinamico, false, Kind::variable, true);
+          ((AST::VarDeclaration*)($$))->vars.push_back(
+            symtab.newVariable($1, Type::dinamico, false, Kind::variable, true));
         }
 
         | parametro T_COMMA T_ID
         {
-          $$ = NULL;
+          $$ = $1;
+          ((AST::VarDeclaration*)($$))->vars.push_back(
+            symtab.newVariable($3, Type::dinamico, false, Kind::variable, true));
         }
         ;
 
