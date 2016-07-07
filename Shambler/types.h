@@ -4,8 +4,8 @@
 #include <vector>
 
 enum Type { inteiro, real, booleano, indefinido, dinamico};
-const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "indefinido"};
-const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida"};
+const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano", "indefinido", "dinamico"};
+const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida", "dinamica"};
 const std::vector<std::string> op_name = {"soma", "subtracao", "divisao", "multiplicacao", "associacao",
 											"igual", "diferente", "menor", "maior", "menor ou igual", "maior ou igual", "e", "ou",
 											"nao", "parenteses"};

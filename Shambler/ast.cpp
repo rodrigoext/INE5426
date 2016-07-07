@@ -76,6 +76,10 @@ void BinOp::printTree(){
     return;
 }
 
+int BinOp::computeTree() {
+  return left->computeTree() + right->computeTree();
+}
+
 void Block::printTree(){
     for (Node* line: lines) {
         line->printTree();
@@ -83,38 +87,21 @@ void Block::printTree(){
     }
 }
 
-void VarDeclaration::printTree(){
-	if (parameter) {
-		if (kind == array)
-			std::cout << "parametro arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-		else
-			std::cout << "parametro " << type_name_masc[type] << ": ";
-		for (auto var = vars.begin(); var != vars.end(); var++) {
-			std::cout << dynamic_cast<Variable *>(*var)->id;
-			if(next(var) != vars.end()) std::cout << ", ";
-		}
-		std::cout << std::endl;
-	} else {
-		if (kind == array)
-			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
-		else {
-      if(strong) {
-			  std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
-      } else {
-        std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
-      }
-
-    }
-		for (auto var = vars.begin(); var != vars.end(); var++) {
-			std::cout << dynamic_cast<Variable *>(*var)->id;
-			if(next(var) != vars.end()) std::cout << ", ";
-		}
-	}
+int Block::computeTree(){
+  int value;
+  for (Node* line: lines) {
+      value = line->computeTree();
+      std::cout << "Computed " << value << std::endl;
+  }
+  return 0;
 }
-
 
 void Number::printTree(){
 	std::cout << " valor " << type_name_masc[type] << " " << value;
+}
+
+int Number::computeTree(){
+  return std::stoi(value);
 }
 
 void Variable::printTree(){
@@ -130,10 +117,58 @@ void Variable::printTree(){
 			parameters->printTree();
 		}
 		std::cout << "}";
+	} else if (kind == matrix) { 
+		std::cout << "matriz " << type_name_masc[type] << " " << id;
+		if (x && y) {
+			std::cout << " {+linha:";
+			x->printTree();
+			std::cout << "}, {+coluna:";
+			y->printTree();
+			std::cout << "}";
+		}
 	} else {
 		std::cout << "variável " << type_name_fem[type] << " " << id;
 	}
+}
 
+int Variable::computeTree(){
+  return 0;
+}
+
+void VarDeclaration::printTree(){
+	if (parameter) {
+		if (kind == array)
+			std::cout << "parametro arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+		else
+			std::cout << "parametro " << type_name_masc[type] << ": ";
+		for (auto var = vars.begin(); var != vars.end(); var++) {
+			std::cout << dynamic_cast<Variable *>(*var)->id;
+			if(next(var) != vars.end()) std::cout << ", ";
+		}
+		std::cout << std::endl;
+	} else {
+		if (kind == array) {
+			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
+		} else if (kind == matrix) {
+			std::cout << "Declaracao de Matriz " << type_name_masc[type] << " de "; 
+			std::cout << x->value << " linhas por " << y->value << " colunas: ";
+		} else {
+			if(strong) {
+					std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
+			} else {
+				std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
+			}
+
+    }
+		for (auto var = vars.begin(); var != vars.end(); var++) {
+			std::cout << dynamic_cast<Variable *>(*var)->id;
+			if(next(var) != vars.end()) std::cout << ", ";
+		}
+	}
+}
+
+int VarDeclaration::computeTree() {
+  return 0;
 }
 
 void ConditionalExp::printTree() {
@@ -173,6 +208,14 @@ void LoopExp::printTree() {
 	std::cout << "Fim laco";
 }
 
+double LoopExp::computeTreeD() {
+	if (forExp) {
+		return 1.0;
+	} else {
+		return 0.0;
+	}
+}
+
 void ParameterDeclaration::printTree() {
 	for (auto param = params.begin(); param != params.end(); param++) {
 		dynamic_cast<VarDeclaration *>(*param)->printTree();
@@ -207,7 +250,7 @@ void FunctionDeclaration::printTree() {
 }
 
 void FindExpr::printTree() {
-  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " e igual a ";
+  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " =";
   next->printTree();
   std::cout << std::endl;
 }

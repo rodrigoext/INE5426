@@ -1,9 +1,11 @@
-v0: operadores matematicos, logicos e relacionais
-v1: condicionais
+v1: operadores matematicos, logicos e relacionais
+v2: condicionais
 		if
 		if else if else
+v3:arranjos
+	tipo[n] arranjo
 
-v2: laços
+v4: laços
 		while
 		for in
 		for to
@@ -11,10 +13,9 @@ v2: laços
 		for to --
 		for i=1 --
 
-v3: funções
+v5: funções
 		func return
 		void func
 		
-v4: matrizes e arranjos
-		tipo[n] arranjo
+v6: matrizes
 		tipo(x,y) matriz

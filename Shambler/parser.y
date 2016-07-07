@@ -104,7 +104,22 @@ declaracao :
           $$ = $5;
         }
 
-        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist { $$ = $7; }
+        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist 
+        {
+          AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
+          vardecl->setType(symtab.tempType);
+          vardecl->setKind(Kind::matrix);
+          vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
+          for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+            symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+            symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
+            ((AST::Variable *)(*var))->setType(symtab.tempType);
+            ((AST::Variable *)(*var))->setKind(Kind::matrix);
+          }
+          symtab.strong = false;
+          $$ = $7;
+       	}
         ;
 
 varlist : T_ID { if (symtab.checkId($1)) {
@@ -161,6 +176,7 @@ atribuicao:
                                       AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
                      									vardecl->setType(symtab.tempType);
                                       vardecl->setKind(Kind::matrix);
+                                      vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
@@ -194,6 +210,14 @@ expr    : term { $$ = $1; }
         {
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
         	v->setNext($3);
+          $$ = v;
+        }
+        
+        | T_ID T_ABRE_P expr T_COMMA expr T_FECHA_P
+        {
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+          v->setKind(Kind::matrix);
+          v->setUseXY($3, $5);
           $$ = v;
         }
 
@@ -236,18 +260,23 @@ funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
 
 parametros: T_ABRE_P parametro T_FECHA_P
         {
-          $$ = NULL;
+          $$ = $2;
         }
+        | { $$ = NULL;}
         ;
 
 parametro: T_ID
         {
-          $$ = NULL;
+          $$ = new AST::VarDeclaration(Type::dinamico, false, Kind::variable, true);
+          ((AST::VarDeclaration*)($$))->vars.push_back(
+            symtab.newVariable($1, Type::dinamico, false, Kind::variable, true));
         }
 
         | parametro T_COMMA T_ID
         {
-          $$ = NULL;
+          $$ = $1;
+          ((AST::VarDeclaration*)($$))->vars.push_back(
+            symtab.newVariable($3, Type::dinamico, false, Kind::variable, true));
         }
         ;
 
@@ -264,7 +293,7 @@ condicao: D_IF expr T_FUNC_INI lines T_FUNC_END
         }
         ;
 
-laco: 
+laco:
         D_WHILE expr T_FUNC_INI lines T_FUNC_END
         {
           $$ = new AST::LoopExp($2, $4);
@@ -275,14 +304,14 @@ laco:
           $$ = new AST::LoopExp($2, $4, true);
         }
 
-        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END 
+        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $6, true);
           loop->SetConditionFor($4);
           $$ = loop;
         }
 
-        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END 
+        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $8, true, true);
           loop->SetConditionFor($4);
@@ -292,7 +321,7 @@ laco:
 
 busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
         {
-          $$= new AST::FindExpr($7, $9, Type::indefinido);
+          $$ = new AST::FindExpr($7, $9, Type::indefinido);
         }
 
 

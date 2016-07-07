@@ -18,14 +18,17 @@ class Node {
     public:
         Type type;
         Kind kind;
+		bool strong;
         virtual ~Node() { }
         Node() {
         	this->type = indefinido;
         	this->kind = variable;
+			this->strong = false;
         }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
-        //virtual int computeTree(){return 0;}
+        virtual int computeTree(){return 0;}
+		virtual double computeTreeD(){return 0.0;}
 
 
 };
@@ -51,13 +54,17 @@ class Variable : public Node {
          Node * next;
          bool parameter, strong;
          Node * parameters;
+		 Node *x;
+		 Node *y;
          Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
-        	 	 this->next = NULL;
-        	 	 this->type = t;
-             this->strong = strong;
-        	 	 this->parameter = parameter;
-        	 	 this->parameters = parameters;
+				this->next = NULL;
+				this->x = NULL;
+				this->y = NULL;
+				this->type = t;
+				this->strong = strong;
+				this->parameter = parameter;
+				this->parameters = parameters;
             }
          void setNext(Node * next) {
         	 this->next = next;
@@ -68,10 +75,65 @@ class Variable : public Node {
          void setKind(Kind k) {
            this->kind = k;
          }
+		 void setUseXY(Node *x, Node *y) {
+			 this->x = x;
+			 this->y = y;
+		 }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }
          void printTree();
+         int computeTree();
+};
+
+class Number : public Node {
+	 public:
+		std::string value;
+		Node * next;
+		Number(std::string value, Type t) :
+			value(value) {
+			this->next = NULL;
+			this->type = t;
+		}
+		void setNext(Node * node) {
+			this->next = node;
+		}
+		void printTree();
+    int computeTree();
+};
+
+class VarDeclaration : public Node {
+     public:
+        NodeList vars;
+        Number *tamanho;
+		Number *x;
+		Number *y;
+        bool parameter, strong;
+        VarDeclaration(Type t, bool strong = false, Kind k = variable, bool parameter = false) {
+        	this->type = t;
+        	this->kind = k;
+        	this->tamanho = NULL;
+          this->strong = strong;
+        	this->parameter = parameter;
+        }
+        void setType(Type t) {
+        	this->type = t;
+        	setTypeVars(t);
+        }
+        void setKind(Kind k) {
+          this->kind = k;
+        }
+        void setTypeVars(Type t) {
+        }
+        void setTamanho(Number * tamanho) {
+        	this->tamanho = tamanho;
+        }
+		void setTamanhoXY(Number * x, Number * y) {
+			this->x = x;
+			this->y = y;
+		}
+        void printTree();
+        int computeTree();
 };
 
 class BinOp : public Node {
@@ -84,10 +146,14 @@ class BinOp : public Node {
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-        		if (left->type != right->type) {
-        			yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
-        					" mas recebeu " + type_name_masc[right->type] + ".").c_str());
-        		}
+				if (left->strong) {
+					if (left->type != right->type) {
+						yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
+								" mas recebeu " + type_name_masc[right->type] + ".").c_str());
+					}
+				} else {
+					left->type = right->type;
+				}
         		break;
         	case soma:
         	case divide:
@@ -120,6 +186,7 @@ class BinOp : public Node {
         	}
         }
         void printTree();
+        int computeTree();
 };
 
 class UnOp : public Node {
@@ -163,48 +230,7 @@ class Block : public Node {
         NodeList lines;
         Block() { }
         void printTree();
-};
-
-class Number : public Node {
-	 public:
-		std::string value;
-		Node * next;
-		Number(std::string value, Type t) :
-			value(value) {
-			this->next = NULL;
-			this->type = t;
-		}
-		void setNext(Node * node) {
-			this->next = node;
-		}
-		void printTree();
-};
-
-class VarDeclaration : public Node {
-     public:
-        NodeList vars;
-        Number *tamanho;
-        bool parameter, strong;
-        VarDeclaration(Type t, bool strong = false, Kind k = variable, bool parameter = false) {
-        	this->type = t;
-        	this->kind = k;
-        	this->tamanho = NULL;
-          this->strong = strong;
-        	this->parameter = parameter;
-        }
-        void setType(Type t) {
-        	this->type = t;
-        	setTypeVars(t);
-        }
-        void setKind(Kind k) {
-          this->kind = k;
-        }
-        void setTypeVars(Type t) {
-        }
-        void setTamanho(Number * tamanho) {
-        	this->tamanho = tamanho;
-        }
-        void printTree();
+        int computeTree();
 };
 
 class ConditionalExp : public Node {
@@ -237,6 +263,7 @@ class LoopExp : public Node {
 			this->conditionFor = next;
 		}
 		void printTree();
+		double computeTreeD();
 };
 
 class ParameterDeclaration : public Node {

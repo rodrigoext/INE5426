@@ -1,0 +1,29 @@
+int a = 3
+b = 5
+caminhar = TRUE
+
+while caminhar {
+  c = 3
+}
+
+int i = 0
+for i to 100 {
+  i = i + 1
+}
+
+i = 200
+for i to 50 -- {
+  i = i - 1
+}
+
+soma {
+  r = 2 + 3
+}
+
+subtrair(a, b) {
+  result = a - b
+  return result
+}
+
+int[3] arranjo
+arranjo.find(x -> x = 3)

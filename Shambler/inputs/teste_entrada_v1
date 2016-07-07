@@ -1,19 +1,21 @@
-real media, frequencia
-frequencia = .8
-bool aprovado = FALSE
-bool rec
-a = 3.9
-b = 5.
-c = 10
+int a, b
+int c = 5
+d = 3
+real h, i = 2.4;
+real l, m
+real j = .7
+k = 0.8
+bool x, z;
+bool w = TRUE
+y = FALSE
 
-if frequencia >= .75 {
-	media = (a*2 + b*2 + c*4) / 8
-	if media >= 5.75 OR media = 5.5 AND frequencia = 10. {
-		aprovado = TRUE
-	} else if media >= 3. {
-		rec = TRUE
-	} else {
-		aprovado = FALSE
-		rec = FALSE
-	}
-}
+a = 2 + 6 - 14 / 2
+a = (c*2 + d*c) / 4
+b = - a
+
+i = 14.5 - h * 3.
+m = j*5 / k
+l = - d
+
+x = y OR a > i
+z = ~ w AND d <= l
