@@ -128,6 +128,9 @@ class VarDeclaration : public Node {
         }
         void setTypeVars(Type t) {
         }
+		void setStrong() {
+			strong = true;
+		}
         void setTamanho(Number * tamanho) {
         	this->tamanho = tamanho;
         }
@@ -150,6 +153,7 @@ class BinOp : public Node {
         	switch (op) {
         	case associa:
 				if (left->strong) {
+					std::cout << "strong" << std::endl;
 					if (left->type != right->type) {
 						yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
 								" mas recebeu " + type_name_masc[right->type] + ".").c_str());

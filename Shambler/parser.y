@@ -150,6 +150,7 @@ atribuicao:
         tipo varlist T_IGUAL expr {
                                       AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($2));
                      									vardecl->setType(symtab.tempType);
+                                      vardecl->setStrong();
                      									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
                       									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
                       									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
@@ -246,9 +247,27 @@ expr    : term { $$ = $1; }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
-term   :  T_INT { $$ = new AST::Number($1, Type::inteiro); symtab.tempType = Type::inteiro; }
-		    | T_REAL { $$ = new AST::Number($1, Type::real); symtab.tempType = Type::real; }
-		    | T_BOOL { $$ = new AST::Number($1, Type::booleano); symtab.tempType = Type::booleano; }
+term   :  T_INT 
+        { 
+          $$ = new AST::Number($1, Type::inteiro); 
+          if (!symtab.strong) 
+            symtab.tempType = Type::inteiro; 
+        }
+		    
+        | T_REAL 
+        { 
+          $$ = new AST::Number($1, Type::real);
+          if (!symtab.strong)  
+            symtab.tempType = Type::real; 
+        }
+		    
+        | T_BOOL 
+        { 
+          $$ = new AST::Number($1, Type::booleano);
+          if (!symtab.strong)  
+            symtab.tempType = Type::booleano; 
+        }
+        
         | T_ID { $$ = symtab.useVariable($1); }
         ;
 

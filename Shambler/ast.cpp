@@ -150,7 +150,7 @@ void VarDeclaration::printTree(){
 		if (kind == array) {
 			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
 		} else if (kind == matrix) {
-			std::cout << "Declaracao de Matriz " << type_name_masc[type] << " de "; 
+			std::cout << "Declaracao de Matriz " << type_name_fem[type] << " de "; 
 			std::cout << x->value << " linhas por " << y->value << " colunas: ";
 		} else {
 			if(strong) {
