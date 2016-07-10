@@ -59,7 +59,10 @@ AST::Node* SymbolTable::assignVariable(std::string id){
     	return new AST::Variable(id, indefinido);
     }
     entryList[id].initialized = true;
-    return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
+	AST::Variable *v = new AST::Variable(id, entryList[id].type, entryList[id].kind);
+	if (entryList[id].strong)
+		v->setStrong(true);
+    return v; //Creates variable node anyway
 }
 
 AST::Node* SymbolTable::useVariable(std::string id){

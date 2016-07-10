@@ -27,6 +27,7 @@ class Node {
         }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
+		virtual void setStrong(){ }
         virtual int computeTree(){return 0;}
 		virtual double computeTreeD(){return 0.0;}
 
@@ -148,12 +149,11 @@ class BinOp : public Node {
         Node *left;
         Node *right;
         Node *array_exp;
-        BinOp(Node *left, Operation op, Node *right, Node *array_exp = NULL) :
+        BinOp(Node *left, Operation op, Node *right, bool strong = false, Node *array_exp = NULL) :
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-				if (left->strong) {
-					std::cout << "strong" << std::endl;
+				if (strong) {
 					if (left->type != right->type) {
 						yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
 								" mas recebeu " + type_name_masc[right->type] + ".").c_str());

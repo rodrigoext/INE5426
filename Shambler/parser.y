@@ -94,6 +94,7 @@ declaracao :
           vardecl->setType(symtab.tempType);
           vardecl->setKind(Kind::array);
           vardecl->setTamanho(new AST::Number($3, Type::inteiro));
+          vardecl->setStrong();
           for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
             symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
             symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
@@ -105,7 +106,7 @@ declaracao :
           $$ = $5;
         }
 
-        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist 
+        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist
         {
           AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
           vardecl->setType(symtab.tempType);
@@ -157,7 +158,8 @@ atribuicao:
                                         symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
                       									((AST::Variable *)(*var))->setType(symtab.tempType);
                      									}
-                     									$$ = new AST::BinOp($2, associa, $4);
+                                      AST::BinOp *bo = new AST::BinOp($2, associa, $4, symtab.strong);
+                     									$$ = bo;
                                       symtab.strong = false;
        				  			              }
 
@@ -195,8 +197,9 @@ atribuicao:
        								              }
        	| varlist T_IGUAL expr {
                                   if (symtab.declared) {
-                                    AST::Variable* v = dynamic_cast< AST::Variable*>($1);
-                                    $$ = new AST::BinOp($1, associa, $3);
+                                    AST::Variable *v = dynamic_cast< AST::Variable*>($1);
+                                    AST::BinOp *bo = new AST::BinOp($1, associa, $3, v->strong);
+                     								$$ = bo;
                                   } else {
                                     AST::VarDeclaration* vardecl = dynamic_cast<AST::VarDeclaration*>($1);
                   									vardecl->setType(symtab.tempType);
@@ -247,27 +250,27 @@ expr    : term { $$ = $1; }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
 
-term   :  T_INT 
-        { 
-          $$ = new AST::Number($1, Type::inteiro); 
-          if (!symtab.strong) 
-            symtab.tempType = Type::inteiro; 
+term   :  T_INT
+        {
+          $$ = new AST::Number($1, Type::inteiro);
+          if (!symtab.strong)
+            symtab.tempType = Type::inteiro;
         }
-		    
-        | T_REAL 
-        { 
+
+        | T_REAL
+        {
           $$ = new AST::Number($1, Type::real);
-          if (!symtab.strong)  
-            symtab.tempType = Type::real; 
+          if (!symtab.strong)
+            symtab.tempType = Type::real;
         }
-		    
-        | T_BOOL 
-        { 
+
+        | T_BOOL
+        {
           $$ = new AST::Number($1, Type::booleano);
-          if (!symtab.strong)  
-            symtab.tempType = Type::booleano; 
+          if (!symtab.strong)
+            symtab.tempType = Type::booleano;
         }
-        
+
         | T_ID { $$ = symtab.useVariable($1); }
         ;
 
