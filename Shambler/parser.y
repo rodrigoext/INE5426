@@ -125,21 +125,26 @@ declaracao :
        	}
         ;
 
-varlist : T_ID { if (symtab.checkId($1)) {
-                    $$ = symtab.assignVariable($1);
-                    symtab.declared = true;
-                  } else {
-                    $$ = new AST::VarDeclaration(symtab.tempType, symtab.strong);
-                    if (symtab.strong)
-                      ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, symtab.tempType, symtab.strong));
-                    else
-                      ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, indefinido, symtab.strong));
-                   symtab.declared = false;
-                  }
-               }
-        | varlist T_COMMA T_ID { $$ = $1;
-                                 ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($3, symtab.tempType, symtab.strong));
-                                }
+varlist : T_ID 
+        { 
+          if (symtab.checkId($1)) {
+            $$ = symtab.assignVariable($1);
+            symtab.declared = true;
+          } else {
+            $$ = new AST::VarDeclaration(symtab.tempType, symtab.strong);
+            if (symtab.strong)
+              ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, symtab.tempType, symtab.strong));
+            else
+              ((AST::VarDeclaration*)($$))->vars.push_back(symtab.newVariable($1, indefinido, symtab.strong));
+            symtab.declared = false;
+          }
+        }
+        
+        | varlist T_COMMA T_ID 
+        { $$ = $1;
+          ((AST::VarDeclaration*)($$))->vars.push_back(
+            symtab.newVariable($3, symtab.tempType, symtab.strong));
+        }
         ;
 
 tipo	: D_INT { symtab.tempType = Type::inteiro; symtab.strong = true; }
@@ -148,90 +153,78 @@ tipo	: D_INT { symtab.tempType = Type::inteiro; symtab.strong = true; }
 		;
 
 atribuicao:
-        tipo varlist T_IGUAL expr {
-                                      AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($2));
-                     									vardecl->setType(symtab.tempType);
-                                      vardecl->setStrong();
-                     									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-                      									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
-                      									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
-                                        symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
-                      									((AST::Variable *)(*var))->setType(symtab.tempType);
-                     									}
-                                      AST::BinOp *bo = new AST::BinOp($2, associa, $4, symtab.strong);
-                     									$$ = bo;
-                                      symtab.strong = false;
-       				  			              }
+        tipo varlist T_IGUAL expr 
+        {
+          AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($2));
+          vardecl->setType(symtab.tempType);
+          vardecl->setStrong();
+          for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+            symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+            symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
+            ((AST::Variable *)(*var))->setType(symtab.tempType);
+          }
+          AST::BinOp *bo = new AST::BinOp($2, associa, $4, symtab.strong);
+          $$ = bo;
+          symtab.strong = false;
+       	}
 
-        | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist T_IGUAL expr {
-                                      AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($5));
-                     									vardecl->setType(symtab.tempType);
-                                      vardecl->setKind(Kind::array);
-                                      vardecl->setTamanho(new AST::Number($3, Type::inteiro));
-                     									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-                      									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
-                      									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
-                                        symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
-                                        symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
-                      									((AST::Variable *)(*var))->setType(symtab.tempType);
-                                        ((AST::Variable *)(*var))->setKind(Kind::array);
-                     									}
-                     									$$ = new AST::BinOp($5, associa, $7);
-                                      symtab.strong = false;
-       								              }
-        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist T_IGUAL expr {
-                                      AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
-                     									vardecl->setType(symtab.tempType);
-                                      vardecl->setKind(Kind::matrix);
-                                      vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
-                     									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-                      									symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
-                      									symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
-                                        symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
-                                        symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
-                      									((AST::Variable *)(*var))->setType(symtab.tempType);
-                                        ((AST::Variable *)(*var))->setKind(Kind::matrix);
-                     									}
-                     									$$ = new AST::BinOp($7, associa, $9);
-                                      symtab.strong = false;
-       								              }
-       	| varlist T_IGUAL expr {
-                                  if (symtab.declared) {
-                                    AST::Variable *v = dynamic_cast< AST::Variable*>($1);
-                                    AST::BinOp *bo = new AST::BinOp($1, associa, $3, v->strong);
-                     								$$ = bo;
-                                  } else {
-                                    AST::VarDeclaration* vardecl = dynamic_cast<AST::VarDeclaration*>($1);
-                  									vardecl->setType(symtab.tempType);
-                  									for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-                  										symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
-                  										symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
-                  										dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
-                  									}
-                  									$$ = new AST::BinOp($1, associa, $3);
-                                  }
-       							            }
+        | tipo T_ARRAY_INIT T_INT T_ARRAY_END varlist T_IGUAL expr 
+        {
+          AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($5));
+          vardecl->setType(symtab.tempType);
+          vardecl->setKind(Kind::array);
+          vardecl->setTamanho(new AST::Number($3, Type::inteiro));
+          for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+            symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+            symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::array);
+            symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
+            ((AST::Variable *)(*var))->setType(symtab.tempType);
+            ((AST::Variable *)(*var))->setKind(Kind::array);
+          }
+          $$ = new AST::BinOp($5, associa, $7);
+          symtab.strong = false;
+        }
+
+        | tipo T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P varlist T_IGUAL expr 
+        {
+          AST::VarDeclaration* vardecl = ((AST::VarDeclaration*)($7));
+          vardecl->setType(symtab.tempType);
+          vardecl->setKind(Kind::matrix);
+          vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
+          for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
+            symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
+            symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
+            symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
+            ((AST::Variable *)(*var))->setType(symtab.tempType);
+            ((AST::Variable *)(*var))->setKind(Kind::matrix);
+          }
+          $$ = new AST::BinOp($7, associa, $9);
+          symtab.strong = false;
+        }
+
+       	| varlist T_IGUAL expr 
+        {
+          if (symtab.declared) {
+            AST::Variable *v = dynamic_cast< AST::Variable*>($1);
+            AST::BinOp *bo = new AST::BinOp($1, associa, $3, v->strong);
+            $$ = bo;
+          } else {
+            AST::VarDeclaration* vardecl = dynamic_cast<AST::VarDeclaration*>($1);
+            vardecl->setType(symtab.tempType);
+            for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
+              symtab.setSymbolType(dynamic_cast<AST::Variable *>(*var)->id, symtab.tempType);
+              symtab.setSymbolInitialized(dynamic_cast<AST::Variable *>(*var)->id);
+              dynamic_cast<AST::Variable*>(*var)->setType(symtab.tempType);
+            }
+            $$ = new AST::BinOp($1, associa, $3);
+          }
+       	}
         ;
 
 expr    : term { $$ = $1; }
-        /*Usar valores do arranjo*/
-        | T_ID T_ARRAY_INIT expr T_ARRAY_END
-        {
-          //Precisa mudar para um valor (Number), não variável
-          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
-        	v->setNext($3);
-          $$ = v;
-        }
-        /*Usar valores da matriz*/
-        | T_ID T_ABRE_P expr T_COMMA expr T_FECHA_P
-        {
-          //Precisa mudar para um valor (Number), não variável
-          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
-          v->setKind(Kind::matrix);
-          v->setUseXY($3, $5);
-          $$ = v;
-        }
-
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
@@ -272,6 +265,24 @@ term   :  T_INT
         }
 
         | T_ID { $$ = symtab.useVariable($1); }
+
+        /*Usar valores do arranjo*/
+        | T_ID T_ARRAY_INIT expr T_ARRAY_END
+        {
+          //Precisa mudar para um valor (Number), não variável
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+        	v->setNext($3);
+          $$ = v;
+        }
+        /*Usar valores da matriz*/
+        | T_ID T_ABRE_P expr T_COMMA expr T_FECHA_P
+        {
+          //Precisa mudar para um valor (Number), não variável
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+          v->setKind(Kind::matrix);
+          v->setUseXY($3, $5);
+          $$ = v;
+        }
         ;
 
 funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
