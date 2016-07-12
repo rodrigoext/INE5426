@@ -1,0 +1,18 @@
+Atribuicao de valor para variavel n: valor inteiro 10
+
+Definicao de funcao inteira: fib
++parametros:
+parametro inteiro: n
++corpo:
+Atribuicao de valor para variavel a: valor inteiro 0
+Atribuicao de valor para variavel j: valor inteiro 1
+Atribuicao de valor para variavel b: valor inteiro 1
+Laco
++enquanto: (variavel inteira j (menor booleano) variavel inteira n)
++faca:
+Atribuicao de valor para arranjo inteiro fibonacci {+indice: variavel inteira j (subtracao inteira) valor inteiro 1}: variavel inteira a (soma inteira) variavel inteira b
+Atribuicao de valor para variavel inteira b: variavel inteira a
+Atribuicao de valor para variavel inteira a: arranjo inteiro fibonacci {+indice: variavel inteira j (subtracao inteira) valor inteiro 1}
+Fim laco
+Retorno de funcao: arranjo inteiro fibonacci
+Fim definicao

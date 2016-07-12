@@ -1,0 +1,7 @@
+j = 300
+
+for j to 120 -- {
+	int[200] lista
+	lista[j-100] = lista[j-50];
+	j = j - 1
+}

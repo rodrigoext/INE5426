@@ -1,0 +1,11 @@
+Laco
++para: Atribuicao de valor para variavel i: valor inteiro 1
++ate: valor inteiro 50
++faca: 
+Declaracao de variavel inteira: a
+Atribuicao de valor para variavel inteira a: valor inteiro 1
+Declaracao de variavel real: b
+Atribuicao de valor para variavel real b: valor real .2
+Atribuicao de valor para variavel x: ((abre parenteses) (variavel inteira a (soma inteira) variavel inteira b) (fecha parenteses)) (multiplicacao inteira) ((abre parenteses) (variavel inteira a (multiplicacao inteira) variavel inteira b) (fecha parenteses))
+Atribuicao de valor para variavel inteira i: variavel inteira i (soma inteira) valor inteiro 1
+Fim laco

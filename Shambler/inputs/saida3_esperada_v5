@@ -1,0 +1,6 @@
+Definicao de funcao sem retorno: soma
++parametros:
+parametro inteiro: a,b
++corpo:
+Atribuicao de valor para variavel m: variavel a (soma) variavel b
+Fim definicao

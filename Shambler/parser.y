@@ -42,14 +42,17 @@ extern void yyerror(const char* s, ...);
  * Example: %type<node> expr
  */
 %type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
-%type <node> laco
+%type <node> laco expr_for
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
  */
+%left T_OR
+%left T_AND
 %left T_PLUS T_SUB
 %left T_MUL T_DIV
+
 %nonassoc error
 
 /* Starting rule
@@ -239,7 +242,7 @@ expr    : term { $$ = $1; }
         | expr T_AND expr { $$ = new AST::BinOp($1, e_logico, $3); }
         | expr T_OR expr { $$ = new AST::BinOp($1, ou_logico, $3); }
         | T_NEGA expr { $$ = new AST::UnOp($2, negacao); }
-        | T_SUB expr { $$ = new AST::UnOp($2, subtrai); }
+        | T_SUB expr { $$ = new AST::UnOp($2, menos_unario); }
         | T_ABRE_P expr T_FECHA_P { $$ = new AST::UnOp($2, parenteses); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
@@ -347,20 +350,23 @@ laco:
           $$ = new AST::LoopExp($2, $4, true);
         }
 
-        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END
+        | D_FOR expr_for D_TO expr T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $6, true);
           loop->SetConditionFor($4);
           $$ = loop;
         }
 
-        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END
+        | D_FOR expr_for D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $8, true, true);
           loop->SetConditionFor($4);
           $$ = loop;
         }
+
         ;
+expr_for: expr { $$ = $1;}
+        | atribuicao { $$ = $1;} 
 
 busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
         {

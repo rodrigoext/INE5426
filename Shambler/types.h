@@ -8,9 +8,9 @@ const std::vector<std::string> type_name_masc = { "inteiro", "real", "booleano",
 const std::vector<std::string> type_name_fem = { "inteira", "real", "booleana", "indefinida", "dinamica"};
 const std::vector<std::string> op_name = {"soma", "subtracao", "divisao", "multiplicacao", "associacao",
 											"igual", "diferente", "menor", "maior", "menor ou igual", "maior ou igual", "e", "ou",
-											"nao", "parenteses"};
+											"menos unario", "nao", "parenteses"};
 enum Kind { variable, function, array, matrix};
 enum Operation {
 	soma, subtrai, divide, multiplica, associa,
-	igual, diferente, menor, maior, menor_igual, maior_igual, e_logico, ou_logico,
+	igual, diferente, menor, maior, menor_igual, maior_igual, e_logico, ou_logico, menos_unario,
 	negacao, parenteses};

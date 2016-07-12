@@ -1,0 +1,10 @@
+Atribuicao de valor para variavel j: valor inteiro 300
+
+Laco
++para: variavel inteira j
++decrementa ate: valor inteiro 120
++faca: 
+Declaracao de arranjo inteiro de tamanho 200: lista
+Atribuicao de valor para arranjo inteiro lista {+indice: (variavel inteira j (subtracao inteira) valor inteiro 100)}: arranjo inteiro lista {+indice: (variavel inteira j (subtracao inteira) valor inteiro 50)}
+Atribuicao de valor para variavel inteira j: variavel inteira j (subtracao inteira) valor inteiro 1
+Fim laco

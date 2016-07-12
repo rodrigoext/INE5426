@@ -1,0 +1,10 @@
+incremento {
+	real r = 3.6
+	int i = 4;
+	c = 5;
+	if r > i {
+		c = c + 1
+	} else {
+		c = c - 1
+	}
+}

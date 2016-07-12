@@ -216,6 +216,7 @@ class UnOp : public Node {
         		this->type = booleano;
         		break;
         	case parenteses:
+			case menos_unario:
         		this->type = next->type;
         		break;
         	default:
