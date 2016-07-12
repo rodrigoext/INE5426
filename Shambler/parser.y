@@ -198,6 +198,7 @@ atribuicao:
             symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
             symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
             symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
+            symtab.setSymbolValues(((AST::Variable *)(*var))->id, 1.0); //Trocar pelo compute
             ((AST::Variable *)(*var))->setType(symtab.tempType);
             ((AST::Variable *)(*var))->setKind(Kind::matrix);
           }
@@ -267,20 +268,22 @@ term   :  T_INT
         | T_ID { $$ = symtab.useVariable($1); }
 
         /*Usar valores do arranjo*/
-        | T_ID T_ARRAY_INIT expr T_ARRAY_END
+        | T_ID T_ARRAY_INIT T_INT T_ARRAY_END
         {
           //Precisa mudar para um valor (Number), não variável
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
-        	v->setNext($3);
+          v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
+        	v->setNext(new AST::Number($3, Type::inteiro));
           $$ = v;
         }
         /*Usar valores da matriz*/
-        | T_ID T_ABRE_P expr T_COMMA expr T_FECHA_P
+        | T_ID T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P
         {
           //Precisa mudar para um valor (Number), não variável
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
           v->setKind(Kind::matrix);
-          v->setUseXY($3, $5);
+          v->setUseXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
+          v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
           $$ = v;
         }
         ;

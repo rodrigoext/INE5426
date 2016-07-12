@@ -22,6 +22,7 @@ class Symbol {
 		int size_array;
 		bool funcDeclarada;
 		bool strong;
+		double values;
 		Symbol() {
 			type = indefinido;
 			kind = variable;
@@ -50,6 +51,12 @@ class Symbol {
 		void setStrong() {
 			strong = true;
 		}
+		void setValues(double v) {
+			values = v;
+		}
+		double getValueAt(int pos) {
+			return values;
+		}
 };
 
 class SymbolTable {
@@ -69,6 +76,8 @@ class SymbolTable {
 		void setSymbolStrong(std::string id);
         void setSymbolTypeString(std::string id, Type t);
         void setFunctionDeclared(std::string id);
+		void setSymbolValues(std::string id, double val);
+		double getSymbolValueAtPosition(std::string id, int pos = 0);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);
         AST::Node* newVariable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false);
         AST::Node* newFunction(std::string id, Type t, Kind k = function, AST::Node* parametros = NULL, bool declarada = false);

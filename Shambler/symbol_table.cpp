@@ -72,7 +72,8 @@ AST::Node* SymbolTable::useVariable(std::string id){
     }
     if ( ! entryList[id].initialized && entryList[id].kind != function ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
 		//std::cout << type_name_masc[entryList[id].type] << std::endl;
-	AST::Variable * var = new AST::Variable(id, entryList[id].type, entryList[id].kind);
+	//std::cout << entryList[id].kind << std::endl;
+	AST::Variable * var = new AST::Variable(id, entryList[id].type, false, entryList[id].kind);
 	if(entryList[id].strong)
 		var->setStrong(true);
    	return var; //Creates variable node anyway
@@ -116,4 +117,12 @@ void SymbolTable::setSymbolTypeString(std::string id, Type t) {
 
 void SymbolTable::setFunctionDeclared(std::string id) {
 	entryList[id].SetFuncaoDecladara();
+}
+
+void SymbolTable::setSymbolValues(std::string id, double val) {
+	entryList[id].setValues(val);
+}
+
+double SymbolTable::getSymbolValueAtPosition(std::string id, int pos) {
+	return entryList[id].getValueAt(pos);
 }

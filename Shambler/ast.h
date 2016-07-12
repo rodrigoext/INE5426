@@ -57,6 +57,7 @@ class Variable : public Node {
          Node * parameters;
 		 Node *x;
 		 Node *y;
+		 Node * valPosition;
          Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
 				this->next = NULL;
@@ -86,6 +87,9 @@ class Variable : public Node {
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }
+		 void setValPosition(Node * n) {
+			 this->valPosition = n;
+		 }
          void printTree();
          int computeTree();
 };

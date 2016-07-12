@@ -106,10 +106,18 @@ int Number::computeTree(){
 
 void Variable::printTree(){
 	if (kind == array) {
-		std::cout << "arranjo " << type_name_masc[type] << " " << id << " {+indice:";
-		if(next != NULL)
+		if(valPosition) {
+			valPosition->printTree();
+			std::cout << " localizado no "; 
+		}
+		std::cout << "arranjo " << type_name_masc[type] << " " << id;
+		
+		if(next != NULL) {
+			std::cout << " {+indice:";
 			next->printTree();
-		//std::cout << "} ";
+		}
+		std::cout << "} ";
+		
 	} else if (kind == function) {
 		std::cout << "chamada de funcao " << type_name_fem[type] << " " << id;
 		std::cout << " {+parametros: ";
@@ -118,7 +126,11 @@ void Variable::printTree(){
 		}
 		std::cout << "}";
 	} else if (kind == matrix) {
-		std::cout << "matriz " << type_name_masc[type] << " " << id;
+		if(valPosition) {
+			valPosition->printTree();
+			std::cout << " localizado na "; 
+		}
+		std::cout << "matriz " << type_name_fem[type] << " " << id;
 		if (x && y) {
 			std::cout << " {+linha:";
 			x->printTree();
