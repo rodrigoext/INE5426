@@ -27,6 +27,7 @@ class Node {
         }
         Node(Type t) : type(t) { }
         virtual void printTree(){ }
+		virtual void setStrong(){ }
         virtual int computeTree(){return 0;}
 		virtual double computeTreeD(){return 0.0;}
 
@@ -56,6 +57,7 @@ class Variable : public Node {
          Node * parameters;
 		 Node *x;
 		 Node *y;
+		 Node * valPosition;
          Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
 				this->next = NULL;
@@ -79,9 +81,15 @@ class Variable : public Node {
 			 this->x = x;
 			 this->y = y;
 		 }
+		 void setStrong(bool s) {
+			 this->strong = s;
+		 }
          void SetParametros(Node * parameters) {
         	 this->parameters = parameters;
          }
+		 void setValPosition(Node * n) {
+			 this->valPosition = n;
+		 }
          void printTree();
          int computeTree();
 };
@@ -125,6 +133,9 @@ class VarDeclaration : public Node {
         }
         void setTypeVars(Type t) {
         }
+		void setStrong() {
+			strong = true;
+		}
         void setTamanho(Number * tamanho) {
         	this->tamanho = tamanho;
         }
@@ -142,11 +153,11 @@ class BinOp : public Node {
         Node *left;
         Node *right;
         Node *array_exp;
-        BinOp(Node *left, Operation op, Node *right, Node *array_exp = NULL) :
+        BinOp(Node *left, Operation op, Node *right, bool strong = false, Node *array_exp = NULL) :
             left(left), right(right), op(op), array_exp(array_exp) {
         	switch (op) {
         	case associa:
-				if (left->strong) {
+				if (strong) {
 					if (left->type != right->type) {
 						yyerror(("semantico: operacao " + op_name[op] + " espera " + type_name_masc[left->type] +
 								" mas recebeu " + type_name_masc[right->type] + ".").c_str());

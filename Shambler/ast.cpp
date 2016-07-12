@@ -106,10 +106,18 @@ int Number::computeTree(){
 
 void Variable::printTree(){
 	if (kind == array) {
-		std::cout << "arranjo " << type_name_masc[type] << " " << id << " {+indice:";
-		if(next != NULL)
+		if(valPosition) {
+			valPosition->printTree();
+			std::cout << " localizado no "; 
+		}
+		std::cout << "arranjo " << type_name_masc[type] << " " << id;
+		
+		if(next != NULL) {
+			std::cout << " {+indice:";
 			next->printTree();
-		//std::cout << "} ";
+		}
+		std::cout << "} ";
+		
 	} else if (kind == function) {
 		std::cout << "chamada de funcao " << type_name_fem[type] << " " << id;
 		std::cout << " {+parametros: ";
@@ -117,8 +125,12 @@ void Variable::printTree(){
 			parameters->printTree();
 		}
 		std::cout << "}";
-	} else if (kind == matrix) { 
-		std::cout << "matriz " << type_name_masc[type] << " " << id;
+	} else if (kind == matrix) {
+		if(valPosition) {
+			valPosition->printTree();
+			std::cout << " localizado na "; 
+		}
+		std::cout << "matriz " << type_name_fem[type] << " " << id;
 		if (x && y) {
 			std::cout << " {+linha:";
 			x->printTree();
@@ -150,7 +162,7 @@ void VarDeclaration::printTree(){
 		if (kind == array) {
 			std::cout << "Declaracao de arranjo " << type_name_masc[type] << " de tamanho " << tamanho->value << ": ";
 		} else if (kind == matrix) {
-			std::cout << "Declaracao de Matriz " << type_name_masc[type] << " de "; 
+			std::cout << "Declaracao de Matriz " << type_name_fem[type] << " de ";
 			std::cout << x->value << " linhas por " << y->value << " colunas: ";
 		} else {
 			if(strong) {

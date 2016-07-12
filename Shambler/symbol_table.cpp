@@ -59,7 +59,10 @@ AST::Node* SymbolTable::assignVariable(std::string id){
     	return new AST::Variable(id, indefinido);
     }
     entryList[id].initialized = true;
-    return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
+	AST::Variable *v = new AST::Variable(id, entryList[id].type, entryList[id].kind);
+	if (entryList[id].strong)
+		v->setStrong(true);
+    return v; //Creates variable node anyway
 }
 
 AST::Node* SymbolTable::useVariable(std::string id){
@@ -69,7 +72,11 @@ AST::Node* SymbolTable::useVariable(std::string id){
     }
     if ( ! entryList[id].initialized && entryList[id].kind != function ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
 		//std::cout << type_name_masc[entryList[id].type] << std::endl;
-   	return new AST::Variable(id, entryList[id].type, entryList[id].kind); //Creates variable node anyway
+	//std::cout << entryList[id].kind << std::endl;
+	AST::Variable * var = new AST::Variable(id, entryList[id].type, false, entryList[id].kind);
+	if(entryList[id].strong)
+		var->setStrong(true);
+   	return var; //Creates variable node anyway
 }
 
 Symbol SymbolTable::getVariable(std::string id){
@@ -94,6 +101,10 @@ void SymbolTable::setSymbolKind(std::string id, Kind k) {
 	entryList[id].setKind(k);
 }
 
+void SymbolTable::setSymbolStrong(std::string id) {
+	entryList[id].setStrong();
+}
+
 void SymbolTable::setSymbolSize(std::string id, int size) {
 	if (size < 1)
 		yyerror(("semantico: arranjo " + id + " com tamanho menor do que um.").c_str());
@@ -106,4 +117,12 @@ void SymbolTable::setSymbolTypeString(std::string id, Type t) {
 
 void SymbolTable::setFunctionDeclared(std::string id) {
 	entryList[id].SetFuncaoDecladara();
+}
+
+void SymbolTable::setSymbolValues(std::string id, double val) {
+	entryList[id].setValues(val);
+}
+
+double SymbolTable::getSymbolValueAtPosition(std::string id, int pos) {
+	return entryList[id].getValueAt(pos);
 }
