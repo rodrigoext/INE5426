@@ -379,15 +379,17 @@ laco:
           loop->SetConditionFor($4);
           $$ = loop;
         }
-
         ;
+
 expr_for: expr { $$ = $1;}
-        | atribuicao { $$ = $1;} 
+        | atribuicao { $$ = $1;}
+        ;
 
 busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
         {
           $$ = new AST::FindExpr($7, $9, Type::indefinido);
         }
+        ;
 
 
 
