@@ -318,12 +318,16 @@ class FunctionCall : public Node {
 
 class FindExpr : public Node {
   public:
-    std::string id;
+  	std::string id;
+  	Node * where;
     Node * next;
     Type type;
-    FindExpr(std::string id, Node * next, Type t) :
-      id(id), next(next), type(t) {
-
+    FindExpr(std::string id, Node * where, Node * next, Type t) :
+      id(id), where(where), next(next), type(t) {
+		  Variable *var = (Variable*)where;
+		  if (var->kind != array && var->kind != matrix) {
+			  yyerror(("semantico: variavel " + var->id + " nao oferece estrutura para busca por predicado.").c_str());
+		  }
       }
     void printTree();
 };

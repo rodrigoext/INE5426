@@ -272,7 +272,8 @@ void FunctionCall::printTree() {
 }
 
 void FindExpr::printTree() {
-  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " =";
+  std::cout << "Busca por predicado em " << ((Variable*)where)->id;
+  std::cout << ", onde existe um " << id << ", tal que " << id << " =";
   next->printTree();
   std::cout << std::endl;
 }

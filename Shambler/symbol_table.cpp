@@ -77,6 +77,7 @@ AST::Node* SymbolTable::useVariable(std::string id){
     }
     if ( ! entryList[id].initialized && entryList[id].kind != function ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
 	std::cout << entryList[id].type << std::endl;
+	std::cout << entryList[id].kind << std::endl;
 	AST::Variable * var = new AST::Variable(id, entryList[id].type, false, entryList[id].kind);
 	if(entryList[id].strong)
 		var->setStrong(true);
