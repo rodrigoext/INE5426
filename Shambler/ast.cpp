@@ -259,10 +259,15 @@ void FunctionDeclaration::printTree() {
 }
 
 void FunctionCall::printTree() {
-	std::cout << "Chamada da funcao " << id << " ";
+	std::cout << std::endl << "Chamada da funcao: ";
+	std::cout << std::endl << "+ " << id;
 	if(params) {
-		std::cout << "com ";
-		params->printTree();
+		std::cout << std::endl << "parametros: " << std::endl;
+		for(auto v : ((VarDeclaration*)params)->vars) {
+			std::cout << "+ ";
+			((Variable*)v)->printTree();
+			std::cout << std::endl;
+		}
 	}
 }
 

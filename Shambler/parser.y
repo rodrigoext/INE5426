@@ -294,14 +294,12 @@ term   :  T_INT
 
 funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
         {
-          symtab.newFunction($1, Type::indefinido, Kind::function);
-          $$ = new AST::FunctionDeclaration($1, $2, $4, NULL, indefinido);
+          $$ = symtab.newFunction($1, Type::indefinido, Kind::function, $2, $4, NULL, true);
         }
 
         | T_ID parametros T_FUNC_INI lines D_RETURN expr lines T_FUNC_END
         {
           $$ = symtab.newFunction($1, ((AST::Variable*)$6)->type, function, $2, $4, $6, true);
-          //$$ = new AST::FunctionDeclaration($1, $2, $4, $6, ((AST::Variable*)$6)->type);
         }
         ;
 

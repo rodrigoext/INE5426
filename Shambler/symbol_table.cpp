@@ -76,14 +76,7 @@ AST::Node* SymbolTable::useVariable(std::string id){
     	return new AST::Variable(id, indefinido);
     }
     if ( ! entryList[id].initialized && entryList[id].kind != function ) yyerror("semantico: variavel %s nao inicializada.\n", id.c_str());
-		//std::cout << type_name_masc[entryList[id].type] << std::endl;
-	//std::cout << entryList[id].kind << std::endl;
-	/*if(entryList[id].kind == Kind::function) {
-		AST::FunctionDeclaration * var = new AST::Variable(id, entryList[id].type, false, entryList[id].kind);
-		if(entryList[id].strong)
-			var->setStrong(true);
-		return var;
-	}*/
+	std::cout << entryList[id].type << std::endl;
 	AST::Variable * var = new AST::Variable(id, entryList[id].type, false, entryList[id].kind);
 	if(entryList[id].strong)
 		var->setStrong(true);
