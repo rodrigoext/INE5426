@@ -42,7 +42,7 @@ extern void yyerror(const char* s, ...);
  * Example: %type<node> expr
  */
 %type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
-%type <node> laco expr_for
+%type <node> laco expr_for call_func
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -229,6 +229,7 @@ atribuicao:
         ;
 
 expr    : term { $$ = $1; }
+        | call_func { $$ = $1; }
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
@@ -293,14 +294,21 @@ term   :  T_INT
 
 funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
         {
-          symtab.newFunction($1, Type::indefinido, function);
+          symtab.newFunction($1, Type::indefinido, Kind::function);
           $$ = new AST::FunctionDeclaration($1, $2, $4, NULL, indefinido);
         }
 
         | T_ID parametros T_FUNC_INI lines D_RETURN expr lines T_FUNC_END
         {
-          symtab.newFunction($1, ((AST::Variable*)$6)->type, function);
-          $$ = new AST::FunctionDeclaration($1, $2, $4, $6, ((AST::Variable*)$6)->type);
+          $$ = symtab.newFunction($1, ((AST::Variable*)$6)->type, function, $2, $4, $6, true);
+          //$$ = new AST::FunctionDeclaration($1, $2, $4, $6, ((AST::Variable*)$6)->type);
+        }
+        ;
+
+call_func :
+        T_ID parametros
+        {
+          $$ = new AST::FunctionCall($1, $2);
         }
         ;
 
@@ -308,22 +316,32 @@ parametros: T_ABRE_P parametro T_FECHA_P
         {
           $$ = $2;
         }
-        | { $$ = NULL;}
         ;
 
 parametro: T_ID
         {
           $$ = new AST::VarDeclaration(Type::dinamico, false, Kind::variable, true);
-          ((AST::VarDeclaration*)($$))->vars.push_back(
-            symtab.newVariable($1, Type::dinamico, false, Kind::variable, true));
+          if (symtab.checkId($1)) {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.useVariable($1));  
+          } else {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.newVariable($1, Type::dinamico, false, Kind::variable, true));
+          }
         }
 
         | parametro T_COMMA T_ID
         {
+          if (symtab.checkId($3)) {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.useVariable($3));  
+          } else {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.newVariable($3, Type::dinamico, false, Kind::variable, true));
+          }
           $$ = $1;
-          ((AST::VarDeclaration*)($$))->vars.push_back(
-            symtab.newVariable($3, Type::dinamico, false, Kind::variable, true));
         }
+        | { $$ = NULL;}
         ;
 
 condicao: D_IF expr T_FUNC_INI lines T_FUNC_END

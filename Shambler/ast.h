@@ -307,6 +307,15 @@ class FunctionDeclaration : public Node {
 		void printTree();
 };
 
+class FunctionCall : public Node {
+	public:
+		std::string id;
+		Node * params;
+		FunctionCall(std::string id, Node * params) : 
+			id(id), params(params){ }
+		void printTree();
+};
+
 class FindExpr : public Node {
   public:
     std::string id;

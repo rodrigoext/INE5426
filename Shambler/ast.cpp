@@ -258,6 +258,14 @@ void FunctionDeclaration::printTree() {
 	std::cout << std::endl << "Fim declaracao" ;
 }
 
+void FunctionCall::printTree() {
+	std::cout << "Chamada da funcao " << id << " ";
+	if(params) {
+		std::cout << "com ";
+		params->printTree();
+	}
+}
+
 void FindExpr::printTree() {
   std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " =";
   next->printTree();
