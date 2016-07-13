@@ -216,6 +216,7 @@ class UnOp : public Node {
         		this->type = booleano;
         		break;
         	case parenteses:
+			case menos_unario:
         		this->type = next->type;
         		break;
         	default:
@@ -303,6 +304,15 @@ class FunctionDeclaration : public Node {
 		void SetParametros(Node *parametros) {
 			this->parametros = parametros;
 		}
+		void printTree();
+};
+
+class FunctionCall : public Node {
+	public:
+		std::string id;
+		Node * params;
+		FunctionCall(std::string id, Node * params) : 
+			id(id), params(params){ }
 		void printTree();
 };
 

@@ -237,13 +237,12 @@ void ParameterDeclaration::printTree() {
 void FunctionDeclaration::printTree() {
 	if (next != NULL) {
 		std::cout << "Declaracao de funcao ";
-    if (type == indefinido)
-      std::cout << "sem retorno: " << id << std::endl;
-    else
-      std::cout << type_name_fem[type] << ": " << id << std::endl;
-	} else {
-		std::cout << "Definicao de funcao " << type_name_fem[type] << ": " << id << std::endl;
-  }
+		if (type == indefinido) {
+			std::cout << "sem retorno: " << id << std::endl;
+		} else {
+			std::cout << type_name_fem[type] << ": " << id << std::endl;
+		}
+	} 
 	if (parametros != NULL) {
 		std::cout << "+parametros:" << std::endl;
 		parametros->printTree();
@@ -255,9 +254,20 @@ void FunctionDeclaration::printTree() {
 	if (retorno != NULL) {
 		std::cout << "Retorno de funcao: ";
 		retorno->printTree();
-		std::cout << std::endl << "Fim declaracao" ;
-	} else {
-		std::cout << "Fim definicao" ;
+	}
+	std::cout << std::endl << "Fim declaracao" ;
+}
+
+void FunctionCall::printTree() {
+	std::cout << std::endl << "Chamada da funcao: ";
+	std::cout << std::endl << "+ " << id;
+	if(params) {
+		std::cout << std::endl << "parametros: " << std::endl;
+		for(auto v : ((VarDeclaration*)params)->vars) {
+			std::cout << "+ ";
+			((Variable*)v)->printTree();
+			std::cout << std::endl;
+		}
 	}
 }
 

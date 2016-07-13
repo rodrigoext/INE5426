@@ -13,6 +13,7 @@ namespace STab {
 class Symbol;
 
 typedef std::map<std::string,Symbol> SymbolList;
+typedef std::vector<SymbolList> BlockSymbolList;
 
 class Symbol {
 	public:
@@ -65,6 +66,7 @@ class SymbolTable {
         Type tempType;
         Type tempTypeFunc;
 		bool strong, declared;
+		int scopePos;
         std::string tempLegthArray;
         SymbolTable() {}
         bool checkId(std::string id) {return (entryList.find(id) != entryList.end());}
@@ -80,9 +82,10 @@ class SymbolTable {
 		double getSymbolValueAtPosition(std::string id, int pos = 0);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);
         AST::Node* newVariable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false);
-        AST::Node* newFunction(std::string id, Type t, Kind k = function, AST::Node* parametros = NULL, bool declarada = false);
+        AST::Node* newFunction(std::string id, Type t, Kind k = function,  AST::Node* parametros = NULL, AST::Node * lines = NULL, AST::Node * ret = NULL, bool declarada = false);
         AST::Node* assignVariable(std::string id);
         AST::Node* useVariable(std::string id);
+		AST::Node* usetFunction(std::string id);
         Symbol getVariable(std::string id);
 
 };

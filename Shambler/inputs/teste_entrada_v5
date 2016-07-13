@@ -1,0 +1,13 @@
+n = 10
+
+fib (n) {
+	a = 0
+	int j, b = 1
+	int[10] fibonacci
+	while j < n {
+		fibonacci[j-1] = a + b
+		b = a
+		a = fibonacci[j-1]
+	}
+	return fibonacci
+}

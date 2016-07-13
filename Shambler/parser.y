@@ -42,14 +42,17 @@ extern void yyerror(const char* s, ...);
  * Example: %type<node> expr
  */
 %type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
-%type <node> laco
+%type <node> laco expr_for call_func
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
  */
+%left T_OR
+%left T_AND
 %left T_PLUS T_SUB
 %left T_MUL T_DIV
+
 %nonassoc error
 
 /* Starting rule
@@ -226,6 +229,7 @@ atribuicao:
         ;
 
 expr    : term { $$ = $1; }
+        | call_func { $$ = $1; }
         | expr T_PLUS expr { $$ = new AST::BinOp($1, soma, $3); }
         | expr T_SUB expr { $$ = new AST::BinOp($1, subtrai, $3); }
         | expr T_MUL expr { $$ = new AST::BinOp($1, multiplica, $3); }
@@ -239,7 +243,7 @@ expr    : term { $$ = $1; }
         | expr T_AND expr { $$ = new AST::BinOp($1, e_logico, $3); }
         | expr T_OR expr { $$ = new AST::BinOp($1, ou_logico, $3); }
         | T_NEGA expr { $$ = new AST::UnOp($2, negacao); }
-        | T_SUB expr { $$ = new AST::UnOp($2, subtrai); }
+        | T_SUB expr { $$ = new AST::UnOp($2, menos_unario); }
         | T_ABRE_P expr T_FECHA_P { $$ = new AST::UnOp($2, parenteses); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         ;
@@ -290,14 +294,19 @@ term   :  T_INT
 
 funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
         {
-          symtab.newFunction($1, Type::indefinido, function);
-          $$ = new AST::FunctionDeclaration($1, $2, $4, NULL, indefinido);
+          $$ = symtab.newFunction($1, Type::indefinido, Kind::function, $2, $4, NULL, true);
         }
 
         | T_ID parametros T_FUNC_INI lines D_RETURN expr lines T_FUNC_END
         {
-          symtab.newFunction($1, ((AST::Variable*)$6)->type, function);
-          $$ = new AST::FunctionDeclaration($1, $2, $4, $6, ((AST::Variable*)$6)->type);
+          $$ = symtab.newFunction($1, ((AST::Variable*)$6)->type, function, $2, $4, $6, true);
+        }
+        ;
+
+call_func :
+        T_ID parametros
+        {
+          $$ = new AST::FunctionCall($1, $2);
         }
         ;
 
@@ -305,22 +314,32 @@ parametros: T_ABRE_P parametro T_FECHA_P
         {
           $$ = $2;
         }
-        | { $$ = NULL;}
         ;
 
 parametro: T_ID
         {
           $$ = new AST::VarDeclaration(Type::dinamico, false, Kind::variable, true);
-          ((AST::VarDeclaration*)($$))->vars.push_back(
-            symtab.newVariable($1, Type::dinamico, false, Kind::variable, true));
+          if (symtab.checkId($1)) {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.useVariable($1));  
+          } else {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.newVariable($1, Type::dinamico, false, Kind::variable, true));
+          }
         }
 
         | parametro T_COMMA T_ID
         {
+          if (symtab.checkId($3)) {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.useVariable($3));  
+          } else {
+            ((AST::VarDeclaration*)($$))->vars.push_back(
+              symtab.newVariable($3, Type::dinamico, false, Kind::variable, true));
+          }
           $$ = $1;
-          ((AST::VarDeclaration*)($$))->vars.push_back(
-            symtab.newVariable($3, Type::dinamico, false, Kind::variable, true));
         }
+        | { $$ = NULL;}
         ;
 
 condicao: D_IF expr T_FUNC_INI lines T_FUNC_END
@@ -347,20 +366,23 @@ laco:
           $$ = new AST::LoopExp($2, $4, true);
         }
 
-        | D_FOR expr D_TO expr T_FUNC_INI lines T_FUNC_END
+        | D_FOR expr_for D_TO expr T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $6, true);
           loop->SetConditionFor($4);
           $$ = loop;
         }
 
-        | D_FOR expr D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END
+        | D_FOR expr_for D_TO expr T_SUB T_SUB T_FUNC_INI lines T_FUNC_END
         {
           AST::LoopExp * loop = new AST::LoopExp($2, $8, true, true);
           loop->SetConditionFor($4);
           $$ = loop;
         }
+
         ;
+expr_for: expr { $$ = $1;}
+        | atribuicao { $$ = $1;} 
 
 busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
         {
