@@ -1,8 +1,10 @@
 #include "ast.h"
 #include "symbol_table.h"
+#include "support.h"
 using namespace AST;
 
 extern STab::SymbolTable symtab;
+void sum_matrix(std::vector<std::vector<int>> matriz1, std::vector<std::vector<int>> matriz2);
 
 /* Print methods */
 void Integer::printTree(){
@@ -76,6 +78,17 @@ void BinOp::printTree(){
 }
 
 int BinOp::computeTree() {
+	switch (op) {
+		case soma:
+			if (right->kind == matrix && left->kind == matrix) {
+				Variable * m1 = (Variable*)left;
+				Variable * m2 = (Variable*)right;
+				sum_matrix(m1->matriz, m2->matriz);
+			}
+			break;
+		default:
+			break;
+	}
   return left->computeTree() + right->computeTree();
 }
 

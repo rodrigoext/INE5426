@@ -415,5 +415,7 @@ imprimir: D_PRINT T_ID
             print_matrix(v->matriz);
           else
             yyerror(("Nao foi possivel imprimir " + v->id).c_str());
+          
+          $$ = NULL;
         }
 %%
