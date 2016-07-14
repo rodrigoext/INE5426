@@ -42,7 +42,7 @@ extern void yyerror(const char* s, ...);
  * Example: %type<node> expr
  */
 %type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
-%type <node> laco expr_for call_func
+%type <node> laco expr_for call_func targets
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -226,6 +226,36 @@ atribuicao:
             $$ = new AST::BinOp($1, associa, $3);
           }
        	}
+
+        | targets T_IGUAL expr
+        {
+          AST::Variable* v = (AST::Variable*)$1;
+          v->setValPosition(NULL);
+          $$ = new AST::BinOp(v,associa,$3);
+        }
+        ;
+
+targets: T_ID { $$ = symtab.useVariable($1); }
+
+        /*Usar valores do arranjo*/
+        | T_ID T_ARRAY_INIT T_INT T_ARRAY_END
+        {
+          //Precisa mudar para um valor (Number), não variável
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+          v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
+        	v->setNext(new AST::Number($3, Type::inteiro));
+          $$ = v;
+        }
+        /*Usar valores da matriz*/
+        | T_ID T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P
+        {
+          //Precisa mudar para um valor (Number), não variável
+          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
+          v->setKind(Kind::matrix);
+          v->setUseXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
+          v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
+          $$ = v;
+        }
         ;
 
 expr    : term { $$ = $1; }
@@ -269,27 +299,7 @@ term   :  T_INT
             symtab.tempType = Type::booleano;
         }
 
-        | T_ID { $$ = symtab.useVariable($1); }
-
-        /*Usar valores do arranjo*/
-        | T_ID T_ARRAY_INIT T_INT T_ARRAY_END
-        {
-          //Precisa mudar para um valor (Number), não variável
-          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
-          v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
-        	v->setNext(new AST::Number($3, Type::inteiro));
-          $$ = v;
-        }
-        /*Usar valores da matriz*/
-        | T_ID T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P
-        {
-          //Precisa mudar para um valor (Number), não variável
-          AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
-          v->setKind(Kind::matrix);
-          v->setUseXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
-          v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
-          $$ = v;
-        }
+        | targets { $$ = $1; }
         ;
 
 funcao: T_ID parametros T_FUNC_INI lines T_FUNC_END
