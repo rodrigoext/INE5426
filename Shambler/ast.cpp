@@ -1,6 +1,5 @@
 #include "ast.h"
 #include "symbol_table.h"
-
 using namespace AST;
 
 extern STab::SymbolTable symtab;
@@ -168,7 +167,7 @@ void VarDeclaration::printTree(){
 			if(strong) {
 					std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
 			} else {
-				std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
+				std::cout << "variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
 			}
 
     }

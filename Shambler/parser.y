@@ -1,6 +1,7 @@
 %{
 #include "ast.h"
 #include "symbol_table.h"
+#include "support.h"
 #include "types.h"
 STab::SymbolTable symtab;
 AST::Block *programRoot; /* the root node of our program AST:: */
@@ -28,7 +29,7 @@ extern void yyerror(const char* s, ...);
 %token T_ASSIGN T_DECLARA
 %token D_IF D_THEN D_END D_ELSE
 %token D_WHILE D_DO D_FOR D_TO
-%token D_DEF D_FUN D_DECL D_RETURN D_FIND
+%token D_DEF D_FUN D_DECL D_RETURN D_FIND D_PRINT
 %token T_MUL T_DIV
 %token T_IGUAL T_DIFERENTE T_MAIOR T_MENOR T_FIND
 %token T_MAIOR_IGUAL T_MENOR_IGUAL
@@ -42,7 +43,7 @@ extern void yyerror(const char* s, ...);
  * Example: %type<node> expr
  */
 %type <node> expr line declaracao atribuicao varlist term funcao parametro parametros busca condicao
-%type <node> laco expr_for call_func targets
+%type <node> laco expr_for call_func targets imprimir
 %type <block> lines program
 
 /* Operator precedence for mathematical operators
@@ -82,6 +83,8 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | laco T_FIM
         | busca
         | busca T_FIM
+        | imprimir
+        | imprimir T_FIM
         | error T_FIM {yyerrok; $$ = NULL;}
         ;
 
@@ -197,13 +200,16 @@ atribuicao:
           vardecl->setKind(Kind::matrix);
           vardecl->setTamanhoXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
           for (auto var = vardecl->vars.begin(); var != vardecl->vars.end(); var++) {
-            symtab.setSymbolType(((AST::Variable *)(*var))->id, symtab.tempType);
-            symtab.setSymbolInitialized(((AST::Variable *)(*var))->id);
-            symtab.setSymbolKind(((AST::Variable *)(*var))->id, Kind::matrix);
-            symtab.setSymbolStrong(((AST::Variable *)(*var))->id);
-            symtab.setSymbolValues(((AST::Variable *)(*var))->id, 1.0); //Trocar pelo compute
+            std::string id_v = ((AST::Variable *)(*var))->id;
+            symtab.setSymbolType(id_v, symtab.tempType);
+            symtab.setSymbolInitialized(id_v);
+            symtab.setSymbolKind(id_v, Kind::matrix);
+            symtab.setSymbolStrong(id_v);
+            symtab.setSymbolRowCol(id_v, std::stoi($3), std::stoi($5));
+            symtab.setSymbolValues(id_v, $9);
             ((AST::Variable *)(*var))->setType(symtab.tempType);
             ((AST::Variable *)(*var))->setKind(Kind::matrix);
+            ((AST::Variable *)(*var))->matriz = symtab.getSymbolMatrix(id_v);
           }
           $$ = new AST::BinOp($7, associa, $9);
           symtab.strong = false;
@@ -324,6 +330,7 @@ parametros: T_ABRE_P parametro T_FECHA_P
         {
           $$ = $2;
         }
+        | { $$ = NULL;}
         ;
 
 parametro: T_ID
@@ -400,4 +407,13 @@ busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
           $$ = new AST::FindExpr($5, symtab.useVariable($1), $9, Type::indefinido);
         }
         ;
+
+imprimir: D_PRINT T_ID
+        {
+          AST::Variable * v = (AST::Variable*)symtab.useVariable($2);
+          if (v->kind == matrix)
+            print_matrix(v->matriz);
+          else
+            yyerror(("Nao foi possivel imprimir " + v->id).c_str());
+        }
 %%
