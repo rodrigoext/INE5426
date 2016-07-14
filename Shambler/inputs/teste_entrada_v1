@@ -11,7 +11,7 @@ y = FALSE
 
 a = 2 + 6 - 14 / 2
 a = (c*2 + d*c) / 4
-b = - a
+b = - a                  
 
 i = 14.5 - h * 3.
 m = j*5 / k
@@ -19,3 +19,7 @@ l = - d
 
 x = y OR a > i
 z = ~ w AND d <= l
+
+
+## arrumar coercao (linha 17 e 18)
+## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 13, 17, 18, 20 e 21)

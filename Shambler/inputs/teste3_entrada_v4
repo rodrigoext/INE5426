@@ -1,6 +1,8 @@
-for i = 1 to 50 {
-	int a = 1
-	real b = .2;
-	x = (a + b) * (a * b)
-	i = i + 1
+j = 300
+
+for j to 120 -- {
+	int[200] lista
+	lista[j] = lista[j] + j*j;
 }
+
+## arrumar tipo dinamico de variavel depois de receber algum tipo (linha 3)

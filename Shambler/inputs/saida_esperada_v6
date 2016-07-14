@@ -1,15 +1,13 @@
 Declaracao de Matriz inteira de 4 linhas por 4 colunas: matrix
 
 Laco
-+para: Atribuicao de valor para variavel i: valor inteiro 0
++para: Atribuicao de valor para variavel com tipagem dinamica inteira i: valor inteiro 0
 +ate: valor inteiro 3
 +faca: 
 Laco
-+para: Atribuicao de valor para variavel j: valor inteiro 0
++para: Atribuicao de valor para variavel com tipagem dinamica inteira j: valor inteiro 0
 +ate: valor inteiro 3
 +faca: 
 Atribuicao de valor para matriz inteira matrix {+linha: variavel inteira i}, {+coluna: variavel inteira j}: variavel inteira i (soma inteira) variavel inteira j
-Atribuicao de valor para variavel inteira j: variavel inteira j (soma inteira) valor inteiro 1
 Fim laco
-Atribuicao de valor para variavel inteira i: variavel inteira i (soma inteira) valor inteiro 1
 Fim laco

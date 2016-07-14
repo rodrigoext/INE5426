@@ -6,10 +6,8 @@ Laco
 +enquanto: (variavel inteira x (menor ou igual booleano) variavel inteira maximo)
 +faca:
 Declaracao de variavel real: valor
-Declaracao de variavel booleana: fim
-Atribuicao de valor para variavel booleana fim: valor booleano FALSE
-Atribuicao de valor para variavel real valor: (valor real 0.2 (multiplicacao real) variavel inteira x para real) (soma real) valor real .5
-Atribuicao de valor para variavel inteira x: variavel inteira x (soma inteira) valor inteiro 1
+Atribuicao de valor para (Declaracao de variavel booleana: fim): valor booleano FALSE
+Atribuicao de valor para variavel real valor: ((valor real 0.2 (multiplicacao real) variavel inteira x para real) (soma real) valor real .5)
 Fim laco
 
 Atribuicao de valor para variavel booleana fim: valor booleano TRUE

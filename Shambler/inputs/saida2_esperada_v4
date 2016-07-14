@@ -1,11 +1,8 @@
-Declaracao de variavel inteira: i
-Atribuicao de valor para variavel inteira i: valor inteiro 0
-Declaracao de arranjo inteiro de tamanho 8: array
-
 Laco
-+para: variavel inteira i
-+em: arranjo inteiro array
++para: Atribuicao de valor para variavel i: valor inteiro 1
++ate: valor inteiro 50
 +faca: 
-Atribuicao de valor para arranjo inteiro array {+indice: variavel inteira i}: arranjo inteiro array {+indice: variavel inteira i} (multiplicacao inteira) valor inteiro 2
-Atribuicao de valor para variavel inteira i: variavel inteira i (soma inteira) valor inteiro 1
+Atribuicao de valor para (Declaracao de variavel inteira: a): valor inteiro 1
+Atribuicao de valor para (Declaracao de variavel real: b): valor real .2
+Atribuicao de valor para variavel com tipagem dinamica inteira x: ((abre parenteses) (variavel inteira a (soma inteira) variavel real b) (fecha parenteses) (multiplicacao inteira) (abre parenteses) (variavel inteira a (multiplicacao inteira) variavel real b) (fecha parenteses))
 Fim laco

@@ -3,7 +3,9 @@ int(4,4) matrix
 for i = 0 to 3 {
 	for j = 0 to 3{
 		matrix(i, j) = i + j;
-		j = j + 1
 	}
-	i = i + 1;
 }
+
+## arrumar para aceitar atribuicao de i no for
+## adicionar aceitacao de matriz no lado esquerdo da atribuicao
+## arrumar para aceitar variaveis nos indices da matriz

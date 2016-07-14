@@ -1,7 +1,6 @@
 real media, frequencia
 frequencia = .8
 bool aprovado = FALSE
-bool rec
 a = 3.9
 b = 5.
 c = 10
@@ -12,6 +11,8 @@ if frequencia >= .75 {
 		aprovado = TRUE
 	} else {
 		aprovado = FALSE
-		rec = FALSE
 	}
 }
+
+## arrumar o tipo das variaveis na linha 9: media, a e b são reais e c é inteira
+## arrumar coerção na linha 9

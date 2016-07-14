@@ -1,13 +1,13 @@
 n = 10
 
-fib (n) {
-	a = 0
-	int j, b = 1
-	int[10] fibonacci
+multiplica (n) {
+	int[10] produtos
+	j = 0
 	while j < n {
-		fibonacci[j-1] = a + b
-		b = a
-		a = fibonacci[j-1]
+		mul[j] = n*j;
 	}
-	return fibonacci
+	return produtos
 }
+
+## adicionar aceitacao de array no lado esquerdo da atribuicao
+## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 3 e 6)

@@ -1,21 +1,20 @@
 v1: operadores matematicos, logicos e relacionais
 v2: condicionais
 		if
-		if else if else
+		if else
 v3:arranjos
 	tipo[n] arranjo
-
 v4: laços
 		while
-		for in
 		for to
 		for i=1 to
 		for to --
 		for i=1 --
-
 v5: funções
 		func return
 		void func
-		
 v6: matrizes
 		tipo(x,y) matriz
+v7: buscas
+		list.find(item ­> item = “nome”)  
+		list.find(item ­> item = “nome”, 10) 

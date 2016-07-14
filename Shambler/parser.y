@@ -400,7 +400,4 @@ busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
           $$ = new AST::FindExpr($5, symtab.useVariable($1), $9, Type::indefinido);
         }
         ;
-
-
-
 %%
