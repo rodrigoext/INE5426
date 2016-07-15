@@ -246,7 +246,6 @@ targets: T_ID { $$ = symtab.useVariable($1); }
         /*Usar valores do arranjo*/
         | T_ID T_ARRAY_INIT T_INT T_ARRAY_END
         {
-          //Precisa mudar para um valor (Number), não variável
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
           v->setValPosition(new AST::Number(std::to_string((int)symtab.getSymbolValueAtPosition($1)), Type::inteiro));
         	v->setNext(new AST::Number($3, Type::inteiro));
@@ -255,7 +254,6 @@ targets: T_ID { $$ = symtab.useVariable($1); }
         /*Usar valores da matriz*/
         | T_ID T_ABRE_P T_INT T_COMMA T_INT T_FECHA_P
         {
-          //Precisa mudar para um valor (Number), não variável
           AST::Variable* v = ((AST::Variable*)(symtab.useVariable($1)));
           v->setKind(Kind::matrix);
           v->setUseXY(new AST::Number($3, Type::inteiro), new AST::Number($5, Type::inteiro));
@@ -406,6 +404,13 @@ busca: T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_FECHA_P
         {
           $$ = new AST::FindExpr($5, symtab.useVariable($1), $9, Type::indefinido);
         }
+
+        |T_ID T_DOT D_FIND T_ABRE_P T_ID T_FIND T_ID T_IGUAL expr T_COMMA T_INT T_FECHA_P
+        {
+          AST::FindExpr *fe = new AST::FindExpr($5, symtab.useVariable($1), $9, Type::indefinido);
+          fe->setQtd(new AST::Number($11, Type::inteiro));
+          $$ = fe; 
+        }
         ;
 
 imprimir: D_PRINT T_ID
@@ -415,7 +420,6 @@ imprimir: D_PRINT T_ID
             print_matrix(v->matriz);
           else
             yyerror(("Nao foi possivel imprimir " + v->id).c_str());
-          
           $$ = NULL;
         }
 %%

@@ -296,5 +296,6 @@ void FindExpr::printTree() {
   std::cout << "Busca por predicado em " << ((Variable*)where)->id;
   std::cout << ", onde existe um " << id << ", tal que " << id << " =";
   next->printTree();
-  std::cout << std::endl;
+  if(qtd)
+  	std::cout << " retornando a posição dos primeiros " << qtd << " encontrados";
 }

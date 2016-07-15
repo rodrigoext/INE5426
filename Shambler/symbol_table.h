@@ -96,6 +96,9 @@ class SymbolTable {
         void setSymbolKind(std::string id, Kind k);
         void setSymbolSize(std::string id, int size);
 		void setSymbolRowCol(std::string id, int row, int col) {entryList[id].setRowCol(row, col);}
+		void setValueSymbolRowCol(std::string id, int row, int col, int value) {
+			entryList[id].matriz[row][col] = value;
+		}
 		void setSymbolStrong(std::string id);
         void setSymbolTypeString(std::string id, Type t);
         void setFunctionDeclared(std::string id);

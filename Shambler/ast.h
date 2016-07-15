@@ -329,13 +329,18 @@ class FindExpr : public Node {
   	Node * where;
     Node * next;
     Type type;
+	int qtd;
     FindExpr(std::string id, Node * where, Node * next, Type t) :
       id(id), where(where), next(next), type(t) {
 		  Variable *var = (Variable*)where;
 		  if (var->kind != array && var->kind != matrix) {
 			  yyerror(("semantico: variavel " + var->id + " nao oferece estrutura para busca por predicado.").c_str());
 		  }
+		  qtd = 0;
       }
+	void setQtd(Number * how_many) {
+		qtd = std::stoi(how_many->value);
+	}
     void printTree();
 };
 }
