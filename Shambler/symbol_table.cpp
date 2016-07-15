@@ -92,13 +92,11 @@ Symbol SymbolTable::getVariable(std::string id){
 }
 
 bool SymbolTable::setSymbolType(std::string id, Type t) {
-		//std::cout << id << " | " << type_name_masc[entryList[id].type] << std::endl;
-		if (entryList[id].type == indefinido) {
-			entryList[id].setType(t);
-			return true;
-		}
-    //std::cout << id << " | " << type_name_masc[entryList[id].type] << std::endl;
-		return false;
+	if (entryList[id].type == indefinido) {
+		entryList[id].setType(t);
+		return true;
+	}
+	return false;
 }
 
 void SymbolTable::setSymbolInitialized(std::string id, bool init) {

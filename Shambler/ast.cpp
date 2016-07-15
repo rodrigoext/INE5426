@@ -4,7 +4,6 @@
 using namespace AST;
 
 extern STab::SymbolTable symtab;
-void sum_matrix(std::vector<std::vector<int>> matriz1, std::vector<std::vector<int>> matriz2);
 
 /* Print methods */
 void Integer::printTree(){
@@ -80,11 +79,13 @@ void BinOp::printTree(){
 int BinOp::computeTree() {
 	switch (op) {
 		case soma:
-			if (right->kind == matrix && left->kind == matrix) {
-				Variable * m1 = (Variable*)left;
-				Variable * m2 = (Variable*)right;
+		{
+			Variable * m1 = (Variable*)left;
+			Variable * m2 = (Variable*)right;
+			if (m1->kind == matrix && m2->kind == matrix) {
 				sum_matrix(m1->matriz, m2->matriz);
 			}
+		}
 			break;
 		default:
 			break;
@@ -192,6 +193,10 @@ void VarDeclaration::printTree(){
 }
 
 int VarDeclaration::computeTree() {
+	for (auto var = vars.begin(); var != vars.end(); var++) {
+		std::cout << dynamic_cast<Variable *>(*var)->id;
+		if(next(var) != vars.end()) std::cout << ", ";
+	}
   return 0;
 }
 
@@ -230,6 +235,10 @@ void LoopExp::printTree() {
 	std::cout << "+faca: " << std::endl;
 	next->printTree();
 	std::cout << "Fim laco";
+}
+
+int LoopExp::computeTree() {
+	return 0;
 }
 
 double LoopExp::computeTreeD() {

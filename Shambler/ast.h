@@ -281,6 +281,7 @@ class LoopExp : public Node {
 			this->conditionFor = next;
 		}
 		void printTree();
+		int computeTree();
 		double computeTreeD();
 };
 
