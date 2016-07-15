@@ -13,6 +13,3 @@ if frequencia >= .75 {
 		aprovado = FALSE
 	}
 }
-
-## arrumar o tipo das variaveis na linha 9: media, a e b são reais e c é inteira
-## arrumar coerção na linha 9

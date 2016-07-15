@@ -5,7 +5,3 @@ for i = 0 to 3 {
 		matrix(i, j) = i + j;
 	}
 }
-
-## arrumar para aceitar atribuicao de i no for
-## adicionar aceitacao de matriz no lado esquerdo da atribuicao
-## arrumar para aceitar variaveis nos indices da matriz

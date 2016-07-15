@@ -19,7 +19,3 @@ l = - d
 
 x = y OR a > i
 z = ~ w AND d <= l
-
-
-## arrumar coercao (linha 17 e 18)
-## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 13, 17, 18, 20 e 21)

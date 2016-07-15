@@ -9,5 +9,3 @@ while x <= maximo {
 }
 
 fim = TRUE
-
-## arrumar coercao linha 8

@@ -8,5 +8,3 @@ incremento {
 		c = c - 1
 	}
 }
-
-## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 6 e 8)

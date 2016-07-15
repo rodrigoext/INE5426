@@ -8,6 +8,3 @@ multiplica (n) {
 	}
 	return produtos
 }
-
-## adicionar aceitacao de array no lado esquerdo da atribuicao
-## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 3 e 6)

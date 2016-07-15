@@ -3,5 +3,3 @@ for i = 1 to 50 {
 	real b = .2;
 	x = (a + b) * (a * b)
 }
-
-## arrumar para aceitar atribuicao de i no for

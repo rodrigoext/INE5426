@@ -4,5 +4,3 @@ for j to 120 -- {
 	int[200] lista
 	lista[j] = lista[j] + j*j;
 }
-
-## arrumar tipo dinamico de variavel depois de receber algum tipo (linha 3)
