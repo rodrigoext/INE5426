@@ -1,21 +1,17 @@
 Declaracao de variavel inteira: a, b
-Atribuicao de valor para (Declaracao de variavel inteira: c): valor inteiro 5
-Atribuicao de valor para variavel com tipagem dinamica inteira d:  valor inteiro 3
-Atribuicao de valor para (Declaracao de variavel real: h, i): valor real 2.4
-Declaracao de variavel real: l, m
-Atribuicao de valor para (Declaracao de variavel real: j): valor real .7
-Atribuicao de valor para variavel com tipagem dinamica real k: valor real 0.8
+Atribuicao de valor para Declaracao de variavel inteira: c:  valor inteiro 5
+Atribuicao de valor para variavel com tipagem dinâmica inteira d:  valor inteiro 3
+Atribuicao de valor para Declaracao de variavel real: h, i:  valor real 2.4
+Declaracao de variavel real: m
+Atribuicao de valor para Declaracao de variavel real: j:  valor real .7
+Atribuicao de valor para variavel com tipagem dinâmica real k:  valor real 0.8
 Declaracao de variavel booleana: x, z
-Atribuicao de valor para (Declaracao de variavel booleana: w): valor booleano TRUE
-Atribuicao de valor para variavel com tipagem dinamica booleana y: valor booleano FALSE
-
-Atribuicao de valor para variavel inteira a: (( valor inteiro 2 (soma inteira) valor inteiro 6) (subtracao inteira) (valor inteiro 14 (divisao inteira) valor inteiro 2))
-Atribuicao de valor para variavel inteira a: ((abre parenteses) ((variavel inteira c (multiplicacao inteira) valor inteiro 2) (soma inteira) (variavel inteira d (multiplicacao inteira) variavel inteira c)) (fecha parenteses) (divisao inteira) valor inteiro 4)
-Atribuicao de valor para variavel inteira b: (menos unario inteiro) variavel inteira a 
-
-Atribuicao de valor para variavel real i: (valor real 14.5 (subtracao real) (variavel real h (multiplicacao real) valor real 3.))
-Atribuicao de valor para variavel real m: ((variavel real j (multiplicacao real) valor inteiro 5) (divisao real) variavel real k)
-Atribuicao de valor para variavel real l: ((menos unario inteiro) variavel inteira d)
-
-Atribuicao de valor para variavel booleana x: (variavel booleana y (ou booleano) (variavel inteira a (maior booleano) variavel real i))
-Atribuicao de valor para variavel booleana z: (nao booleano) (variavel booleana w (e booleano) (variavel inteira d (menor ou igual booleano) (variavel real l (e booleano) variavel real m (diferente booleano) valor real 3.0))) 
+Atribuicao de valor para Declaracao de variavel booleana: w:  valor booleano TRUE
+Atribuicao de valor para variavel com tipagem dinâmica booleana y:  valor booleano FALSE
+Atribuicao de valor para variável inteira a: (( valor inteiro 2 (soma inteira)  valor inteiro 6) (subtracao inteira) ( valor inteiro 14 (divisao inteira)  valor inteiro 2))
+Atribuicao de valor para variável inteira a: ((abre parenteses) ((variável inteira c (multiplicacao inteira)  valor inteiro 2) (soma inteira) (variável dinamica d (multiplicacao dinamica) variável inteira c)) (fecha parenteses) (divisao inteira)  valor inteiro 4)
+Atribuicao de valor para variável inteira b: (menos unario inteiro) variável inteira a
+Atribuicao de valor para variável real i: ( valor real 14.5 (subtracao real) (variável real h (multiplicacao real)  valor real 3.))
+Atribuicao de valor para variável real m: ((variável real j (multiplicacao real)  valor inteiro 5) (divisao real) variável dinamica k)
+Atribuicao de valor para variável booleana x: (variável dinamica y (ou booleano) (variável inteira a (maior booleano) variável real i))
+Atribuicao de valor para variável booleana z: (nao booleano) (variável booleana w (e booleano) (variável dinamica d (menor ou igual booleano) (variável real j (e booleano) (variável real m (diferente booleano)  valor real 3.0))))

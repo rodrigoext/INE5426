@@ -1,19 +1,19 @@
 Declaracao de variavel real: media, frequencia
-Atribuicao de valor para variavel real frequencia: valor real .8
-Atribuicao de valor para (Declaracao de variavel booleana: aprovado): valor booleano FALSE
-Atribuicao de valor para variavel com tipagem dinamica real a: valor real 3.9
-Atribuicao de valor para variavel com tipagem dinamica real b: valor real 5.
-Atribuicao de valor para variavel com tipagem dinamica real c: valor inteiro 10
-
+Atribuicao de valor para variável real frequencia:  valor real .8
+Atribuicao de valor para Declaracao de variavel booleana: aprovado:  valor booleano FALSE
+Atribuicao de valor para Declaracao de variavel real: a:  valor real 3.9
+Atribuicao de valor para Declaracao de variavel real: b:  valor real 5.
+Atribuicao de valor para Declaracao de variavel inteira: c:  valor inteiro 10
 Expressao condicional
-+se: (variavel real frequencia (maior ou igual booleano) valor real .75)
-+entao:
-Atribuicao de valor para variavel real media: ((abre parenteses) (((variavel real a (multiplicacao real) valor inteiro 2 para real) (soma real) (variavel real b (multiplicacao real) valor inteiro 2 para real)) (soma real) (variavel inteira c (multiplicacao inteira) valor inteiro 4)) para real (fecha parenteses) (divisao real) valor inteiro 8 para real) 
-Expressao condicional
-+se: (variavel real media (maior ou igual booleano) (valor real 5.75 (ou booleano) (variavel real media (igual booleano) (valor real 5.5 (e booleano) (variavel real frequencia (igual booleano) valor real 10.)))))
++se: (variável real frequencia (maior ou igual booleano)  valor real .75)
 +entao: 
-Atribuicao de valor para variavel booleana aprovado: valor booleano TRUE
-+senao:
-Atribuicao de valor para variavel booleana aprovado: valor booleano FALSE
+Atribuicao de valor para variável real media: ((abre parenteses) (((variável real a (multiplicacao real)  valor inteiro 2) (soma real) (variável real b (multiplicacao real)  valor inteiro 2)) (soma real) (variável inteira c (multiplicacao inteira)  valor inteiro 4)) (fecha parenteses) (divisao real)  valor inteiro 8)
+Expressao condicional
++se: (variável real media (maior ou igual booleano) ( valor real 5.75 (ou booleano) (variável real media (igual booleano) ( valor real 5.5 (e booleano) (variável real frequencia (igual booleano)  valor real 10.)))))
++entao: 
+Atribuicao de valor para variável booleana aprovado:  valor booleano TRUE
++senao
+Atribuicao de valor para variável booleana aprovado:  valor booleano FALSE
 Fim expressao condicional
+
 Fim expressao condicional

@@ -1,6 +1,6 @@
-j = 300
+int j = 300
 
 for j to 120 -- {
-	int[200] lista
-	lista[j] = lista[j] + j*j;
+	int[200] lista = 0
+	lista[150] = lista[130] + j*j;
 }

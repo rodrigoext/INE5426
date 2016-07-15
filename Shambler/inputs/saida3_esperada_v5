@@ -1,9 +1,9 @@
-Atribuicao de valor para variavel com tipagem dinamica inteira a:  valor inteiro 1
-Atribuicao de valor para variavel com tipagem dinamica inteira b:  valor inteiro 2
-
+Atribuicao de valor para Declaracao de variavel inteira: a:  valor inteiro 1
+Atribuicao de valor para Declaracao de variavel inteira: b:  valor inteiro 2
 Declaracao de funcao sem retorno: soma
 +parametros:
-parametro inteiro: a, b
+parametro dinamico: a, b
 +corpo:
-Atribuicao de valor para variavel com tipagem dinâmica m: (variavel inteira a (soma inteira) variavel inteira b)
+Atribuicao de valor para variavel com tipagem dinâmica inteira m: (variável inteira a (soma inteira) variável inteira b)
+
 Fim declaracao

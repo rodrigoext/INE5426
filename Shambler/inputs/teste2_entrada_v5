@@ -1,10 +1,11 @@
 incremento {
 	real r = 3.6
-	int i = 4;
-	c = 5;
+	int c, i = 4;
 	if r > i {
 		c = c + 1
 	} else {
 		c = c - 1
 	}
 }
+
+## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 6 e 8)

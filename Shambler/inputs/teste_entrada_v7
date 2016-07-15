@@ -1,0 +1,9 @@
+int[7] array = 0
+real(3,3) matrix = 5.0
+
+array[2] = 3
+array.find(x -> x = 3)
+
+matrix(2,2) = 3.5
+matrix(3,3) = 3.5
+matrix.find(item -> item = 3.5, 5)
