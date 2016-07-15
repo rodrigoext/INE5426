@@ -18,4 +18,8 @@ m = j*5 / k
 l = - d
 
 x = y OR a > i
-z = ~ w AND d <= l
+z = ~ w AND d <= l AND m ~= 3.0
+
+
+## arrumar coercao (linha 17 e 18)
+## arrumar tipo dinamico de variavel depois de receber algum tipo (linhas 13, 17, 18, 20 e 21)

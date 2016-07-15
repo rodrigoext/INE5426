@@ -18,4 +18,4 @@ Atribuicao de valor para variavel real m: ((variavel real j (multiplicacao real)
 Atribuicao de valor para variavel real l: ((menos unario inteiro) variavel inteira d)
 
 Atribuicao de valor para variavel booleana x: (variavel booleana y (ou booleano) (variavel inteira a (maior booleano) variavel real i))
-Atribuicao de valor para variavel booleana z: (nao booleano) (variavel booleana w (e booleano) (variavel inteira d (menor ou igual booleano) variavel real l)) 
+Atribuicao de valor para variavel booleana z: (nao booleano) (variavel booleana w (e booleano) (variavel inteira d (menor ou igual booleano) (variavel real l (e booleano) variavel real m (diferente booleano) valor real 3.0))) 
