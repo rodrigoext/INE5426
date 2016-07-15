@@ -1,6 +1,5 @@
 a = 1
 b = 2
-
-soma (a, b) {
-	m = a + b
+soma (x, y) {
+	m = x + y
 }
