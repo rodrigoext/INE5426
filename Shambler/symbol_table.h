@@ -20,15 +20,18 @@ class Symbol {
 		Type type;
 		Kind kind;
 		bool initialized;
-		int size_array;
+		int size_array, size_row, size_col;
 		bool funcDeclarada;
 		bool strong;
-		double values;
+		int values;
+		std::vector<std::vector<int> > matriz;
 		Symbol() {
 			type = indefinido;
 			kind = variable;
 			initialized = false;
 			size_array = 0;
+			size_row = 0;
+			size_col = 0;
 			funcDeclarada = false;
 			strong = false;
 		}
@@ -46,14 +49,31 @@ class Symbol {
 		void setInicializado() {
 			initialized = true;
 		}
+		void setRowCol(int row, int col) {
+			size_row = row;
+			size_col = col;
+			std::vector<std::vector<int> > matriz_t(row, std::vector<int>(col));
+			matriz = matriz_t;
+		}
 		void SetFuncaoDecladara() {
 			funcDeclarada = true;
 		}
 		void setStrong() {
 			strong = true;
 		}
-		void setValues(double v) {
-			values = v;
+		void setValues(int v) {
+			switch (this->kind) {
+				case matrix:
+					for (int i = 0; i < size_row; i++) {
+						for (int j = 0; j < size_col; j++) {
+							matriz[i][j] = v;
+						}
+					}
+					values = v;
+					break;
+				default:
+				 values = v;
+			}
 		}
 		double getValueAt(int pos) {
 			return values;
@@ -75,10 +95,17 @@ class SymbolTable {
         void setSymbolInitialized(std::string id, bool init = true);
         void setSymbolKind(std::string id, Kind k);
         void setSymbolSize(std::string id, int size);
+		void setSymbolRowCol(std::string id, int row, int col) {entryList[id].setRowCol(row, col);}
+		void setValueSymbolRowCol(std::string id, int row, int col, int value) {
+			entryList[id].matriz[row][col] = value;
+		}
 		void setSymbolStrong(std::string id);
         void setSymbolTypeString(std::string id, Type t);
         void setFunctionDeclared(std::string id);
-		void setSymbolValues(std::string id, double val);
+		void setSymbolValues(std::string id, AST::Node *value);
+		std::vector<std::vector<int> > getSymbolMatrix(std::string id) {
+			return entryList[id].matriz;
+		}
 		double getSymbolValueAtPosition(std::string id, int pos = 0);
         AST::Node* newVariable(std::string id, Type t, Kind k, AST::Node* next);
         AST::Node* newVariable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false);

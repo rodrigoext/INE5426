@@ -58,6 +58,7 @@ class Variable : public Node {
 		 Node *x;
 		 Node *y;
 		 Node * valPosition;
+		 std::vector<std::vector<int> > matriz;
          Variable(std::string id, Type t, bool strong = false, Kind k = variable, bool parameter = false, Node * parameters = NULL) :
             id(id), kind(k) {
 				this->next = NULL;
@@ -121,7 +122,7 @@ class VarDeclaration : public Node {
         	this->type = t;
         	this->kind = k;
         	this->tamanho = NULL;
-          this->strong = strong;
+          	this->strong = strong;
         	this->parameter = parameter;
         }
         void setType(Type t) {
@@ -142,6 +143,11 @@ class VarDeclaration : public Node {
 		void setTamanhoXY(Number * x, Number * y) {
 			this->x = x;
 			this->y = y;
+		}
+		void setVarMatrix(std::vector<std::vector<int> > matriz) {
+			for (auto v : vars) {
+				((Variable*)v)->matriz = matriz;
+			}
 		}
         void printTree();
         int computeTree();
@@ -275,6 +281,7 @@ class LoopExp : public Node {
 			this->conditionFor = next;
 		}
 		void printTree();
+		int computeTree();
 		double computeTreeD();
 };
 
@@ -318,13 +325,22 @@ class FunctionCall : public Node {
 
 class FindExpr : public Node {
   public:
-    std::string id;
+  	std::string id;
+  	Node * where;
     Node * next;
     Type type;
-    FindExpr(std::string id, Node * next, Type t) :
-      id(id), next(next), type(t) {
-
+	int qtd;
+    FindExpr(std::string id, Node * where, Node * next, Type t) :
+      id(id), where(where), next(next), type(t) {
+		  Variable *var = (Variable*)where;
+		  if (var->kind != array && var->kind != matrix) {
+			  yyerror(("semantico: variavel " + var->id + " nao oferece estrutura para busca por predicado.").c_str());
+		  }
+		  qtd = 0;
       }
+	void setQtd(Number * how_many) {
+		qtd = std::stoi(how_many->value);
+	}
     void printTree();
 };
 }

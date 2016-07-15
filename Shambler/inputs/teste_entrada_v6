@@ -3,7 +3,5 @@ int(4,4) matrix
 for i = 0 to 3 {
 	for j = 0 to 3{
 		matrix(i, j) = i + j;
-		j = j + 1
 	}
-	i = i + 1;
 }

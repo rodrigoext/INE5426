@@ -1,6 +1,6 @@
 #include "ast.h"
 #include "symbol_table.h"
-
+#include "support.h"
 using namespace AST;
 
 extern STab::SymbolTable symtab;
@@ -77,6 +77,19 @@ void BinOp::printTree(){
 }
 
 int BinOp::computeTree() {
+	switch (op) {
+		case soma:
+		{
+			Variable * m1 = (Variable*)left;
+			Variable * m2 = (Variable*)right;
+			if (m1->kind == matrix && m2->kind == matrix) {
+				sum_matrix(m1->matriz, m2->matriz);
+			}
+		}
+			break;
+		default:
+			break;
+	}
   return left->computeTree() + right->computeTree();
 }
 
@@ -168,7 +181,7 @@ void VarDeclaration::printTree(){
 			if(strong) {
 					std::cout << "Declaracao de variavel " << type_name_fem[type] << ": ";
 			} else {
-				std::cout << " variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
+				std::cout << "variavel com tipagem dinâmica " <<  type_name_fem[type] << " ";
 			}
 
     }
@@ -180,6 +193,10 @@ void VarDeclaration::printTree(){
 }
 
 int VarDeclaration::computeTree() {
+	for (auto var = vars.begin(); var != vars.end(); var++) {
+		std::cout << dynamic_cast<Variable *>(*var)->id;
+		if(next(var) != vars.end()) std::cout << ", ";
+	}
   return 0;
 }
 
@@ -218,6 +235,10 @@ void LoopExp::printTree() {
 	std::cout << "+faca: " << std::endl;
 	next->printTree();
 	std::cout << "Fim laco";
+}
+
+int LoopExp::computeTree() {
+	return 0;
 }
 
 double LoopExp::computeTreeD() {
@@ -272,7 +293,9 @@ void FunctionCall::printTree() {
 }
 
 void FindExpr::printTree() {
-  std::cout << "Busca por predicado onde existe um " << id << ", tal que " << id << " =";
+  std::cout << "Busca por predicado em " << ((Variable*)where)->id;
+  std::cout << ", onde existe um " << id << ", tal que " << id << " =";
   next->printTree();
-  std::cout << std::endl;
+  if(qtd)
+  	std::cout << " retornando a posição dos primeiros " << qtd << " encontrados";
 }

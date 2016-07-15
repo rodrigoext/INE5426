@@ -1,13 +1,10 @@
 n = 10
 
-fib (n) {
-	a = 0
-	int j, b = 1
-	int[10] fibonacci
+multiplica (n) {
+	int[10] produtos = 0
+	j = 0
 	while j < n {
-		fibonacci[j-1] = a + b
-		b = a
-		a = fibonacci[j-1]
+		produtos[0] = n*j;
 	}
-	return fibonacci
+	return produtos
 }

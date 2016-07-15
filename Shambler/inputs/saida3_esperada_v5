@@ -1,6 +1,9 @@
-Definicao de funcao sem retorno: soma
+Atribuicao de valor para variavel com tipagem dinamica inteira a:  valor inteiro 1
+Atribuicao de valor para variavel com tipagem dinamica inteira b:  valor inteiro 2
+
+Declaracao de funcao sem retorno: soma
 +parametros:
-parametro inteiro: a,b
+parametro inteiro: a, b
 +corpo:
-Atribuicao de valor para variavel m: variavel a (soma) variavel b
-Fim definicao
+Atribuicao de valor para variavel com tipagem dinâmica m: (variavel inteira a (soma inteira) variavel inteira b)
+Fim declaracao

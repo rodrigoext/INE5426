@@ -1,15 +1,14 @@
-Definicao de funcao sem retorno: incremento
+Declaracao de funcao sem retorno: incremento
 +corpo:
-Declaracao de variavel real: r
-Atribuicao de valor para variavel real r: valor real 3.6
-Declaracao de variavel real: r
-Atribuicao de valor para variavel inteira i: valor inteiro 4
-Atribuicao de valor para variavel c: valor inteiro 5
+Atribuicao de valor para (Declaracao de variavel real: r): valor real 3.6
+Atribuicao de valor para (Declaracao de variavel inteira: i): valor inteiro 4
+Atribuicao de valor para variavel com tipagem dinamica inteira c: valor inteiro 5
 
 Expressao condicional
 +se: (variavel real r (maior booleano) variavel inteira i)
 +entao: 
-Atribuicao de valor para variavel inteira c: variavel inteira c (soma inteira) valor inteiro 1
+Atribuicao de valor para variavel inteira c: (variavel inteira c (soma inteira) valor inteiro 1)
 +senao:
-Atribuicao de valor para variavel inteira c: variavel inteira c (subtracao inteira) valor inteiro 1
+Atribuicao de valor para variavel inteira c: (variavel inteira c (subtracao inteira) valor inteiro 1)
 Fim expressao condicional
+Fim declaracao

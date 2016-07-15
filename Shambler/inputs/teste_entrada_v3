@@ -1,13 +1,13 @@
-int[5] a
-bool[3] b
-real[8] c
+int[5] a = 1
+bool[3] b = FALSE
+real[8] c = 0.0
 i = 4
 j = 1
 
 a[3] = j
 a[1] = 7
-a[4] = 10*a[3]
-k = a[1]
-a[6] = c[5] / 4
-b[2] = c[3] < a[2]
-b[2] = b[3] AND b[1] 
+a[3] = 10*a[3]
+k = a[3]
+a[2] = c[5] / 4
+b[1] = c[2] < a[4]
+b[2] = b[3] AND b[1]

@@ -1,7 +1,6 @@
 real media, frequencia
 frequencia = .8
 bool aprovado = FALSE
-bool rec
 a = 3.9
 b = 5.
 c = 10
@@ -12,6 +11,5 @@ if frequencia >= .75 {
 		aprovado = TRUE
 	} else {
 		aprovado = FALSE
-		rec = FALSE
 	}
 }
