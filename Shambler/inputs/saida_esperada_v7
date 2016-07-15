@@ -1,0 +1,7 @@
+Atribuicao de valor para Declaracao de arranjo inteiro de tamanho 7: array:  valor inteiro 0
+Atribuicao de valor para Declaracao de Matriz real de 3 linhas por 3 colunas: matrix:  valor real 5.0
+Atribuicao de valor para arranjo inteiro array {+indice: valor inteiro 2} :  valor inteiro 3
+Busca por predicado em array, onde existe um x, tal que x = valor inteiro 3
+Atribuicao de valor para matriz real matrix {+linha: valor inteiro 2}, {+coluna: valor inteiro 2}:  valor real 3.5
+Atribuicao de valor para matriz real matrix {+linha: valor inteiro 3}, {+coluna: valor inteiro 3}:  valor real 3.5
+Busca por predicado em matrix, onde existe um item, tal que item = valor real 3.5 retornando a posição dos primeiros 5 encontrados

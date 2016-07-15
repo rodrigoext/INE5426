@@ -1,8 +1,8 @@
 Laco
-+para: Atribuicao de valor para variavel i: valor inteiro 1
++para: Atribuicao de valor para variavel com tipagem dinamica inteira i: valor inteiro 1
 +ate: valor inteiro 50
 +faca: 
-Atribuicao de valor para (Declaracao de variavel inteira: a): valor inteiro 1
-Atribuicao de valor para (Declaracao de variavel real: b): valor real .2
+Atribuicao de valor para Declaracao de variavel inteira: a: valor inteiro 1
+Atribuicao de valor para Declaracao de variavel real: b: valor real .2
 Atribuicao de valor para variavel com tipagem dinamica inteira x: ((abre parenteses) (variavel inteira a (soma inteira) variavel real b) (fecha parenteses) (multiplicacao inteira) (abre parenteses) (variavel inteira a (multiplicacao inteira) variavel real b) (fecha parenteses))
 Fim laco

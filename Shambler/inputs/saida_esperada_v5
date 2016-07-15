@@ -1,15 +1,14 @@
-Atribuicao de valor para variavel com tipagem dinâmica inteira n: valor inteiro 10
-
+Atribuicao de valor para Declaracao de variavel inteira: n:  valor inteiro 10
 Declaracao de funcao inteira: multiplica
 +parametros:
-parametro inteiro: n
+parametro dinamico: n
 +corpo:
-Declaracao de arranjo inteiro de tamanho 10: produtos
-Atribuicao de valor para variavel com tipagem dinâmica inteira j: valor inteiro 0
+Atribuicao de valor para Declaracao de arranjo inteiro de tamanho 10: produtos:  valor inteiro 10
+Atribuicao de valor para Declaracao de variavel inteira: j:  valor inteiro 0
 Laco
-+enquanto: (variavel inteira j (menor booleano) variavel inteira n)
-+faca:
-Atribuicao de valor para arranjo inteiro mul {+indice: variavel inteira j}: (variavel inteira n (multiplicacao inteira) variavel inteira j)
++enquanto: (variável inteira j (menor booleano) variável inteira n)
++faca: 
+Atribuicao de valor para arranjo inteiro produtos {+indice: valor inteiro 5} : (variável inteira n (multiplicacao inteira) variável inteira j)
 Fim laco
-Retorno de funcao: arranjo inteiro produtos
+Retorno de funcao: arranjo inteiro produtos} 
 Fim declaracao

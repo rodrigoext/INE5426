@@ -1,13 +1,11 @@
 Declaracao de variavel inteira: x, maximo
-Atribuicao de valor para variavel inteira x: valor inteiro 0
-Atribuicao de valor para variavel inteira maximo: valor inteiro 7
-
+Atribuicao de valor para variável inteira x:  valor inteiro 0
+Atribuicao de valor para variável inteira maximo:  valor inteiro 7
 Laco
-+enquanto: (variavel inteira x (menor ou igual booleano) variavel inteira maximo)
-+faca:
++enquanto: (variável inteira x (menor ou igual booleano) variável inteira maximo)
++faca: 
 Declaracao de variavel real: valor
-Atribuicao de valor para (Declaracao de variavel booleana: fim): valor booleano FALSE
-Atribuicao de valor para variavel real valor: ((valor real 0.2 (multiplicacao real) variavel inteira x para real) (soma real) valor real .5)
+Atribuicao de valor para Declaracao de variavel booleana: fim:  valor booleano FALSE
+Atribuicao de valor para variável real valor: (( valor real 0.2 (multiplicacao real) variável inteira x) (soma real)  valor real 5.)
 Fim laco
-
-Atribuicao de valor para variavel booleana fim: valor booleano TRUE
+Atribuicao de valor para variável booleana fim:  valor booleano TRUE

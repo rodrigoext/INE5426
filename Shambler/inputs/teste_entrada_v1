@@ -2,7 +2,7 @@ int a, b
 int c = 5
 d = 3
 real h, i = 2.4;
-real l, m
+real m
 real j = .7
 k = 0.8
 bool x, z;
@@ -15,7 +15,6 @@ b = - a
 
 i = 14.5 - h * 3.
 m = j*5 / k
-l = - d
 
 x = y OR a > i
-z = ~ w AND d <= l AND m ~= 3.0
+z = ~ w AND d <= j AND m ~= 3.0

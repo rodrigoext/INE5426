@@ -1,9 +1,8 @@
-Atribuicao de valor para variavel com tipagem dinâmica inteira j: valor inteiro 300
-
+Atribuicao de valor para Declaracao de variavel inteira: j:  valor inteiro 300
 Laco
-+para: variavel inteira j
-+decrementa ate: valor inteiro 120
++para: variável inteira j
++decrementa ate:  valor inteiro 120
 +faca: 
-Declaracao de arranjo inteiro de tamanho 200: lista
-Atribuicao de valor para arranjo inteiro lista {+indice: variavel inteira j}: (arranjo inteiro lista {+indice: variavel inteira j} (soma inteira) (variavel inteira j (multiplicacao inteira) variavel inteira j))
+Atribuicao de valor para Declaracao de arranjo inteiro de tamanho 200: lista:  valor inteiro 0
+Atribuicao de valor para arranjo inteiro lista {+indice: valor inteiro 150} : ( valor inteiro 0 localizado no arranjo inteiro lista {+indice: valor inteiro 130}  (soma inteira) (variável inteira j (multiplicacao inteira) variável inteira j))
 Fim laco

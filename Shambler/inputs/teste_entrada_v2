@@ -1,9 +1,9 @@
 real media, frequencia
 frequencia = .8
 bool aprovado = FALSE
-a = 3.9
-b = 5.
-c = 10
+real a = 3.9
+real b = 5.
+int c = 10
 
 if frequencia >= .75 {
 	media = (a*2 + b*2 + c*4) / 8
